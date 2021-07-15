@@ -41,21 +41,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/myinfo").hasRole("MEMBER")
                 .antMatchers("/**").permitAll()
                 .and()
-                /* form 기반으로 인증을 하도록 함. 로그인은 기본적으로 HttpSession을 사용.
-                    커스텀 로그인 form의 action 경로와 loginPage()의 파라미터경로가 일치해야 인증처리 가능.
-                    .usernameParameter("파라미터명") : 이 메서드로 파라미터명을 변경할 수 있다.
-                    .deleteCookies("key 명") : 로그아웃 시, 특정 쿠키를 제거하고 싶을 때 사용하는 메서드. */
                 .formLogin()
                 .loginPage("/user/login")
                 .failureUrl("/user/login/failure")
-                // 로그인이 성공했을 때 이동되는 페이지. 컨트롤러에서 URL 매핑이 되어 있어야 함.
                 .defaultSuccessUrl("/user/login/result")
                 .permitAll()
                 .and()
-                /* 로그아웃 메서드. WebSecurityConfigurerAdapter을 사용할 때 자동으로 적용됨.
-                 default : "/logout"에 접근하면 Http 세션을 제거 */
                 .logout()
-                // 커스텀 logout url
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                 .logoutSuccessUrl("/user/logout/result")
                 // Http 세션을 초기화하는 작업.

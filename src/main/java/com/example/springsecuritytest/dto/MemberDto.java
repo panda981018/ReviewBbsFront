@@ -3,8 +3,6 @@ package com.example.springsecuritytest.dto;
 import com.example.springsecuritytest.domain.entity.MemberEntity;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @ToString
@@ -14,21 +12,22 @@ public class MemberDto {
     private Long id;
     private String email;
     private String password;
-    private LocalDateTime createDate;
-    private LocalDateTime modifiedDate;
+    private String createDate;
 
     public MemberEntity toEntity() {
         return MemberEntity.builder()
                 .id(id)
                 .email(email)
                 .password(password)
+                .createDate(createDate)
                 .build();
     }
 
     @Builder
-    public MemberDto(Long id, String email, String password) {
+    public MemberDto(Long id, String email, String password, String createDate) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.createDate = createDate;
     }
 }

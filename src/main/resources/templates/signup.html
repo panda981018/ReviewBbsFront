@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-  xmlns:th="http://www.w3.org/1999/xhtml">
+  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>SIGNUP PAGE</title>
@@ -8,7 +8,6 @@
 <body>
   <h1>회원가입</h1>
   <hr>
-
   <!--  th:action을 사용하면 Thymeleaf csrf 토큰값을 자동으로 추가해주므로
       hidden 타입으로 넘겨주지 않아도 된다.  -->
   <form th:action="@{/user/signup}" method="post">
