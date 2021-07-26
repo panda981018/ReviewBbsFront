@@ -1,7 +1,10 @@
 package com.example.springsecuritytest.conf;
 
+import com.example.springsecuritytest.handler.AuthFailureHandler;
+import com.example.springsecuritytest.handler.AuthSuccessHandler;
 import com.example.springsecuritytest.service.MemberService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,8 +12,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -19,10 +23,29 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private MemberService memberService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    @Bean // 핸들러 Bean으로 등록
+    public AuthenticationFailureHandler failureHandler() {
+        return new AuthFailureHandler();
+    }
+
+    @Bean // 핸들러 Bean으로 등록
+    public AuthenticationSuccessHandler successHandler() {
+        return new AuthSuccessHandler();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        super.configure(web);
+        web.ignoring()
+                .antMatchers("/static/**")
+                .antMatchers("/resources/**")
+                .antMatchers("/css/**")
+                .antMatchers("/js/**")
+                .antMatchers("/fragments/**");
+
     }
 
     @Override
@@ -31,27 +54,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // authorizeRequests() : HttpServletRequest에 따라 접근을 제한함.
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/myinfo").hasRole("MEMBER")
+                .antMatchers("/member/myinfo").hasRole("MEMBER")
                 .antMatchers("/**").permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/user/login")
-                .failureUrl("/user/login/failure")
-                .defaultSuccessUrl("/user/login/result")
+                .loginPage("/member/login")
+                .defaultSuccessUrl("/")
+                .failureHandler(failureHandler()) // 실패시 동작할 핸들러 등록
+                .successHandler(successHandler()) // 성공시 동작할 핸들러 등록
                 .permitAll()
                 .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                .logoutSuccessUrl("/user/logout/result")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                .logoutSuccessUrl("/")
                 // Http 세션을 초기화하는 작업.
                 .invalidateHttpSession(true)
                 .and()
                 // 예외가 발생 했을 때 핸들러를 통해서 처리할 수 있다.
-                .exceptionHandling().accessDeniedPage("/user/denied");
+                .exceptionHandling().accessDeniedPage("/access-denied");
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(memberService).passwordEncoder(passwordEncoder);
     }
 }

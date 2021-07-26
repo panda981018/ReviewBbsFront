@@ -10,24 +10,37 @@ import lombok.*;
 public class MemberDto {
 
     private Long id;
-    private String email;
+    private String username;
     private String password;
-    private String createDate;
+    private String role;
+    private String nickname;
+    private String gender;
+    private int age;
+    private String regDate;
 
     public MemberEntity toEntity() {
         return MemberEntity.builder()
                 .id(id)
-                .email(email)
+                .username(username)
                 .password(password)
-                .createDate(createDate)
+                .role(role)
+                .nickname(nickname)
+                .gender(gender)
+                .age(age)
+                .regDate(regDate)
                 .build();
     }
 
     @Builder
-    public MemberDto(Long id, String email, String password, String createDate) {
+    public MemberDto(Long id, String username, String password, String role,
+                     String nickname, String gender, int age, String regDate) {
         this.id = id;
-        this.email = email;
+        this.username = username;
         this.password = password;
-        this.createDate = createDate;
+        this.role = role;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.age = age;
+        this.regDate = regDate;
     }
 }

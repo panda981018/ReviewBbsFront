@@ -1,4 +1,4 @@
-package com.example.springsecuritytest.domain;
+package com.example.springsecuritytest.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
