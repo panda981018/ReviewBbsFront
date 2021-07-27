@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @Controller
 public class CustomErrorController implements ErrorController {
@@ -18,7 +19,6 @@ public class CustomErrorController implements ErrorController {
 
     @PostMapping("/member/login/error")
     public String loginError(HttpServletRequest request, Model model) {
-
         String errorMessage = (String) request.getAttribute("errorMessage");
         model.addAttribute("errorMessage", errorMessage);
 

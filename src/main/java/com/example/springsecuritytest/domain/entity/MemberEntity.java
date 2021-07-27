@@ -27,11 +27,17 @@ public class MemberEntity {
 
     @Column(length = 10, nullable = false)
     private String role;
+
+    @Column(length = 30, nullable = false)
     private String nickname;
+
+    @Column(length = 10)
     private String gender;
+
+    @Column(length = 4)
     private int age;
 
-    @Column
+    @Column(length = 25)
     private String regDate;
 
     @Builder

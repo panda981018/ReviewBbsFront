@@ -29,7 +29,6 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         } else if (roles.contains(Role.MEMBER.getValue())){
             redirectStrategy.sendRedirect(request, response, "/member" + DEFAULT_LOGIN_SUCCESS_URL);
         } else {
-            request.setAttribute("AUTH_ANONYMOUS", "ANONYMOUS");
             redirectStrategy.sendRedirect(request, response, "/");
         }
 
