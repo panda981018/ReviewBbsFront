@@ -63,10 +63,7 @@ public class MemberService implements UserDetailsService {
                 .username(memberEntity.getUsername())
                 .password(memberEntity.getPassword())
                 .nickname(memberEntity.getNickname())
-                .gender(memberEntity.getGender())
                 .age(memberEntity.getAge())
-                .role(memberEntity.getRole())
-                .regDate(memberEntity.getRegDate())
                 .build();
 
         return memberDto;

@@ -8,18 +8,12 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<div class="container mt-5">
+<div class="container">
     <header th:include="fragments/header :: header"></header>
     <h1>My Info</h1>
     <hr>
-    <form th:action="@{/member/info/update}" th:object="${member}" method="post">
-        <!-- role -->
-        <div class="mb-3">
-            <label th:for="role" class="form-label"><b>Role</b></label><br/>
-            <input type="radio" th:field="*{role}" value="Member" onclick="return false;"/> 일반 회원
-            <input type="radio" th:field="*{role}" value="Admin" onclick="return false;"/> 관리자
-        </div>
-        <!--  email  -->
+    <form th:action="@{/member/info}" th:object="${member}" method="post">
+        <!--  username  -->
         <div class="mb-3">
             <label th:for="username" class="form-label" aria-describedby="emailHelpBlock"><b>Email address</b></label>
             <small id="emailHelpBlock" class="text-muted">이메일은 바꿀 수 없습니다.</small>
@@ -61,15 +55,8 @@
                 <option class="dropdown-item" th:value="26" value="26">26</option>
             </select>
         </div>
-        <!-- Gender -->
-        <div class="mb-3">
-            <label th:for="gender" class="form-label"><b>Gender</b></label><br/>
-            <input type="radio" name="gender" th:field="*{gender}" value="Male" onclick="return false;"/> Male
-            <input type="radio" name="gender" th:field="*{gender}" value="Female" onclick="return false;"/> Female
-        </div>
-
-
         <button type="submit" class="btn btn-primary">Update</button>
+        <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">Back</button>
     </form>
 </div>
 

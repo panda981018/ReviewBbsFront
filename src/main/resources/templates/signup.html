@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:include="fragments/header :: main-head(SignUp)">
     <meta charset="UTF-8">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -9,11 +9,12 @@
     <title>SIGNUP PAGE</title>
 </head>
 <body>
-<div class="container mt-5">
+<div class="container">
+    <header th:include="fragments/header :: header"></header>
     <h1>Sign Up</h1>
     <hr>
     <!-- signUpForm은 Controller에서 넘겨준 객체 -->
-    <form th:action="@{/member/signup}" th:object="${signUpForm}" method="post">
+    <form th:action="@{/signup}" th:object="${signUpForm}" method="post">
         <!-- role -->
         <div class="mb-3">
             <label th:for="role" class="form-label"><b>Role</b></label><br/>

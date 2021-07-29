@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // authorizeRequests() : HttpServletRequest에 따라 접근을 제한함.
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/member/myinfo").hasRole("MEMBER")
+                .antMatchers("/member/**").hasRole("MEMBER")
                 .antMatchers("/**").permitAll()
                 .and()
                 .formLogin()
@@ -67,8 +67,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                 .logoutSuccessUrl("/")
-                // Http 세션을 초기화하는 작업.
-                .invalidateHttpSession(true)
+                .invalidateHttpSession(true) // 로그아웃시 세션 제거
+//                .deleteCookies("JSESSIONID") // 쿠키 제거
+                .clearAuthentication(true) // 권한 정보 제거
                 .and()
                 // 예외가 발생 했을 때 핸들러를 통해서 처리할 수 있다.
                 .exceptionHandling().accessDeniedPage("/access-denied");

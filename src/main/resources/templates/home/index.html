@@ -8,12 +8,6 @@
 <body class="bg-light">
 <div class="container">
     <header th:include="fragments/header :: header"></header>
-    <p th:if="${session.AUTH_ANONYMOUS}"/>
-    <p class="alert alert-success" role="alert" th:if="${message}" th:text="${message}">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </p>
     <div class="box">
         <h2>Let's share your place.</h2>
     </div>

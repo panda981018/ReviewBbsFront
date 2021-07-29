@@ -1,25 +1,17 @@
 package com.example.springsecuritytest.controller;
 
 import com.example.springsecuritytest.dto.MemberDto;
-import com.example.springsecuritytest.dto.SignUpForm;
 import com.example.springsecuritytest.service.MemberService;
-import com.example.springsecuritytest.validate.SignUpFormValidator;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 
 @Controller
@@ -27,41 +19,16 @@ import java.sql.SQLException;
 @RequestMapping("/member")
 public class MemberController { // member
 
-    private final Logger log = LoggerFactory.getLogger(MemberController.class);
-
     @Autowired
     private MemberService memberService;
-    @Autowired
-    private SignUpFormValidator signUpFormValidator;
-
-    @InitBinder("signUpForm")
-    public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(signUpFormValidator);
-    }
 
     @GetMapping("/home")
-    public String memberHome() {
+    public String memberHome(HttpSession session) {
+        System.out.println(session.getId());
         return "home/memberHome";
     }
 
-    // 회원가입 페이지
-    @GetMapping("/signup")
-    public String showSignUpPage(Model model) {
-        model.addAttribute("signUpForm", new SignUpForm());
 
-        return "signup";
-    }
-
-    // 회원가입 처리
-    @PostMapping("/signup")
-    public String signUp(@Valid SignUpForm signUpForm, Errors errors, RedirectAttributes attributes) {
-        if (errors.hasErrors()) {
-            return "signup";
-        } else {
-            memberService.signUp(signUpForm);
-            return "home/index";
-        }
-    }
 
     // 로그인 페이지
     @GetMapping("/login")
@@ -77,8 +44,8 @@ public class MemberController { // member
         return "myinfo";
     }
 
-    // 내정보 수정하기 클릭했을 때
-    @PostMapping("/info/update")
+    // 내정보에서 update 클릭했을 때
+    @PostMapping("/info")
     public String postMyInfo(Authentication auth, MemberDto memberDto) throws SQLException {
 
         MemberDto beforeMem = memberService.findByUsername(auth.getName());

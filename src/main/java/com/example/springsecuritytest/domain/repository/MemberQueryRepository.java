@@ -1,12 +1,9 @@
 package com.example.springsecuritytest.domain.repository;
 
-import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.dto.MemberDto;
-import com.example.springsecuritytest.dto.SignUpForm;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

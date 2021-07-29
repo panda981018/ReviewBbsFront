@@ -2,7 +2,9 @@ package com.example.springsecuritytest.domain.repository;
 
 import com.example.springsecuritytest.domain.entity.MemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
     MemberEntity findByUsername(String username);
