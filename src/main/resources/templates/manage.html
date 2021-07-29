@@ -24,7 +24,8 @@
 </head>
 <body class="bg-light">
 <div class="container">
-    <h1>This is Admin Page.</h1>
+    <header th:include="fragments/header :: header"></header>
+    <h1>Admin Page</h1>
     <hr>
     <a class="btn btn-outline-primary" th:href="@{/admin/home}">메인으로 이동</a>
 

@@ -22,7 +22,6 @@ public class HomeController { // anonymous
 
     @Autowired
     private MemberService memberService;
-
     @Autowired
     private SignUpFormValidator signUpFormValidator;
 

@@ -40,7 +40,6 @@ public class MemberService implements UserDetailsService {
     public void signUp(SignUpForm signUpForm) {
 
         LocalDateTime now = LocalDateTime.now();
-        // HH = 24시간 포맷, hh = 12시간 포맷
         String time = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         MemberDto memberDto = MemberDto.builder()

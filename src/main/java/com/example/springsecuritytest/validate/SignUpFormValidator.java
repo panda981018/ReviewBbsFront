@@ -30,7 +30,7 @@ public class SignUpFormValidator implements Validator {
             errors.rejectValue("username", "invalid username", "이미 사용 중인 아이디입니다.");
         }
         // password 길이 제한.
-        if (signUpForm.getPassword().length() > 0 && signUpForm.getPassword().length() < 4) {
+        if (signUpForm.getPassword().length() > 0 && signUpForm.getPassword().length() < 8) {
             errors.rejectValue("password", "password length is too short", "비밀번호의 길이가 너무 짧습니다.");
         }
 

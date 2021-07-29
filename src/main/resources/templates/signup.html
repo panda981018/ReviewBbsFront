@@ -18,8 +18,8 @@
         <!-- role -->
         <div class="mb-3">
             <label th:for="role" class="form-label"><b>Role</b></label><br/>
-            <input type="radio" th:field="*{role}" value="Member" checked/> 일반 회원
-            <input type="radio" th:field="*{role}" value="Admin"/> 관리자
+            <input type="radio" th:field="*{role}" value="Member" checked> 일반 회원
+            <input type="radio" th:field="*{role}" value="Admin"> 관리자
         </div>
         <!--  email  -->
         <div class="mb-3">
@@ -63,13 +63,6 @@
                 <option class="dropdown-item" th:value="25" value="25">25</option>
                 <option class="dropdown-item" th:value="26" value="26">26</option>
             </select>
-<!--            <button class="btn dropdown-toggle" data-toggle="dropdown">-->
-<!--                나이 선택-->
-<!--            </button>-->
-<!--            <div class="dropdown-menu">-->
-<!--                &lt;!&ndash; 나이 관련해서 메뉴 만들기 for문(?)으로 해서 쭉 만들면 될거같은데 더 찾아보기 &ndash;&gt;-->
-<!--                <a class="dropdown-item" href="#">24</a>-->
-<!--            </div>-->
         </div>
         <!-- Gender -->
         <div class="mb-3">
