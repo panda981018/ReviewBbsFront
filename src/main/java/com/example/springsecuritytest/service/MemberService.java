@@ -6,7 +6,7 @@ import com.example.springsecuritytest.domain.repository.MemberRepository;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.dto.SignUpForm;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,28 +15,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class MemberService implements UserDetailsService {
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
     private MemberQueryRepository memberQueryRepository;
 
-    @Transactional
     public void signUp(SignUpForm signUpForm) {
 
         LocalDateTime now = LocalDateTime.now();
@@ -55,59 +49,104 @@ public class MemberService implements UserDetailsService {
         memberRepository.save(memberDto.toEntity());
     }
 
-    public MemberDto findByUsername(String username) {
+    public MemberDto findByUsername(String username) throws SQLException {
 
-        MemberEntity memberEntity = memberRepository.findByUsername(username);
-        MemberDto memberDto = MemberDto.builder()
-                .username(memberEntity.getUsername())
-                .password(memberEntity.getPassword())
-                .nickname(memberEntity.getNickname())
-                .age(memberEntity.getAge())
-                .build();
-
-        return memberDto;
+        Optional<MemberEntity> memberEntity = memberRepository.findByUsername(username);
+        if(memberEntity.isPresent()) {
+            MemberEntity user = memberEntity.get();
+            MemberDto memberDto = MemberDto.builder()
+                    .id(user.getId())
+                    .username(user.getUsername())
+                    .password(user.getPassword())
+                    .role(user.getRole())
+                    .gender(user.getGender())
+                    .nickname(user.getNickname())
+                    .age(user.getAge())
+                    .regDate(user.getRegDate())
+                    .build();
+            return memberDto;
+        } else {
+            throw new SQLException();
+        }
     }
 
     public void updateMember(MemberDto memberDto) throws SQLException {
-        MemberDto afterMem;
 
-        if (memberDto.getPassword() == null) {
-            afterMem = MemberDto.builder()
-                    .username(memberDto.getUsername())
-                    .nickname(memberDto.getNickname())
-                    .age(memberDto.getAge())
-                    .build();
+        Optional<MemberEntity> memberData = memberRepository.findByUsername(memberDto.getUsername());
+
+        if (memberData.isPresent()) {
+            MemberDto afterMem;
+            MemberEntity member = memberData.get();
+            if (memberDto.getPassword().isEmpty()) {
+                afterMem = MemberDto.builder()
+                        .id(member.getId())
+                        .username(memberDto.getUsername())
+                        .password(memberData.get().getPassword())
+                        .nickname(memberDto.getNickname())
+                        .role(member.getRole())
+                        .gender(member.getGender())
+                        .age(memberDto.getAge())
+                        .regDate(member.getRegDate())
+                        .build();
+            } else {
+                afterMem = MemberDto.builder()
+                        .id(member.getId())
+                        .username(memberDto.getUsername())
+                        .password(passwordEncoder.encode(memberDto.getPassword()))
+                        .nickname(memberDto.getNickname())
+                        .role(member.getRole())
+                        .gender(member.getGender())
+                        .age(member.getAge())
+                        .regDate(member.getRegDate())
+                        .build();
+            }
+            memberRepository.save(afterMem.toEntity());
         } else {
-            afterMem = MemberDto.builder()
-                    .username(memberDto.getUsername())
-                    .password(passwordEncoder.encode(memberDto.getPassword()))
-                    .nickname(memberDto.getNickname())
-                    .age(memberDto.getAge())
-                    .build();
+            throw new SQLException();
         }
-
-        memberQueryRepository.updateUserInfo(afterMem);
+        //memberQueryRepository.updateUserInfo(afterMem);
 
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        MemberEntity user = memberRepository.findByUsername(username);
+        Optional<MemberEntity> memberEntity = memberRepository.findByUsername(username);
 
-        if (user == null) {
+        if (memberEntity.isPresent()) {
+            MemberEntity user = memberEntity.get();
+
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            if (user.getRole().equals("Admin")) { // admin role을 가지고 있다면
+                authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
+            } else { // member role을 가지고 있다면
+                authorities.add(new SimpleGrantedAuthority(Role.MEMBER.getValue()));
+            }
+
+            return new User(user.getUsername(), user.getPassword(), authorities);
+        } else {
             throw new UsernameNotFoundException(username);
         }
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-
-        if (user.getRole().equals("Admin")) { // admin role을 가지고 있다면
-            authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
-        } else { // member role을 가지고 있다면
-            authorities.add(new SimpleGrantedAuthority(Role.MEMBER.getValue()));
-        }
-
-        return new User(user.getUsername(), user.getPassword(), authorities);
     }
 
+    public List<MemberDto> findAllMembers() {
+
+        List<MemberEntity> members = memberRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+        List<MemberDto> memberDtoList = new ArrayList<>();
+
+        for (MemberEntity member : members) {
+            MemberDto dto = MemberDto.builder()
+                    .id(member.getId())
+                    .username(member.getUsername())
+                    .nickname(member.getNickname())
+                    .gender(member.getGender())
+                    .role(member.getRole())
+                    .regDate(member.getRegDate())
+                    .age(member.getAge())
+                    .build();
+
+            memberDtoList.add(dto);
+        }
+        return memberDtoList;
+    }
 }

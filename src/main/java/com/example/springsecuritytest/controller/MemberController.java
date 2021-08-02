@@ -19,7 +19,6 @@ import java.sql.SQLException;
 @RequestMapping("/member")
 public class MemberController { // member
 
-    @Autowired
     private MemberService memberService;
 
     @GetMapping("/home")
@@ -38,7 +37,7 @@ public class MemberController { // member
 
     // 내정보 페이지
     @GetMapping("/info")
-    public String showMyInfo(Authentication auth, Model model) { // 세션에서 유지되고 있는 Authentication 객체를 가져옴.
+    public String showMyInfo(Authentication auth, Model model) throws SQLException { // 세션에서 유지되고 있는 Authentication 객체를 가져옴.
         MemberDto member = memberService.findByUsername(auth.getName());
         model.addAttribute("member", member);
         return "myinfo";

@@ -10,9 +10,7 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
 
-
     <link href="/css/blog.css" rel="stylesheet">
-
     <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
 
     <style>
@@ -29,6 +27,11 @@
             top: 50%;
             transform: translateY(-50%);
         }
+
+        header {
+            margin: 3%;
+        }
+
     </style>
     <title th:text="${title}">Sharing</title>
 </head>
@@ -56,7 +59,7 @@
             </div>
             <div sec:authorize="isAuthenticated()">
                 <a class="btn btn-sm btn-outline-secondary" th:href="@{/member/info}" sec:authorize="hasRole('ROLE_MEMBER')">My Info</a>
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/admin}" sec:authorize="hasRole('ROLE_ADMIN')">Admin Page</a>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/manage}" sec:authorize="hasRole('ROLE_ADMIN')">Admin Page</a>
                 <a class="btn btn-sm btn-outline-secondary" th:href="@{/member/logout}">Logout</a>
             </div>
         </div>
