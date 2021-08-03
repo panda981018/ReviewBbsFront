@@ -19,7 +19,7 @@ public class MemberEntity {
             generator = "USER_SEQ_GEN")
     private Long id;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 30, nullable = false)
     private String username;
 
     @Column(length = 100, nullable = false)

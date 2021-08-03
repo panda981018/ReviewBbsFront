@@ -17,7 +17,7 @@ public class CustomErrorController implements ErrorController {
 
     private final String DEFAULT_ERROR_PATH = "/error";
 
-    @PostMapping("/member/login/error")
+    @PostMapping("/login/error")
     public String loginError(HttpServletRequest request, Model model) {
         String errorMessage = (String) request.getAttribute("errorMessage");
         model.addAttribute("errorMessage", errorMessage);
