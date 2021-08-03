@@ -14,5 +14,4 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     // SignUpFormValidator에서 사용.
     boolean existsByUsername(String username);
     //boolean existsByNickname(String nickname);
-
 }

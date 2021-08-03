@@ -4,7 +4,6 @@ import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.domain.repository.MemberQueryRepository;
 import com.example.springsecuritytest.domain.repository.MemberRepository;
 import com.example.springsecuritytest.dto.MemberDto;
-import com.example.springsecuritytest.dto.SignUpForm;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,22 +30,22 @@ public class MemberService implements UserDetailsService {
     private MemberRepository memberRepository;
     private MemberQueryRepository memberQueryRepository;
 
-    public void signUp(SignUpForm signUpForm) {
+    public void signUp(MemberDto memberDto) {
 
         LocalDateTime now = LocalDateTime.now();
         String time = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        MemberDto memberDto = MemberDto.builder()
-                .username(signUpForm.getUsername())
-                .password(passwordEncoder.encode(signUpForm.getPassword()))
-                .nickname(signUpForm.getNickname())
-                .gender(signUpForm.getGender())
-                .age(signUpForm.getAge())
-                .role(signUpForm.getRole())
+        MemberDto memberInfo = MemberDto.builder()
+                .username(memberDto.getUsername())
+                .password(passwordEncoder.encode(memberDto.getPassword()))
+                .nickname(memberDto.getNickname())
+                .gender(memberDto.getGender())
+                .age(memberDto.getAge())
+                .role(memberDto.getRole())
                 .regDate(time)
                 .build();
 
-        memberRepository.save(memberDto.toEntity());
+        memberRepository.save(memberInfo.toEntity());
     }
 
     public MemberDto findByUsername(String username) throws SQLException {

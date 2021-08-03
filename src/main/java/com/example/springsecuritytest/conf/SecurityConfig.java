@@ -58,17 +58,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**").permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/member/login")
+                .loginPage("/login")
                 .defaultSuccessUrl("/")
                 .failureHandler(failureHandler()) // 실패시 동작할 핸들러 등록
                 .successHandler(successHandler()) // 성공시 동작할 핸들러 등록
                 .permitAll()
                 .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true) // 로그아웃시 세션 제거
-//                .deleteCookies("JSESSIONID") // 쿠키 제거
+                .deleteCookies("JSESSIONID") // 쿠키 제거
                 .clearAuthentication(true) // 권한 정보 제거
                 .and()
                 // 예외가 발생 했을 때 핸들러를 통해서 처리할 수 있다.

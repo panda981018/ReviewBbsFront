@@ -3,7 +3,6 @@ package com.example.springsecuritytest.controller;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.MemberService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,14 +26,6 @@ public class MemberController { // member
         return "home/memberHome";
     }
 
-
-
-    // 로그인 페이지
-    @GetMapping("/login")
-    public String showLoginPage() {
-        return "login";
-    }
-
     // 내정보 페이지
     @GetMapping("/info")
     public String showMyInfo(Authentication auth, Model model) throws SQLException { // 세션에서 유지되고 있는 Authentication 객체를 가져옴.
@@ -56,7 +47,7 @@ public class MemberController { // member
 
         memberService.updateMember(memberDto);
 
-        return "memberupdate";
+        return "redirect/memberupdate";
     }
 
 
