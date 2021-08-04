@@ -3,6 +3,8 @@ package com.example.springsecuritytest.dto;
 import com.example.springsecuritytest.domain.entity.MemberEntity;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
 @ToString
@@ -10,9 +12,12 @@ import lombok.*;
 public class MemberDto {
 
     private Long id;
+    @NotBlank
     private String username;
+    @NotBlank
     private String password;
     private String role;
+    @NotBlank
     private String nickname;
     private String gender;
     private int age;

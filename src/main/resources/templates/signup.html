@@ -34,9 +34,8 @@
             <label th:for="signUpEmail" class="form-label" aria-describedby="emailHelpBlock"><b>Email address</b></label>
             <small id="emailHelpBlock" class="text-muted">이메일 형식으로 입력해주세요.</small>
             <input type="email" class="form-control" id="signUpEmail" name="username" placeholder="이메일을 입력해주세요" autocomplete="off"/>
-            <div>
-                <p class="alert alert-danger" id="emailError" name="emailError" style="display: none"></p>
-            </div>
+            <p class="alert alert-danger" th:if="${ #fields.hasErrors('username')}" th:errors="*{username}"
+               id="emailError" name="emailError">Email Error</p>
         </div>
         <!-- password -->
         <div class="mb-3" id="passwordDiv">
@@ -51,9 +50,8 @@
         <div class="mb-3" id="nicknameDiv">
             <label th:for="nickname" class="form-label"><b>Nickname</b></label>
             <input type="text" class="form-control" id="nickname" name="nickname" placeholder="이름" autocomplete="off"/>
-            <div>
-                <p class="alert alert-danger" id="nicknameError" name="nicknameError" role="alert" style="display: none"></p>
-            </div>
+            <p class="alert alert-danger" th:if="${ #fields.hasErrors('nickname') }" th:errors="*{nickname}"
+               id="nicknameError" name="nicknameError" style="display: none"></p>
         </div>
         <!-- age -->
         <div class="mb-3 dropdown" id="ageDiv">
