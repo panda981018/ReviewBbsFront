@@ -17,7 +17,7 @@
             <th>Username</th>
             <th>Nickname</th>
             <th>Role</th>
-            <th>Age</th>
+            <th>Birth</th>
             <th>Gender</th>
             <th>Register Date</th>
         </tr>
@@ -28,7 +28,7 @@
             <td th:text="${member.username}"></td>
             <td th:text="${member.nickname}"></td>
             <td th:text="${member.role}"></td>
-            <td th:text="${member.age}"></td>
+            <td th:text="${member.year} + '-' + ${member.month} + '-' + ${member.day}"></td>
             <td th:text="${member.gender}"></td>
             <td th:text="${member.regDate}"></td>
         </tr>

@@ -1,0 +1,18 @@
+#emailError, #passwordError, #nicknameError {
+    padding: 1em;
+    margin-top: 1em;
+}
+
+#birthError {
+    padding: 1em;
+    margin-top: 1em;
+    display: none;
+}
+
+.error {
+    display: block;
+    text-align: center;
+    margin: auto;
+    color: red;
+    font-weight: bold;
+}

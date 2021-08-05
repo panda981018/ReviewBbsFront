@@ -4,6 +4,7 @@ import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.domain.repository.MemberQueryRepository;
 import com.example.springsecuritytest.domain.repository.MemberRepository;
 import com.example.springsecuritytest.dto.MemberDto;
+import javassist.compiler.Parser;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,7 +41,9 @@ public class MemberService implements UserDetailsService {
                 .password(passwordEncoder.encode(memberDto.getPassword()))
                 .nickname(memberDto.getNickname())
                 .gender(memberDto.getGender())
-                .age(memberDto.getAge())
+                .year(memberDto.getYear())
+                .month(memberDto.getMonth())
+                .day(memberDto.getDay())
                 .role(memberDto.getRole())
                 .regDate(time)
                 .build();
@@ -53,6 +56,7 @@ public class MemberService implements UserDetailsService {
         Optional<MemberEntity> memberEntity = memberRepository.findByUsername(username);
         if(memberEntity.isPresent()) {
             MemberEntity user = memberEntity.get();
+            String[] birth = user.getBirth().split("-");
             MemberDto memberDto = MemberDto.builder()
                     .id(user.getId())
                     .username(user.getUsername())
@@ -60,9 +64,12 @@ public class MemberService implements UserDetailsService {
                     .role(user.getRole())
                     .gender(user.getGender())
                     .nickname(user.getNickname())
-                    .age(user.getAge())
+                    .year(birth[0])
+                    .month(birth[1])
+                    .day(birth[2])
                     .regDate(user.getRegDate())
                     .build();
+
             return memberDto;
         } else {
             throw new SQLException();
@@ -76,6 +83,7 @@ public class MemberService implements UserDetailsService {
         if (memberData.isPresent()) {
             MemberDto afterMem;
             MemberEntity member = memberData.get();
+
             if (memberDto.getPassword().isEmpty()) {
                 afterMem = MemberDto.builder()
                         .id(member.getId())
@@ -84,7 +92,9 @@ public class MemberService implements UserDetailsService {
                         .nickname(memberDto.getNickname())
                         .role(member.getRole())
                         .gender(member.getGender())
-                        .age(memberDto.getAge())
+                        .year(memberDto.getYear())
+                        .month(memberDto.getMonth())
+                        .day(memberDto.getDay())
                         .regDate(member.getRegDate())
                         .build();
             } else {
@@ -95,7 +105,9 @@ public class MemberService implements UserDetailsService {
                         .nickname(memberDto.getNickname())
                         .role(member.getRole())
                         .gender(member.getGender())
-                        .age(member.getAge())
+                        .year(memberDto.getYear())
+                        .month(memberDto.getMonth())
+                        .day(memberDto.getDay())
                         .regDate(member.getRegDate())
                         .build();
             }
@@ -134,15 +146,31 @@ public class MemberService implements UserDetailsService {
         List<MemberDto> memberDtoList = new ArrayList<>();
 
         for (MemberEntity member : members) {
-            MemberDto dto = MemberDto.builder()
-                    .id(member.getId())
-                    .username(member.getUsername())
-                    .nickname(member.getNickname())
-                    .gender(member.getGender())
-                    .role(member.getRole())
-                    .regDate(member.getRegDate())
-                    .age(member.getAge())
-                    .build();
+            MemberDto dto;
+            if (member.getBirth() != null) { // member
+                String[] birth = member.getBirth().split("-");
+                dto = MemberDto.builder()
+                        .id(member.getId())
+                        .username(member.getUsername())
+                        .nickname(member.getNickname())
+                        .gender(member.getGender())
+                        .role(member.getRole())
+                        .regDate(member.getRegDate())
+                        .year(birth[0])
+                        .month(birth[1])
+                        .day(birth[2])
+                        .build();
+            } else { // admin
+                dto = MemberDto.builder()
+                        .id(member.getId())
+                        .username(member.getUsername())
+                        .nickname(member.getNickname())
+                        .gender(member.getGender())
+                        .role(member.getRole())
+                        .regDate(member.getRegDate())
+                        .build();
+            }
+
 
             memberDtoList.add(dto);
         }

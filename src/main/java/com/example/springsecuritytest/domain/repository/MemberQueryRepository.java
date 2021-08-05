@@ -18,24 +18,24 @@ public class MemberQueryRepository { // CRUD
     private final JPAQueryFactory jpaQueryFactory;
 
     // update
-    @Modifying
-    @Transactional
-    public void updateUserInfo(MemberDto memberDto) throws SQLException {
-        if (memberDto.getPassword() == null) {
-            jpaQueryFactory.update(memberEntity)
-                    .set(memberEntity.nickname, memberDto.getNickname())
-                    .set(memberEntity.age, memberDto.getAge())
-                    .where(memberEntity.username.eq(memberDto.getUsername()))
-                    .execute();
-        } else {
-            jpaQueryFactory.update(memberEntity)
-                    .set(memberEntity.password, memberDto.getPassword())
-                    .set(memberEntity.nickname, memberDto.getNickname())
-                    .set(memberEntity.age, memberDto.getAge())
-                    .where(memberEntity.username.eq(memberDto.getUsername()))
-                    .execute();
-        }
-    }
+//    @Modifying
+//    @Transactional
+//    public void updateUserInfo(MemberDto memberDto) throws SQLException {
+//        if (memberDto.getPassword() == null) {
+//            jpaQueryFactory.update(memberEntity)
+//                    .set(memberEntity.nickname, memberDto.getNickname())
+//                    .set(memberEntity.age, memberDto.getAge())
+//                    .where(memberEntity.username.eq(memberDto.getUsername()))
+//                    .execute();
+//        } else {
+//            jpaQueryFactory.update(memberEntity)
+//                    .set(memberEntity.password, memberDto.getPassword())
+//                    .set(memberEntity.nickname, memberDto.getNickname())
+//                    .set(memberEntity.age, memberDto.getAge())
+//                    .where(memberEntity.username.eq(memberDto.getUsername()))
+//                    .execute();
+//        }
+//    }
 
     // delete
     @Transactional

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<head>
+    <style>
+        #emailError, #passwordError, #nicknameError {
+            padding: 1em;
+            margin-top: 1em;
+        }
+    </style>
+    <title>My Info</title>
+</head>
+<body>
+<div class="container-fluid" layout:fragment="content">
+    <h1>My Info</h1>
+    <hr>
+    <form th:action="@{/member/info}" th:object="${member}" method="post" onsubmit="return validateForm();">
+        <!--  username  -->
+        <div class="mb-3">
+            <label th:for="username" class="form-label" aria-describedby="emailHelpBlock"><b>Email address</b></label>
+            <small id="emailHelpBlock" class="text-muted">이메일은 바꿀 수 없습니다.</small>
+            <input type="email" class="form-control" name="username" th:field="*{username}" placeholder="이메일을 입력해주세요"
+                   readonly/>
+            <p class="alert alert-danger" th:if="${ #fields.hasErrors('username')}" th:errors="*{username}"
+               id="emailError" name="emailError">Email Error</p>
+        </div>
+
+        <!-- password -->
+        <div class="mb-3">
+            <label th:for="password" class="form-label" aria-describedby="passwordHelpBlock"><b>Password</b></label>
+            <small id="passwordHelpBlock" class="text-muted">비밀번호는 8자 이상으로 해주세요.</small>
+            <input type="password" class="form-control" name="password" th:field="*{password}" placeholder="비밀번호"/>
+            <p class="alert alert-danger" id="passwordError" name="passwordError" style="display: none"></p>
+        </div>
+        <!-- nickname -->
+        <div class="mb-3">
+            <label th:for="nickname" class="form-label"><b>Nickname</b></label>
+            <input type="text" class="form-control" th:field="*{nickname}" placeholder="이름"/>
+            <p class="alert alert-danger" th:if="${ #fields.hasErrors('nickname') }" th:errors="*{nickname}"
+               id="nicknameError" name="nicknameError" style="display: none"></p>
+        </div>
+        <!-- birth -->
+        <div class="mb-3 dropdown">
+            <label class="form-label" for="birth"><b>Birth</b></label><br/>
+            <div id="birth">
+                <!-- year -->
+                <select class="btn dropdown-toggle" data-toggle="dropdown" th:field="*{year}">
+                    <option class="dropdown-item" value="">년</option>
+                    <th:block th:each="year : ${#numbers.sequence(1970, 2021)}">
+                        <option class="dropdown-item" th:value="${year}" th:text="${year}"></option>
+                    </th:block>
+                </select>
+                <!-- month-->
+                <select class="btn dropdown-toggle" data-toggle="dropdown" th:field="*{month}">
+                    <option class="dropdown-item" value="">월</option>
+                    <th:block th:each="month : ${#numbers.listFormatInteger(#numbers.sequence(1, 12), 2)}">
+                        <option class="dropdown-item" th:value="${month}" th:text="${month}"></option>
+                    </th:block>
+                </select>
+                <!-- day of month -->
+                <select class="btn dropdown-toggle" data-toggle="dropdown" th:field="*{day}">
+                    <option class="dropdown-item" value="">일</option>
+                    <th:block th:each="day : ${#numbers.listFormatInteger(#numbers.sequence(1, 31), 2)}">
+                        <option class="dropdown-item" th:value="${day}" th:text="${day}"></option>
+                    </th:block>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">Back</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,6 +1,9 @@
 package com.example.springsecuritytest.domain.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 @SequenceGenerator(
@@ -11,6 +14,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 무분별한 Entity 생성을 막기 위해 protected
 @Getter
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "MEMBER")
 public class MemberEntity {
     @Id
@@ -35,14 +40,18 @@ public class MemberEntity {
     private String gender;
 
     @Column(length = 4)
+    @ColumnDefault("0")
     private int age;
+
+    @Column(length = 15)
+    private String birth;
 
     @Column(length = 25)
     private String regDate;
 
     @Builder
     public MemberEntity(Long id, String username, String password, String role,
-                        String nickname, String gender, int age, String regDate) {
+                        String nickname, String gender, int age, String birth, String regDate) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -50,6 +59,7 @@ public class MemberEntity {
         this.nickname = nickname;
         this.gender = gender;
         this.age = age;
+        this.birth = birth;
         this.regDate = regDate;
     }
 }

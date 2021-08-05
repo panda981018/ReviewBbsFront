@@ -1,4 +1,47 @@
-function checkForm() {
+// role 선택에 따른 양식 변화
+function changeSignUpForm() {
+
+    document.getElementById('roleDiv').addEventListener('change', function (e) {
+        let target = e.target;
+        const birth = document.getElementById('birthDiv');
+        const gender = document.getElementById('genderDiv');
+
+        switch (target.id) {
+            case 'member' :
+                birth.style.display = 'block';
+                gender.style.display = 'block';
+                break;
+            case 'admin' :
+                birth.style.display = 'none';
+                gender.style.display = 'none';
+                break;
+        }
+    })
+}
+
+// birth validate
+function birthValidate() {
+    document.getElementById('birth').addEventListener('focusout', () => {
+        const year = document.getElementById('year');
+        const month = document.getElementById('month');
+        const dayOfMonth = document.getElementById('day');
+        const birthError = document.getElementById('birthError');
+
+        let selectedYear = year.options[year.selectedIndex].value;
+        let selectedMonth = month.options[month.selectedIndex].value;
+        let selectedDayOfMonth = dayOfMonth.options[dayOfMonth.selectedIndex].value;
+
+        if (selectedYear == ' ' || selectedMonth == ' ' || selectedDayOfMonth == ' ') {
+            birthError.classList.add('alert', 'alert-danger');
+            birthError.innerText = '생년월일을 모두 설정해주세요';
+        } else {
+            birthError.innerText = '';
+            birthError.classList.remove('alert', 'alert-danger');
+        }
+    })
+}
+
+function validateForm() {
 
     const email = document.signUpForm.username;
     const emailError = document.getElementById('emailError');
@@ -38,4 +81,9 @@ function checkForm() {
     }
 
     return true;
+}
+
+window.onload = function () {
+    birthValidate();
+    changeSignUpForm();
 }

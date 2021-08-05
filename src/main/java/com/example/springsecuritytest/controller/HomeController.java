@@ -68,11 +68,13 @@ public class HomeController { // anonymous
 
         if (memberDto.getRole().equals("Admin")) {
             memberDto.setGender("");
-            memberDto.setAge(0);
+            memberDto.setYear(null);
+            memberDto.setMonth(null);
+            memberDto.setDay(null);
         }
 
         memberService.signUp(memberDto);
-        return "redirect/signupsuccess";
+        return "redirect:/";
     }
 
 }

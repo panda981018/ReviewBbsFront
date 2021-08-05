@@ -31,7 +31,7 @@ public class MemberController { // member
     public String showMyInfo(Authentication auth, Model model) throws SQLException { // 세션에서 유지되고 있는 Authentication 객체를 가져옴.
         MemberDto member = memberService.findByUsername(auth.getName());
         model.addAttribute("member", member);
-        return "myinfo";
+        return "myInfo";
     }
 
     // 내정보에서 update 클릭했을 때
@@ -47,7 +47,7 @@ public class MemberController { // member
 
         memberService.updateMember(memberDto);
 
-        return "redirect/memberupdate";
+        return "redirect:/member/home";
     }
 
 

@@ -26,7 +26,6 @@
             transform: translateY(-50%);
         }
     </style>
-    <!-- 스크립트가 들어갈 위치 -->
 </head>
     <body class="bg-light">
         <!-- 공통 header -->
@@ -39,5 +38,8 @@
 
         <!-- 공통 script -->
         <th:block th:replace="fragments/script :: scriptFrag"></th:block>
+
+        <!-- 파일별 스크립트 위치 -->
+        <th:blocck layout:fragment="script"></th:blocck>
     </body>
 </html>

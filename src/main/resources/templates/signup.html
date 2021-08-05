@@ -4,25 +4,17 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
-    <style>
-        #emailError, #passwordError, #nicknameError {
-            padding: 1em;
-            margin-top: 1em;
-        }
-    </style>
+    <link type="text/css" src="/css/signUp.css">
 
-    <th:block layout:fragment="script">
-        <script src="/js/checkForm.js"></script>
-        <script src="/js/changeSignUpForm.js"></script>
-    </th:block>
     <title>Sign Up</title>
 </head>
-<body onload="changeSignUpForm()">
+<body>
 <div class="container" layout:fragment="content">
     <h1>Sign Up</h1>
     <hr>
     <!-- signUpForm은 Controller에서 넘겨준 객체 -->
-    <form name="signUpForm" th:action="@{/signup}" th:object="${memberDto}" method="post" onsubmit="return checkForm();">
+    <form name="signUpForm" th:action="@{/signup}" th:object="${memberDto}" method="post"
+          onsubmit="return validateForm();">
         <!-- role -->
         <div class="mb-3" id="roleDiv">
             <label th:for="role" class="form-label"><b>Role</b></label><br/>
@@ -31,20 +23,21 @@
         </div>
         <!--  email  -->
         <div class="mb-3" id="emailDiv">
-            <label th:for="signUpEmail" class="form-label" aria-describedby="emailHelpBlock"><b>Email address</b></label>
+            <label th:for="signUpEmail" class="form-label" aria-describedby="emailHelpBlock"><b>Email
+                address</b></label>
             <small id="emailHelpBlock" class="text-muted">이메일 형식으로 입력해주세요.</small>
-            <input type="email" class="form-control" id="signUpEmail" name="username" placeholder="이메일을 입력해주세요" autocomplete="off"/>
+            <input type="email" class="form-control" id="signUpEmail" name="username" placeholder="이메일을 입력해주세요"
+                   autocomplete="off"/>
             <p class="alert alert-danger" th:if="${ #fields.hasErrors('username')}" th:errors="*{username}"
                id="emailError" name="emailError">Email Error</p>
         </div>
         <!-- password -->
         <div class="mb-3" id="passwordDiv">
-            <label th:for="signUpPassword" class="form-label" aria-describedby="passwordHelpBlock"><b>Password</b></label>
+            <label th:for="signUpPassword" class="form-label"
+                   aria-describedby="passwordHelpBlock"><b>Password</b></label>
             <small id="passwordHelpBlock" class="text-muted">비밀번호는 8자 이상으로 해주세요.</small>
             <input type="password" class="form-control" id="signUpPassword" name="password" placeholder="비밀번호"/>
-            <div>
-                <p class="alert alert-danger" id="passwordError" name="passwordError" style="display: none"></p>
-            </div>
+            <p class="alert alert-danger" id="passwordError" name="passwordError" style="display: none"></p>
         </div>
         <!-- nickname -->
         <div class="mb-3" id="nicknameDiv">
@@ -53,24 +46,45 @@
             <p class="alert alert-danger" th:if="${ #fields.hasErrors('nickname') }" th:errors="*{nickname}"
                id="nicknameError" name="nicknameError" style="display: none"></p>
         </div>
-        <!-- age -->
-        <div class="mb-3 dropdown" id="ageDiv">
-            <label th:for="age" class="form-label"><b>Age</b></label><br/>
-            <select class="btn dropdown-toggle" data-toggle="dropdown" th:field="*{age}">
-                <option class="dropdown-item" th:value="23" value="23" selected>23</option>
-                <option class="dropdown-item" th:value="24" value="24">24</option>
-                <option class="dropdown-item" th:value="25" value="25">25</option>
-                <option class="dropdown-item" th:value="26" value="26">26</option>
-            </select>
+        <!-- birth -->
+        <div class="mb-3 dropdown" id="birthDiv">
+            <label class="form-label" for="birth"><b>Birth</b></label><br/>
+            <div id="birth">
+                <!-- year -->
+                <select class="btn dropdown-toggle" data-toggle="dropdown" id="year" name="year">
+                    <option class="dropdown-item" value=" ">년</option>
+                    <th:block th:each="year : ${#numbers.sequence(1970, 2021)}">
+                        <option class="dropdown-item" th:value="${year}" th:text="${year}"></option>
+                    </th:block>
+                </select>
+                <!-- month-->
+                <select class="btn dropdown-toggle" data-toggle="dropdown" id="month" name="month">
+                    <option class="dropdown-item" value=" ">월</option>
+                    <th:block th:each="month : ${#numbers.listFormatInteger(#numbers.sequence(1, 12), 2)}">
+                        <option class="dropdown-item" th:value="${month}" th:text="${month}"></option>
+                    </th:block>
+                </select>
+                <!-- day of month -->
+                <select class="btn dropdown-toggle" data-toggle="dropdown" id="day" name="day">
+                    <option class="dropdown-item" value=" ">일</option>
+                    <th:block th:each="day : ${#numbers.listFormatInteger(#numbers.sequence(1, 31), 2)}">
+                        <option class="dropdown-item" th:value="${day}" th:text="${day}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <div id="birthError"></div>
         </div>
         <!-- Gender -->
         <div class="mb-3" id="genderDiv">
             <label th:for="gender" class="form-label"><b>Gender</b></label>
-            <input type="radio" name="gender" id="male" th:name="gender" value="Male" checked/> Male
-            <input type="radio" name="gender" id="female" th:name="gender" value="Female"/> Female
+            <input type="radio" name="gender" id="male" th:name="gender" value="Male" checked> Male
+            <input type="radio" name="gender" id="female" th:name="gender" value="Female"> Female
         </div>
         <button type="submit" class="btn btn-primary">Sign Up</button>
     </form>
 </div>
+<th:block layout:fragment="script">
+    <script src="/js/checkForm.js"></script>
+</th:block>
 </body>
 </html>
