@@ -12,8 +12,7 @@ import org.springframework.validation.Validator;
 @RequiredArgsConstructor
 public class MemberDtoValidator implements Validator {
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public boolean supports(Class<?> aClass) {
@@ -23,14 +22,12 @@ public class MemberDtoValidator implements Validator {
     @Override
     public void validate(Object object, Errors errors) {
         MemberDto memberDto = (MemberDto) object;
-
+        System.out.println("[Validator] MemberDto: " + memberDto);
         if (memberRepository.existsByUsername(memberDto.getUsername())) {
             errors.rejectValue("username", "invalid username", "이미 사용 중인 아이디입니다.");
         }
-        if (memberRepository.countByNickname(memberDto.getNickname()) > 0) {
-            int counting = memberRepository.countByNickname(memberDto.getNickname());
-            System.out.println("[Validator] nickname : " + memberDto.getNickname() + "\ncount : " + counting);
-            errors.rejectValue("nickname", "invalid nickname", "이미 사용 중인 닉네임입니다.");
+        if (memberRepository.existsByNickname(memberDto.getNickname())) {
+            errors.rejectValue("nickname", "invalid nickname", "이미 존재하는 닉네임입니다.");
         }
     }
 }
