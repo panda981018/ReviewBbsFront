@@ -1,6 +1,7 @@
 package com.example.springsecuritytest.dto;
 
 import com.example.springsecuritytest.domain.entity.MemberEntity;
+import com.example.springsecuritytest.service.Role;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -29,7 +30,7 @@ public class MemberDto {
     private String regDate;
 
     public MemberEntity toEntity() {
-        if (this.year == null) { // admin
+        if (role.equals(Role.ADMIN.getValue())) { // admin
             return MemberEntity.builder()
                     .id(id)
                     .username(username)

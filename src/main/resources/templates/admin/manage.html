@@ -23,14 +23,16 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="member : ${members}">
-            <td th:text="${member.id}"></td>
-            <td th:text="${member.username}"></td>
-            <td th:text="${member.nickname}"></td>
-            <td th:text="${member.role}"></td>
-            <td th:text="${member.year} + '-' + ${member.month} + '-' + ${member.day}"></td>
-            <td th:text="${member.gender}"></td>
-            <td th:text="${member.regDate}"></td>
+        <tr th:each="member : ${members}" th:onclick="|location.href='@{/admin/info(id=${member.id})}'|">
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.username}"></td>
+                <td th:text="${member.nickname}"></td>
+                <td th:text="${member.role}"></td>
+                <td th:if="${member.role == 'ROLE_MEMBER'}"
+                    th:text="${member.year} + '-' + ${member.month} + '-' + ${member.day}"></td>
+                <td th:unless="${member.role == 'ROLE_MEMBER'}"></td>
+                <td th:text="${member.gender}"></td>
+                <td th:text="${member.regDate}"></td>
         </tr>
         </tbody>
     </table>

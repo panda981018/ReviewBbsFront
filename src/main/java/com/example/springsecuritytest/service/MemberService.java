@@ -4,7 +4,6 @@ import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.domain.repository.MemberQueryRepository;
 import com.example.springsecuritytest.domain.repository.MemberRepository;
 import com.example.springsecuritytest.dto.MemberDto;
-import javassist.compiler.Parser;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,95 +27,62 @@ import java.util.Optional;
 @AllArgsConstructor
 public class MemberService implements UserDetailsService {
 
-    private PasswordEncoder passwordEncoder;
-    private MemberRepository memberRepository;
-    private MemberQueryRepository memberQueryRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
+    private final MemberQueryRepository memberQueryRepository;
 
-    public void signUp(MemberDto memberDto) {
+    public void signUp(MemberDto memberDto) { // 회원가입
 
         LocalDateTime now = LocalDateTime.now();
         String time = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String cryptoPassword = passwordEncoder.encode(memberDto.getPassword());
 
-        MemberDto memberInfo = MemberDto.builder()
-                .username(memberDto.getUsername())
-                .password(passwordEncoder.encode(memberDto.getPassword()))
-                .nickname(memberDto.getNickname())
-                .gender(memberDto.getGender())
-                .year(memberDto.getYear())
-                .month(memberDto.getMonth())
-                .day(memberDto.getDay())
-                .role(memberDto.getRole())
-                .regDate(time)
-                .build();
+        memberDto.setPassword(cryptoPassword);
+        memberDto.setRegDate(time);
 
-        memberRepository.save(memberInfo.toEntity());
+        memberRepository.save(memberDto.toEntity());
     }
 
-    public MemberDto findByUsername(String username) throws SQLException {
+    public MemberDto findByUsername(String username) throws SQLException { // 이름으로 회원정보 get
 
         Optional<MemberEntity> memberEntity = memberRepository.findByUsername(username);
         if(memberEntity.isPresent()) {
-            MemberEntity user = memberEntity.get();
-            String[] birth = user.getBirth().split("-");
-            MemberDto memberDto = MemberDto.builder()
-                    .id(user.getId())
-                    .username(user.getUsername())
-                    .password(user.getPassword())
-                    .role(user.getRole())
-                    .gender(user.getGender())
-                    .nickname(user.getNickname())
-                    .year(birth[0])
-                    .month(birth[1])
-                    .day(birth[2])
-                    .regDate(user.getRegDate())
-                    .build();
-
-            return memberDto;
+            return memberEntity.get().toDto();
         } else {
             throw new SQLException();
         }
     }
 
-    public void updateMember(MemberDto memberDto) throws SQLException {
-
-        Optional<MemberEntity> memberData = memberRepository.findByUsername(memberDto.getUsername());
-
-        if (memberData.isPresent()) {
-            MemberDto afterMem;
-            MemberEntity member = memberData.get();
-
-            if (memberDto.getPassword().isEmpty()) {
-                afterMem = MemberDto.builder()
-                        .id(member.getId())
-                        .username(memberDto.getUsername())
-                        .password(memberData.get().getPassword())
-                        .nickname(memberDto.getNickname())
-                        .role(member.getRole())
-                        .gender(member.getGender())
-                        .year(memberDto.getYear())
-                        .month(memberDto.getMonth())
-                        .day(memberDto.getDay())
-                        .regDate(member.getRegDate())
-                        .build();
-            } else {
-                afterMem = MemberDto.builder()
-                        .id(member.getId())
-                        .username(memberDto.getUsername())
-                        .password(passwordEncoder.encode(memberDto.getPassword()))
-                        .nickname(memberDto.getNickname())
-                        .role(member.getRole())
-                        .gender(member.getGender())
-                        .year(memberDto.getYear())
-                        .month(memberDto.getMonth())
-                        .day(memberDto.getDay())
-                        .regDate(member.getRegDate())
-                        .build();
-            }
-            memberRepository.save(afterMem.toEntity());
+    public MemberDto findById(Long id) throws SQLException {
+        Optional<MemberEntity> memberEntity = memberRepository.findById(id);
+        if (memberEntity.isPresent()) {
+            return memberEntity.get().toDto();
         } else {
             throw new SQLException();
         }
-        //memberQueryRepository.updateUserInfo(afterMem);
+    }
+
+    public void updateMember(MemberDto memberDto) { // 회원 정보 update
+
+        Optional<MemberEntity> memberEntity = memberRepository.findByUsername(memberDto.getUsername());
+
+        if (memberEntity.isPresent()) {
+            MemberEntity member = memberEntity.get();
+
+            if (memberDto.getPassword().isEmpty()) { // 비밀번호를 수정하지 않은 경우
+                memberDto.setId(member.getId());
+                memberDto.setPassword(member.getPassword());
+            } else { // 비밀번호를 수정한 경우
+                String cryptoPassword = passwordEncoder.encode(memberDto.getPassword());
+                memberDto.setId(member.getId());
+                memberDto.setPassword(cryptoPassword);
+            }
+            memberDto.setRole(member.getRole());
+            memberDto.setGender(member.getGender());
+            memberDto.setRegDate(member.getRegDate());
+
+            memberRepository.save(memberDto.toEntity());
+        }
 
     }
 
@@ -128,7 +95,7 @@ public class MemberService implements UserDetailsService {
             MemberEntity user = memberEntity.get();
 
             List<GrantedAuthority> authorities = new ArrayList<>();
-            if (user.getRole().equals("Admin")) { // admin role을 가지고 있다면
+            if (user.getRole().equals(Role.ADMIN.getValue())) { // admin role을 가지고 있다면
                 authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
             } else { // member role을 가지고 있다면
                 authorities.add(new SimpleGrantedAuthority(Role.MEMBER.getValue()));
@@ -140,40 +107,17 @@ public class MemberService implements UserDetailsService {
         }
     }
 
-    public List<MemberDto> findAllMembers() {
+    public List<MemberDto> findAllMembers() { // 모든 멤버들 리스트 출력
 
         List<MemberEntity> members = memberRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         List<MemberDto> memberDtoList = new ArrayList<>();
 
         for (MemberEntity member : members) {
-            MemberDto dto;
-            if (member.getBirth() != null) { // member
-                String[] birth = member.getBirth().split("-");
-                dto = MemberDto.builder()
-                        .id(member.getId())
-                        .username(member.getUsername())
-                        .nickname(member.getNickname())
-                        .gender(member.getGender())
-                        .role(member.getRole())
-                        .regDate(member.getRegDate())
-                        .year(birth[0])
-                        .month(birth[1])
-                        .day(birth[2])
-                        .build();
-            } else { // admin
-                dto = MemberDto.builder()
-                        .id(member.getId())
-                        .username(member.getUsername())
-                        .nickname(member.getNickname())
-                        .gender(member.getGender())
-                        .role(member.getRole())
-                        .regDate(member.getRegDate())
-                        .build();
-            }
-
-
+            MemberDto dto = member.toDto();
             memberDtoList.add(dto);
         }
+
+        System.out.println(memberDtoList);
         return memberDtoList;
     }
 }

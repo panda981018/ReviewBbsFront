@@ -3,8 +3,8 @@ package com.example.springsecuritytest.controller;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.MemberService;
 import com.example.springsecuritytest.service.Role;
-import com.example.springsecuritytest.validate.MemberDtoValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.springsecuritytest.validate.SignUpValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -18,17 +18,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController { // anonymous
 
-    @Autowired
-    private MemberService memberService;
-
-    @Autowired
-    private MemberDtoValidator memberDtoValidator;
+    private final MemberService memberService;
+    private final SignUpValidator signUpValidator;
 
     @InitBinder("memberDto")
     public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(memberDtoValidator);
+        webDataBinder.addValidators(signUpValidator);
     }
 
     // 메인 페이지
@@ -61,12 +59,13 @@ public class HomeController { // anonymous
     // 회원가입 처리
     @PostMapping("/signup")
     public String signUp(@Valid MemberDto memberDto, Errors errors) {
-        System.out.println("MemberDto:" + memberDto);
+
+        System.out.println("[HomeController] MemberDto:" + memberDto);
+
         if (errors.hasErrors()) {
             return "signup";
         } else {
-
-            if (memberDto.getRole().equals("Admin")) {
+            if (memberDto.getRole().equals(Role.ADMIN.getValue())) {
                 memberDto.setGender("");
                 memberDto.setYear(null);
                 memberDto.setMonth(null);

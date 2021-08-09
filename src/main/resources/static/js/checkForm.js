@@ -1,4 +1,3 @@
-
 // role 선택에 따른 양식 변화
 function changeSignUpForm() {
 
@@ -35,7 +34,7 @@ function emailValidate() {
             emailError.classList.add('error');
             emailError.innerText = '이메일은 필수 입력사항입니다.';
         } else if (email.value.indexOf('@') == -1
-        || email.value.indexOf('.') == -1) {
+            || email.value.indexOf('.') == -1) {
             if (emailError.classList.contains('valid')) {
                 emailError.classList.remove('valid');
             }
@@ -51,18 +50,21 @@ function emailValidate() {
     })
 }
 
-function passwordValidate() {
+function passwordValidate(view) {
     const password = document.getElementById('signUpPassword');
     const passwordError = document.getElementById('passwordError');
 
     password.addEventListener('focusout', () => {
-        if (password.value == '') {
-            if (passwordError.classList.contains('valid')) {
-                passwordError.classList.remove('valid');
+        if (view != 'myInfo') {
+            if (password.value == '') {
+                if (passwordError.classList.contains('valid')) {
+                    passwordError.classList.remove('valid');
+                }
+                passwordError.classList.add('error');
+                passwordError.innerText = '비밀번호는 필수 입력사항입니다.';
             }
-            passwordError.classList.add('error');
-            passwordError.innerText = '비밀번호는 필수 입력사항입니다.';
-        } else if (password.value.length > 0 && password.value.length < 8) {
+        }
+        if (password.value.length > 0 && password.value.length < 8) {
             if (passwordError.classList.contains('valid')) {
                 passwordError.classList.remove('valid');
             }
@@ -155,13 +157,5 @@ function validateForm() {
     } else {
         return true;
     }
-}
-
-window.onload = function () {
-    emailValidate();    // email
-    passwordValidate(); // password
-    nicknameValidate(); // nickname
-    birthValidate();    // birth
-    changeSignUpForm(); // role
 }
 

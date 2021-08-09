@@ -1,5 +1,7 @@
 package com.example.springsecuritytest.domain.entity;
 
+import com.example.springsecuritytest.dto.MemberDto;
+import com.example.springsecuritytest.service.Role;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -30,7 +32,7 @@ public class MemberEntity {
     @Column(length = 100, nullable = false)
     private String password;
 
-    @Column(length = 10, nullable = false)
+    @Column(length = 20, nullable = false)
     private String role;
 
     @Column(length = 30, nullable = false)
@@ -48,6 +50,35 @@ public class MemberEntity {
 
     @Column(length = 25)
     private String regDate;
+
+    public MemberDto toDto() {
+        if (role.equals(Role.MEMBER.getValue())) { // member
+            String[] str = birth.split("-");
+
+            return MemberDto.builder()
+                    .id(id)
+                    .username(username)
+                    .password(password)
+                    .nickname(nickname)
+                    .role(role)
+                    .gender(gender)
+                    .year(str[0])
+                    .month(str[1])
+                    .day(str[2])
+                    .regDate(regDate)
+                    .build();
+        } else { // admin
+            return MemberDto.builder()
+                    .id(id)
+                    .username(username)
+                    .nickname(nickname)
+                    .gender(gender)
+                    .role(role)
+                    .regDate(regDate)
+                    .build();
+        }
+    }
+
 
     @Builder
     public MemberEntity(Long id, String username, String password, String role,
