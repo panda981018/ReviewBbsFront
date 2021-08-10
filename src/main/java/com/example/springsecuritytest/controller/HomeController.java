@@ -11,11 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.LinkedHashMap;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,6 +47,21 @@ public class HomeController { // anonymous
         return "login";
     }
 
+    @PostMapping("/check/email")
+    @ResponseBody
+    public Object checkEmail(@RequestBody Object usernameObj) {
+        LinkedHashMap<String, String> obj = (LinkedHashMap<String, String>) usernameObj;
+
+        return memberService.checkEmail(obj.get("username"));
+    }
+
+    @PostMapping("/check/nickname")
+    @ResponseBody
+    public Object checkNickname(@RequestBody Object nicknameObj) {
+        LinkedHashMap<String, String> obj = (LinkedHashMap<String, String>) nicknameObj;
+        return memberService.checkNickname(obj.get("nickname"));
+    }
+
     // 회원가입 페이지
     @GetMapping("/signup")
     public String showSignUpPage(Model model) {
@@ -59,8 +73,6 @@ public class HomeController { // anonymous
     // 회원가입 처리
     @PostMapping("/signup")
     public String signUp(@Valid MemberDto memberDto, Errors errors) {
-
-        System.out.println("[HomeController] MemberDto:" + memberDto);
 
         if (errors.hasErrors()) {
             return "signup";

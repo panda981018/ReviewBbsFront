@@ -23,31 +23,53 @@ function changeSignUpForm() {
 
 // email validate
 function emailValidate() {
-    const email = document.getElementById('signUpEmail');
-    const emailError = document.getElementById('emailError');
-
-    email.addEventListener('focusout', () => {
-        if (email.value == '') {
-            if (emailError.classList.contains('valid')) {
-                emailError.classList.remove('valid');
+    $('#signUpEmail').on('focusout', function () {
+        const username = $('#signUpEmail').val();
+        const emailError = $('#emailError');
+        if (username == '') { // 비어있을 때
+            if (emailError.hasClass('valid')) {
+                emailError.removeClass('valid');
             }
-            emailError.classList.add('error');
-            emailError.innerText = '이메일은 필수 입력사항입니다.';
-        } else if (email.value.indexOf('@') == -1
-            || email.value.indexOf('.') == -1) {
-            if (emailError.classList.contains('valid')) {
-                emailError.classList.remove('valid');
+            emailError.addClass('error');
+            emailError.text('이메일은 필수 항목입니다.');
+        }else if (username.indexOf('@') == -1
+            || username.indexOf('.') == -1) { // @ 혹은 .이 없을 때
+            if ( emailError.hasClass('valid')) {
+                emailError.removeClass('valid');
             }
-            emailError.classList.add('error');
-            emailError.innerText = '이메일 형식을 지켜주십시오.';
-        } else {
-            if (emailError.classList.contains('error')) {
-                emailError.classList.remove('error');
-            }
-            emailError.innerText = '';
-            emailError.classList.add('valid');
-        }
-    })
+            emailError.addClass('error');
+            emailError.text('이메일 형식을 지켜주십시오.');
+        } else { // 비어있지도 않고 이메일 형식일 경우
+            $.ajax({
+                type: "POST",
+                url: "/check/email",
+                // JSON.stringify([JSON 객체]) : JSON -> String
+                // JSON.parse([String]) : String -> JSON
+                data: JSON.stringify({"username": username}),
+                contentType: "application/json; charset=utf-8;",
+                dataType: "JSON"
+            })
+                .done(function (result) {
+                console.log(result);
+                if (result.usernameResult == true) {
+                    if (emailError.hasClass('valid')) {
+                        emailError.removeClass('valid');
+                    }
+                    emailError.addClass('error');
+                    emailError.text('중복된 이메일입니다. 다른 이메일을 입력해주세요');
+                } else {
+                    if (emailError.hasClass('error')) {
+                        emailError.removeClass('error');
+                    }
+                    emailError.text('');
+                    emailError.addClass('valid');
+                }
+            })
+                .fail(function (xhr, status, error) {
+                    alert("error: " + error + ", status : " + status + "\n오류가 발생했습니다.");
+                });
+        } // else 끝
+    }); // 이벤트 리스너 함수 끝
 }
 
 function passwordValidate(view) {
@@ -79,33 +101,80 @@ function passwordValidate(view) {
 
 // nickname validate 성공
 function nicknameValidate() {
-    let nickname = document.getElementById('nickname');
-    let nicknameError = document.getElementById('nicknameError');
 
-    nickname.addEventListener('focusout', () => {
-        if (nickname.value == '') { // 비어있으면!
-            if (nicknameError.classList.contains('valid')) {
-                nicknameError.classList.remove('valid');
+    $('#nickname').on('focusout', function () {
+        const nickname = $('#nickname').val();
+        const nicknameError = $('#nicknameError');
+
+        if (nickname == '') {
+            if (nicknameError.hasClass('valid')) {
+                nicknameError.removeClass('valid');
             }
-            nicknameError.classList.add('error');
-            nicknameError.innerText = '닉네임은 필수 입력사항입니다.';
-        } else if (nickname.value.length < 5) {
-            if (nicknameError.classList.contains('valid')) {
-                nicknameError.classList.remove('valid');
+            nicknameError.addClass('error');
+            nicknameError.text('닉네임은 필수 항목입니다.');
+        } else if (nickname.length < 4) {
+            if (nicknameError.hasClass('valid')) {
+                nicknameError.removeClass('valid');
             }
-            nicknameError.classList.add('error');
-            nicknameError.innerText = '닉네임은 5자 이상으로 해주세요';
+            nicknameError.addClass('error');
+            nicknameError.text('닉네임은 4자 이상으로 해주세요.');
         } else {
-            if (nicknameError.classList.contains('error')) {
-                nicknameError.innerText = '';
-                nicknameError.classList.remove('error');
-                nicknameError.classList.add('valid');
-            } else {
-                nicknameError.innerText = '';
-                nicknameError.classList.add('valid');
-            }
-        }
-    })
+            $.ajax({
+                type: 'POST',
+                url: '/check/nickname',
+                data: JSON.stringify({ "nickname" : nickname }),
+                contentType: "application/json; charset=utf-8;",
+                dataType: 'JSON'
+            })
+                .done(function (result) {
+                    console.log(result);
+                    if (result.nicknameResult == true) {
+                        if (nicknameError.hasClass('valid')) {
+                            nicknameError.removeClass('valid');
+                        }
+                        nicknameError.addClass('error');
+                        nicknameError.text('중복된 닉네임입니다. 다른 닉네임을 입력해주세요.');
+                    } else {
+                        if (nicknameError.hasClass('error')) {
+                            nicknameError.removeClass('error');
+                        }
+                        nicknameError.text('');
+                        nicknameError.addClass('valid');
+                    }
+                })
+                .fail(function (xhr, status, error) {
+                    alert("error: " + error + ", status : " + status + "\n오류가 발생했습니다.");
+                })
+        } // else 끝
+    }) // 이벤트 리스너 끝
+
+    // let nickname = document.getElementById('nickname');
+    // let nicknameError = document.getElementById('nicknameError');
+    //
+    // nickname.addEventListener('focusout', () => {
+    //     if (nickname.value == '') { // 비어있으면!
+    //         if (nicknameError.classList.contains('valid')) {
+    //             nicknameError.classList.remove('valid');
+    //         }
+    //         nicknameError.classList.add('error');
+    //         nicknameError.innerText = '닉네임은 필수 입력사항입니다.';
+    //     } else if (nickname.value.length < 5) {
+    //         if (nicknameError.classList.contains('valid')) {
+    //             nicknameError.classList.remove('valid');
+    //         }
+    //         nicknameError.classList.add('error');
+    //         nicknameError.innerText = '닉네임은 5자 이상으로 해주세요';
+    //     } else {
+    //         if (nicknameError.classList.contains('error')) {
+    //             nicknameError.innerText = '';
+    //             nicknameError.classList.remove('error');
+    //             nicknameError.classList.add('valid');
+    //         } else {
+    //             nicknameError.innerText = '';
+    //             nicknameError.classList.add('valid');
+    //         }
+    //     }
+    // })
 }
 
 // birth validate 성공

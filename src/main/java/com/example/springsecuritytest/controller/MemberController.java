@@ -3,21 +3,19 @@ package com.example.springsecuritytest.controller;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.MemberService;
 import com.example.springsecuritytest.validate.MyInfoValidator;
-import com.example.springsecuritytest.validate.SignUpValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 @Controller
 @AllArgsConstructor
@@ -44,7 +42,6 @@ public class MemberController { // member
     @GetMapping("/info")
     public String showMyInfo(Authentication auth, Model model) throws SQLException { // 세션에서 유지되고 있는 Authentication 객체를 가져옴.
         MemberDto member = memberService.findByUsername(auth.getName());
-        System.out.println("[MemberController -> showMyInfo] memberDto : " + member);
         model.addAttribute("memberDto", member);
         return "myInfo";
     }

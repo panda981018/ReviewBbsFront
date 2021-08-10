@@ -37,7 +37,7 @@
             <label th:for="signUpPassword" class="form-label"
                    aria-describedby="passwordHelpBlock"><b>Password</b></label>
             <small id="passwordHelpBlock" class="text-muted">비밀번호는 8자 이상으로 해주세요.</small>
-            <input type="password" class="form-control" id="signUpPassword" name="password" placeholder="비밀번호"/>
+            <input type="password" class="form-control" id="signUpPassword" name="password" placeholder="비밀번호" autocomplete="false"/>
             <p class="mt-3 alert alert-danger valid" id="passwordError"></p>
         </div>
         <!-- nickname -->
@@ -86,6 +86,7 @@
     </form>
 </div>
 <th:block layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="/js/checkForm.js"></script>
     <script>
         window.onload = function () {

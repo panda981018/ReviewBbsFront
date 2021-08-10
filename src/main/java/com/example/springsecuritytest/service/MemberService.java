@@ -15,11 +15,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,6 +62,22 @@ public class MemberService implements UserDetailsService {
         }
     }
 
+    // 이메일 중복 체크 함수
+    public HashMap<String, Object> checkEmail(String username) {
+        boolean result = memberRepository.existsByUsername(username);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("usernameResult", result);
+        return map;
+    }
+
+    // 닉네임 중복 체크 함수
+    public Object checkNickname(String nickname) {
+        boolean result = memberRepository.existsByNickname(nickname);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("nicknameResult", result);
+        return map;
+    }
+
     public void updateMember(MemberDto memberDto) { // 회원 정보 update
 
         Optional<MemberEntity> memberEntity = memberRepository.findByUsername(memberDto.getUsername());
@@ -83,7 +99,6 @@ public class MemberService implements UserDetailsService {
 
             memberRepository.save(memberDto.toEntity());
         }
-
     }
 
     @Override
@@ -116,8 +131,6 @@ public class MemberService implements UserDetailsService {
             MemberDto dto = member.toDto();
             memberDtoList.add(dto);
         }
-
-        System.out.println(memberDtoList);
         return memberDtoList;
     }
 }

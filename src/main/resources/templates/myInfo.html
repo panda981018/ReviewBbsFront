@@ -11,7 +11,7 @@
 <div class="container" layout:fragment="content">
     <h1>My Info</h1>
     <hr>
-    <form th:action="@{/member/info}" th:object="${memberDto}" method="post" onsubmit="return validateForm();">
+    <form th:action="@{/member/info}" th:object="${member}" method="post" onsubmit="return validateForm();">
 
         <input type="hidden" th:field="*{id}">
 
