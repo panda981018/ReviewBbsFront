@@ -10,10 +10,10 @@
 </head>
 <body>
 <div class="container" layout:fragment="content">
-    <h1>Sign Up</h1>
+    <h2>Sign Up</h2>
     <hr>
     <!-- signUpForm은 Controller에서 넘겨준 객체 -->
-    <form id="signUpForm" name="signUpForm" th:action="@{/signup}" th:object="${memberDto}" method="post"
+    <form class="form-group" id="signUpForm" name="signUpForm" th:action="@{/signup}" th:object="${memberDto}" method="post"
           onsubmit="return validateForm();">
         <!-- role -->
         <div class="mb-3" id="roleDiv">
@@ -53,21 +53,21 @@
             <label class="form-label" for="birth"><b>Birth</b></label><br/>
             <div id="birth">
                 <!-- year -->
-                <select class="btn dropdown-toggle" data-toggle="dropdown" id="selectYear" name="year">
+                <select class="btn dropdown-toggle form-select-button" data-toggle="dropdown" id="selectYear" name="year">
                     <option class="dropdown-item" value="">년</option>
-                    <th:block th:each="year : ${#numbers.sequence(1970, 2021)}">
+                    <th:block th:each="year : ${#numbers.sequence(1970, #dates.year(#dates.createNow()))}">
                         <option class="dropdown-item" th:value="${year}" th:text="${year}"></option>
                     </th:block>
                 </select>
                 <!-- month-->
-                <select class="btn dropdown-toggle" data-toggle="dropdown" id="selectMonth" name="month">
+                <select class="btn dropdown-toggle form-select-button" data-toggle="dropdown" id="selectMonth" name="month">
                     <option class="dropdown-item" value="">월</option>
                     <th:block th:each="month : ${#numbers.listFormatInteger(#numbers.sequence(1, 12), 2)}">
                         <option class="dropdown-item" th:value="${month}" th:text="${month}"></option>
                     </th:block>
                 </select>
                 <!-- day of month -->
-                <select class="btn dropdown-toggle" data-toggle="dropdown" id="selectDay" name="day">
+                <select class="btn dropdown-toggle form-select-button" data-toggle="dropdown" id="selectDay" name="day">
                     <option class="dropdown-item" value="">일</option>
                     <th:block th:each="day : ${#numbers.listFormatInteger(#numbers.sequence(1, 31), 2)}">
                         <option class="dropdown-item" th:value="${day}" th:text="${day}"></option>
@@ -77,7 +77,7 @@
             <div id="birthError" class="mt-3 valid"></div>
         </div>
         <!-- Gender -->
-        <div class="mb-3 valid" id="genderDiv">
+        <div class="mb-3" id="genderDiv">
             <label th:for="gender" class="form-label"><b>Gender</b></label>
             <input type="radio" name="gender" id="male" th:name="gender" value="Male" checked> Male
             <input type="radio" name="gender" id="female" th:name="gender" value="Female"> Female
@@ -91,6 +91,7 @@
     <script>
         window.onload = function () {
             emailValidate();    // email
+            passwordTooltip();
             passwordValidate('signUp'); // password
             nicknameValidate(); // nickname
             birthValidate();    // birth
