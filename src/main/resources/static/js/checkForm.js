@@ -47,11 +47,11 @@ function emailValidate() {
             })
                 .done(function (result) {
                 console.log(result);
-                if (result.usernameResult == true) {
+                if (result.usernameResult === true) { // 존재한다면
                     emailError.removeClass('valid');
                     emailError.addClass('error');
                     emailError.text('중복된 이메일입니다. 다른 이메일을 입력해주세요');
-                } else {
+                } else { // 존재하지 않는다면
                     emailError.removeClass('error');
                     emailError.text('');
                     emailError.addClass('valid');
@@ -67,7 +67,7 @@ function emailValidate() {
 function passwordValidate(view) {
     const passwordObj = $('#signUpPassword');
     const passwordError = $('#passwordError');
-    // 특수문자 최소 1개이상, 영대소문자와 숫자는 3개 이상이 포함, 총 8 ~ 20글자
+
     const reg = /(?=.*[^a-zA-Z0-9\s])(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}/g;
 
     passwordObj.on('focusout', function () {
@@ -79,8 +79,8 @@ function passwordValidate(view) {
         passwordObj.removeAttr('data-html');
         passwordObj.removeAttr('onmouseover');
 
-        if (view != 'myInfo') {
-            if (password == '') {
+        if (view !== 'myInfo') {
+            if (password === '') {
                 passwordError.removeClass('valid');
                 passwordError.addClass('error');
                 passwordError.text('비밀번호는 필수 입력사항입니다.');
@@ -107,6 +107,7 @@ function passwordTooltip() {
         passwordObj.attr('title', '<b>비밀번호 설정 조건</b><br>' +
             '<small>영문, 숫자, 특수문자를 최소 1개 이상 포함</small><br>' +
             '<small>8자 이상 20자 이하</small>');
+        passwordObj.attr('onmouseover', "title=''");
         passwordObj.tooltip({
             animation: true,
             html: true,
@@ -114,7 +115,7 @@ function passwordTooltip() {
             placement: 'bottom',
             trigger: 'focus'
         });
-        passwordObj.attr('onmouseover', "title=''");
+
     })
 }
 

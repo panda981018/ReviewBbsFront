@@ -54,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // authorizeRequests() : HttpServletRequest에 따라 접근을 제한함.
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/member/info").hasAnyRole("ADMIN", "MEMBER")
                 .antMatchers("/member/**").hasRole("MEMBER")
                 .antMatchers("/**").permitAll()
                 .and()

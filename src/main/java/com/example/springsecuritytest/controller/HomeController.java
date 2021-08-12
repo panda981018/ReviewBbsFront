@@ -14,6 +14,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 @Controller
@@ -50,15 +51,14 @@ public class HomeController { // anonymous
     @PostMapping("/check/email")
     @ResponseBody
     public Object checkEmail(@RequestBody Object usernameObj) {
-        LinkedHashMap<String, String> obj = (LinkedHashMap<String, String>) usernameObj;
-
+        HashMap<String, String> obj = (HashMap<String, String>) usernameObj;
         return memberService.checkEmail(obj.get("username"));
     }
 
     @PostMapping("/check/nickname")
     @ResponseBody
     public Object checkNickname(@RequestBody Object nicknameObj) {
-        LinkedHashMap<String, String> obj = (LinkedHashMap<String, String>) nicknameObj;
+        HashMap<String, String> obj = (HashMap<String, String>) nicknameObj;
         return memberService.checkNickname(obj.get("nickname"));
     }
 
