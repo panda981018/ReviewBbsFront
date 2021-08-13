@@ -1,4 +1,4 @@
-package com.example.springsecuritytest.service;
+package com.example.springsecuritytest.enumclass;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,7 @@
 package com.example.springsecuritytest.controller;
 
 import com.example.springsecuritytest.dto.MemberDto;
+import com.example.springsecuritytest.enumclass.Role;
 import com.example.springsecuritytest.service.MemberService;
 import com.example.springsecuritytest.validate.MyInfoValidator;
 import lombok.AllArgsConstructor;
@@ -24,12 +25,6 @@ public class MemberController { // member
 
     private final MemberService memberService;
 
-//    private final MyInfoValidator myInfoValidator;
-//    @InitBinder("memberDto")
-//    public void initBinder(WebDataBinder webDataBinder) {
-//        webDataBinder.addValidators(myInfoValidator);
-//    }
-
     @GetMapping("/home")
     public String memberHome(HttpSession session) {
         System.out.println(session.getId());
@@ -50,9 +45,9 @@ public class MemberController { // member
 
         memberService.updateMember(memberDto);
 
-        if (auth.getAuthorities().equals("ROLE_ADMIN")) {
+        if (auth.getAuthorities().equals(Role.ADMIN.getValue())) {
             return "redirect:/admin/home";
-        } else if (auth.getAuthorities().equals("ROLE_MEMBER")) {
+        } else if (auth.getAuthorities().equals(Role.MEMBER.getValue())) {
             return "redirect:/member/home";
         } else {
             return "redirect:/";

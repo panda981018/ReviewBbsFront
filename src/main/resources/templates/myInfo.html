@@ -13,7 +13,7 @@
     <hr>
     <form th:action="@{/member/info}" th:object="${member}" method="post" onsubmit="return validateForm();">
 
-        <input type="hidden" th:field="*{id}">
+        <input type="hidden" id="hiddenId" th:field="*{id}">
 
         <!--  username  -->
         <div class="mb-3">
@@ -77,8 +77,9 @@
     <script src="/js/checkForm.js"></script>
     <script>
         window.onload = function () {
+            passwordTooltip();
             passwordValidate('myInfo');
-            nicknameValidate();
+            nicknameValidate('myInfo');
             birthValidate();
         }
     </script>

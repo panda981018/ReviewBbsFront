@@ -1,7 +1,8 @@
 package com.example.springsecuritytest.domain.entity;
 
+import com.example.springsecuritytest.converter.RoleConverter;
 import com.example.springsecuritytest.dto.MemberDto;
-import com.example.springsecuritytest.service.Role;
+import com.example.springsecuritytest.enumclass.Role;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -33,7 +34,8 @@ public class MemberEntity {
     private String password;
 
     @Column(length = 20, nullable = false)
-    private String role;
+    @Convert(converter = RoleConverter.class)
+    private Role role;
 
     @Column(length = 30, nullable = false)
     private String nickname;
@@ -52,7 +54,7 @@ public class MemberEntity {
     private String regDate;
 
     public MemberDto toDto() {
-        if (role.equals(Role.MEMBER.getValue())) { // member
+        if (role == Role.MEMBER) { // member
             String[] str = birth.split("-");
 
             return MemberDto.builder()
@@ -60,7 +62,7 @@ public class MemberEntity {
                     .username(username)
                     .password(password)
                     .nickname(nickname)
-                    .role(role)
+                    .role(Role.MEMBER.getValue())
                     .gender(gender)
                     .year(str[0])
                     .month(str[1])
@@ -73,7 +75,7 @@ public class MemberEntity {
                     .username(username)
                     .nickname(nickname)
                     .gender(gender)
-                    .role(role)
+                    .role(Role.ADMIN.getValue())
                     .regDate(regDate)
                     .build();
         }
@@ -81,7 +83,7 @@ public class MemberEntity {
 
 
     @Builder
-    public MemberEntity(Long id, String username, String password, String role,
+    public MemberEntity(Long id, String username, String password, Role role,
                         String nickname, String gender, int age, String birth, String regDate) {
         this.id = id;
         this.username = username;

@@ -20,8 +20,8 @@
                 </svg>
             </a>
             <div sec:authorize="isAnonymous()">
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/signup}">Sign up</a>
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/login}">Log in</a>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/signup}" sec:authorize="!isAuthenticated()">Sign up</a>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/login}" sec:authorize="!isAuthenticated()">Log in</a>
             </div>
             <div sec:authorize="isAuthenticated()">
                 <a class="btn btn-sm btn-outline-secondary" th:href="@{/member/info}" sec:authorize="hasRole('ROLE_MEMBER')">My Info</a>

@@ -47,7 +47,7 @@ function emailValidate() {
             })
                 .done(function (result) {
                 console.log(result);
-                if (result.usernameResult === true) { // 존재한다면
+                if (result.result === true) { // 존재한다면
                     emailError.removeClass('valid');
                     emailError.addClass('error');
                     emailError.text('중복된 이메일입니다. 다른 이메일을 입력해주세요');
@@ -120,11 +120,16 @@ function passwordTooltip() {
 }
 
 // nickname validate 성공
-function nicknameValidate() {
+function nicknameValidate(view) {
 
     $('#nickname').on('focusout', function () {
+        let id = $('#hiddenId').val();
         const nickname = $('#nickname').val();
         const nicknameError = $('#nicknameError');
+
+        if (id == null) {
+            id = 'null';
+        }
 
         if (nickname == '') {
             nicknameError.removeClass('valid');
@@ -138,13 +143,13 @@ function nicknameValidate() {
             $.ajax({
                 type: 'POST',
                 url: '/check/nickname',
-                data: JSON.stringify({ "nickname" : nickname }),
+                data: JSON.stringify({ "id" : id, "nickname" : nickname, "view" : view }),
                 contentType: "application/json; charset=utf-8;",
                 dataType: 'JSON'
             })
                 .done(function (result) {
                     console.log(result);
-                    if (result.nicknameResult == true) {
+                    if (result.nicknameResult === true) {
                         nicknameError.removeClass('valid');
                         nicknameError.addClass('error');
                         nicknameError.text('중복된 닉네임입니다. 다른 닉네임을 입력해주세요.');

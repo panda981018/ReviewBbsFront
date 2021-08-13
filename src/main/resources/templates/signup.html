@@ -16,8 +16,8 @@
         <!-- role -->
         <div class="mb-3" id="roleDiv">
             <label th:for="role" class="form-label"><b>Role</b></label><br/>
-            <input type="radio" th:name="role" id="member" value="ROLE_MEMBER" checked> 일반 회원
-            <input type="radio" th:name="role" id="admin" value="ROLE_ADMIN"> 관리자
+            <input type="radio" th:name="role" id="member" value="MEMBER" checked> 일반 회원
+            <input type="radio" th:name="role" id="admin" value="ADMIN"> 관리자
         </div>
         <!--  username  -->
         <div class="mb-3" id="emailDiv">
@@ -92,7 +92,7 @@
             emailValidate();    // email
             passwordTooltip();
             passwordValidate('signUp'); // password
-            nicknameValidate(); // nickname
+            nicknameValidate('signUp'); // nickname
             birthValidate();    // birth
             changeSignUpForm(); // role
         }

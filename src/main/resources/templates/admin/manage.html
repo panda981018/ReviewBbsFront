@@ -38,5 +38,18 @@
         </tbody>
     </table>
 </div>
+<th:block layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="/js/checkAdminRole.js"></script>
+    <script th:inline="javascript">
+        // 반드시  CDATA부분 까지 입력해주어야 한다.
+        /* <![CDATA[ */
+        const adminId = [[${adminId}]];
+        $(function () {
+            askAdmin(adminId);
+        })
+        /* ]]> */
+    </script>
+</th:block>
 </body>
 </html>

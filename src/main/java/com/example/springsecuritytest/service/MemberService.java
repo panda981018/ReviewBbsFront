@@ -4,6 +4,7 @@ import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.domain.repository.MemberQueryRepository;
 import com.example.springsecuritytest.domain.repository.MemberRepository;
 import com.example.springsecuritytest.dto.MemberDto;
+import com.example.springsecuritytest.enumclass.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
@@ -63,18 +64,33 @@ public class MemberService implements UserDetailsService {
     }
 
     // 이메일 중복 체크 함수
-    public HashMap<String, Object> checkEmail(String username) {
+    public HashMap<String, Boolean> checkEmail(String username) {
         boolean result = memberRepository.existsByUsername(username);
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("usernameResult", result);
+        HashMap<String, Boolean> map = new HashMap<>();
+        map.put("result", result);
         return map;
     }
 
     // 닉네임 중복 체크 함수
-    public Object checkNickname(String nickname) {
-        boolean result = memberRepository.existsByNickname(nickname);
-        HashMap<String, Object> map = new HashMap<>();
+    public HashMap<String, Boolean> checkNickname(String id, String nickname, String view) throws SQLException {
+        boolean result;
+
+        if (view.equals("myInfo")) {
+            result = memberQueryRepository.findByNickname(Long.parseLong(id)).getResults().contains(nickname);
+        } else {
+            result = memberRepository.existsByNickname(nickname);
+        }
+
+        HashMap<String, Boolean> map = new HashMap<>();
         map.put("nicknameResult", result);
+        return map;
+    }
+
+    // 관리자 비밀번호 체크
+    public HashMap<String, Boolean> checkPassword(String adminId, String password) {
+        List<String> passwordList = memberQueryRepository.findPasswordByUsername(adminId);
+        HashMap<String, Boolean> map = new HashMap<>();
+        map.put("result", passwordList.get(0).equals(passwordEncoder.encode(password)));
         return map;
     }
 
@@ -93,7 +109,15 @@ public class MemberService implements UserDetailsService {
                 memberDto.setId(member.getId());
                 memberDto.setPassword(cryptoPassword);
             }
-            memberDto.setRole(member.getRole());
+
+            if (member.getRole() == Role.ADMIN) {
+                memberDto.setRole(Role.ADMIN.getValue());
+            } else if (member.getRole() == Role.MEMBER) {
+                memberDto.setRole(Role.MEMBER.getValue());
+            } else {
+                memberDto.setRole(null);
+            }
+
             memberDto.setGender(member.getGender());
             memberDto.setRegDate(member.getRegDate());
 
@@ -110,7 +134,7 @@ public class MemberService implements UserDetailsService {
             MemberEntity user = memberEntity.get();
 
             List<GrantedAuthority> authorities = new ArrayList<>();
-            if (user.getRole().equals(Role.ADMIN.getValue())) { // admin role을 가지고 있다면
+            if (user.getRole() == Role.ADMIN) { // admin role을 가지고 있다면
                 authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
             } else { // member role을 가지고 있다면
                 authorities.add(new SimpleGrantedAuthority(Role.MEMBER.getValue()));

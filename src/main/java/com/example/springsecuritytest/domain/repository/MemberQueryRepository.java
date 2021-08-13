@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import static com.example.springsecuritytest.domain.entity.QMemberEntity.memberEntity;
 
@@ -24,6 +25,14 @@ public class MemberQueryRepository { // CRUD
                 .fetchResults();
 
         return rtResult;
+    }
+
+    public List<String> findPasswordByUsername(String username) {
+
+        return jpaQueryFactory.select(memberEntity.password)
+                .from(memberEntity)
+                .where(memberEntity.username.eq(username))
+                .fetch();
     }
 
     // delete

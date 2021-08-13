@@ -10,9 +10,9 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
     Optional<MemberEntity> findByUsername(String username);
+
     // email 중복 여부 확인용
     // SignUpFormValidator에서 사용.
     boolean existsByUsername(String username);
     boolean existsByNickname(String nickname);
-    int countByNickname(String nickname);
 }

@@ -1,7 +1,7 @@
 package com.example.springsecuritytest.dto;
 
 import com.example.springsecuritytest.domain.entity.MemberEntity;
-import com.example.springsecuritytest.service.Role;
+import com.example.springsecuritytest.enumclass.Role;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -35,7 +35,7 @@ public class MemberDto {
                     .id(id)
                     .username(username)
                     .password(password)
-                    .role(role)
+                    .role(Role.ADMIN)
                     .nickname(nickname)
                     .gender(gender)
                     .age(0)
@@ -47,7 +47,7 @@ public class MemberDto {
                     .id(id)
                     .username(username)
                     .password(password)
-                    .role(role)
+                    .role(Role.MEMBER)
                     .nickname(nickname)
                     .gender(gender)
                     .age(calcAge(year))

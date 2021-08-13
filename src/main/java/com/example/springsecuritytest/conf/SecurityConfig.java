@@ -4,7 +4,6 @@ import com.example.springsecuritytest.handler.AuthFailureHandler;
 import com.example.springsecuritytest.handler.AuthSuccessHandler;
 import com.example.springsecuritytest.service.MemberService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,7 +22,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private MemberService memberService;
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Bean // 핸들러 Bean으로 등록
@@ -45,7 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/css/**")
                 .antMatchers("/js/**")
                 .antMatchers("/fragments/**");
-
     }
 
     @Override
@@ -60,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf()
                 .ignoringAntMatchers("/check/email")
+                .ignoringAntMatchers("/check/admin")
                 .ignoringAntMatchers("/check/nickname")
                 .and()
                 .formLogin()

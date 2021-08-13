@@ -4,31 +4,33 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
     <title>Login</title>
 </head>
 <body>
 <div class="container" layout:fragment="content">
-    <h2>Login</h2>
-    <hr>
-    <form th:action="@{/login}" method="post">
-        <!-- 로그인 시 아이디의 name attribute 값은 username이어야 함. -->
-        <div class="mb-3">
-            <label th:for="username" class="form-label"><b>Email address</b></label>
-            <input type="email" class="form-control" name="username" placeholder="이메일을 입력해주세요" autocomplete="off"/>
-            <!-- validator에서 error.rejectValue를 통해 넘어온 값을 아래 코드에서 처리해준다. -->
-            <!--  <p th:if="${ #fields.hasErrors('username')}" th:errors="*{username}">Email Error</p>-->
-        </div>
+    <div class="form-box">
+        <h1 class="mb-5">Login</h1>
+        <form th:action="@{/login}" method="post">
+            <!-- 로그인 시 아이디의 name attribute 값은 username이어야 함. -->
+            <div class="mb-3">
+                <label th:for="username" class="form-label"><b>Email address</b></label>
+                <input type="email" class="form-control" name="username" placeholder="이메일을 입력해주세요" autocomplete="off"/>
+                <!-- validator에서 error.rejectValue를 통해 넘어온 값을 아래 코드에서 처리해준다. -->
+                <!--  <p th:if="${ #fields.hasErrors('username')}" th:errors="*{username}">Email Error</p>-->
+            </div>
 
-        <div class="mb-3">
-            <label th:for="password" class="form-label"><b>Password</b></label>
-            <input type="password" class="form-control" name="password" placeholder="비밀번호" autocomplete="false"/>
-            <!--  <p th:if="${ #fields.hasErrors('password')}" th:errors="*{password}">Password Error</p>-->
-        </div>
-        <div th:if="${errorMessage}">
-            <p class="alert alert-danger" th:text="${errorMessage}">Username or Password invalid. Please verify</p>
-        </div>
-        <button type="submit" class="btn btn-primary">LOGIN</button>
-    </form>
+            <div class="mb-3">
+                <label th:for="password" class="form-label"><b>Password</b></label>
+                <input type="password" class="form-control" name="password" placeholder="비밀번호" autocomplete="false"/>
+                <!--  <p th:if="${ #fields.hasErrors('password')}" th:errors="*{password}">Password Error</p>-->
+            </div>
+            <div th:if="${errorMessage}">
+                <p class="alert alert-danger" th:text="${errorMessage}">Username or Password invalid. Please verify</p>
+            </div>
+            <button type="submit" class="btn btn-primary">LOGIN</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 package com.example.springsecuritytest.handler;
 
-import com.example.springsecuritytest.service.Role;
+import com.example.springsecuritytest.enumclass.Role;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
