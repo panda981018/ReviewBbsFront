@@ -8,7 +8,7 @@
     <title>Admin Main Page</title>
 </head>
 <body>
-<div class="container" layout:fragment="content">
+<div layout:fragment="content">
     <div class="box" sec:authorize="isAuthenticated()">
         <h2 class="text-muted mb-4">관리자 <span sec:authentication="name"></span>님, 반갑습니다!</h2>
     </div>

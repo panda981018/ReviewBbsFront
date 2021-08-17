@@ -3,20 +3,16 @@ package com.example.springsecuritytest.controller;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.enumclass.Role;
 import com.example.springsecuritytest.service.MemberService;
-import com.example.springsecuritytest.validate.MyInfoValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 @Controller
 @AllArgsConstructor

@@ -8,7 +8,7 @@
     <title>My Info</title>
 </head>
 <body>
-<div class="container" layout:fragment="content">
+<div layout:fragment="content">
     <h2>My Info</h2>
     <hr>
     <form th:action="@{/member/info}" th:object="${member}" method="post" onsubmit="return validateForm();">
