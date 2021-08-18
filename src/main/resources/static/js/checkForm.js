@@ -39,27 +39,25 @@ function emailValidate() {
             $.ajax({
                 type: "POST",
                 url: "/check/email",
-                // JSON.stringify([JSON 객체]) : JSON -> String
-                // JSON.parse([String]) : String -> JSON
                 data: JSON.stringify({"username": username}),
-                contentType: "application/json; charset=utf-8;",
-                dataType: "JSON"
-            })
-                .done(function (result) {
-                console.log(result);
-                if (result.result === true) { // 존재한다면
-                    emailError.removeClass('valid');
-                    emailError.addClass('error');
-                    emailError.text('중복된 이메일입니다. 다른 이메일을 입력해주세요');
-                } else { // 존재하지 않는다면
-                    emailError.removeClass('error');
-                    emailError.text('');
-                    emailError.addClass('valid');
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    if (result.result === true) { // 존재한다면
+                        emailError.removeClass('valid');
+                        emailError.addClass('error');
+                        emailError.text('중복된 이메일입니다. 다른 이메일을 입력해주세요');
+                    } else { // 존재하지 않는다면
+                        emailError.removeClass('error');
+                        emailError.text('');
+                        emailError.addClass('valid');
+                    }
+                },
+                error: function () {
+                    alert("오류가 발생했습니다.");
                 }
-            })
-                .fail(function (xhr, status, error) {
-                    alert("error: " + error + ", status : " + status + "\n오류가 발생했습니다.");
-                });
+            });
         } // else 끝
     }); // 이벤트 리스너 함수 끝
 }
@@ -145,11 +143,10 @@ function nicknameValidate(view) {
                 url: '/check/nickname',
                 data: JSON.stringify({ "id" : id, "nickname" : nickname, "view" : view }),
                 contentType: "application/json; charset=utf-8;",
-                dataType: 'JSON'
-            })
-                .done(function (result) {
+                dataType: 'json',
+                success: function (result) {
                     console.log(result);
-                    if (result.nicknameResult === true) {
+                    if (result.result === true) {
                         nicknameError.removeClass('valid');
                         nicknameError.addClass('error');
                         nicknameError.text('중복된 닉네임입니다. 다른 닉네임을 입력해주세요.');
@@ -158,10 +155,11 @@ function nicknameValidate(view) {
                         nicknameError.text('');
                         nicknameError.addClass('valid');
                     }
-                })
-                .fail(function (xhr, status, error) {
-                    alert("error: " + error + ", status : " + status + "\n오류가 발생했습니다.");
-                })
+                },
+                error: function () {
+                    alert("오류가 발생했습니다.");
+                }
+            })
         } // else 끝
     }) // 이벤트 리스너 끝
 }

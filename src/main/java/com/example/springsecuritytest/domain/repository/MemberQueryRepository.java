@@ -1,8 +1,12 @@
 package com.example.springsecuritytest.domain.repository;
 
+import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +37,16 @@ public class MemberQueryRepository { // CRUD
                 .from(memberEntity)
                 .where(memberEntity.username.eq(username))
                 .fetch();
+    }
+
+    public Page<MemberEntity> findAllExceptAdmin(String admin, Pageable pageable) {
+        QueryResults<MemberEntity> rt = jpaQueryFactory.selectFrom(memberEntity)
+                .where(memberEntity.username.ne(admin))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        return new PageImpl<>(rt.getResults(), pageable, rt.getTotal());
     }
 
     // delete

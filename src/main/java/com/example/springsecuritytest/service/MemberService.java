@@ -6,6 +6,9 @@ import com.example.springsecuritytest.domain.repository.MemberRepository;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.enumclass.Role;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -77,12 +80,12 @@ public class MemberService implements UserDetailsService {
 
         if (view.equals("myInfo")) {
             result = memberQueryRepository.findByNickname(Long.parseLong(id)).getResults().contains(nickname);
-        } else {
+        } else { // signup에서
             result = memberRepository.existsByNickname(nickname);
         }
 
         HashMap<String, Boolean> map = new HashMap<>();
-        map.put("nicknameResult", result);
+        map.put("result", result);
         return map;
     }
 
@@ -146,15 +149,7 @@ public class MemberService implements UserDetailsService {
         }
     }
 
-    public List<MemberDto> findAllMembers() { // 모든 멤버들 리스트 출력
-
-        List<MemberEntity> members = memberRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
-        List<MemberDto> memberDtoList = new ArrayList<>();
-
-        for (MemberEntity member : members) {
-            MemberDto dto = member.toDto();
-            memberDtoList.add(dto);
-        }
-        return memberDtoList;
+    public Page<MemberEntity> findAllMembers(String admin, Pageable pageable) { // 모든 멤버들 리스트 출력
+        return memberQueryRepository.findAllExceptAdmin(admin, pageable);
     }
 }

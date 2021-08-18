@@ -23,10 +23,16 @@
                 <a class="btn btn-sm btn-outline-secondary" th:href="@{/signup}" sec:authorize="!isAuthenticated()">Sign up</a>
                 <a class="btn btn-sm btn-outline-secondary" th:href="@{/login}" sec:authorize="!isAuthenticated()">Log in</a>
             </div>
-            <div sec:authorize="isAuthenticated()">
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/member/info}" sec:authorize="hasRole('ROLE_MEMBER')">My Info</a>
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/manage}" sec:authorize="hasRole('ROLE_ADMIN')">Admin Page</a>
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/logout}">Logout</a>
+            <div class="dropdown" sec:authorize="isAuthenticated()">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="myMenu"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    My Menu
+                </button>
+                <div class="dropdown-menu" aria-labelledby="myMenu">
+                    <a class="dropdown-item btn btn-outline-secondary" th:href="@{/member/info}" sec:authorize="hasRole('ROLE_MEMBER')">My Info</a>
+                    <a class="dropdown-item btn btn-outline-secondary" th:href="@{/admin/manage}" sec:authorize="hasRole('ROLE_ADMIN')">Admin Page</a>
+                    <a class="dropdown-item btn btn-outline-secondary" th:href="@{/logout}">Logout</a>
+                </div>
             </div>
         </div>
     </div>

@@ -44,16 +44,14 @@ public class HomeController { // anonymous
 
     @PostMapping("/check/email")
     @ResponseBody
-    public HashMap<String, Boolean> checkEmail(@RequestBody Object usernameObj) {
-        HashMap<String, String> obj = (HashMap<String, String>) usernameObj;
-        return memberService.checkEmail(obj.get("username"));
+    public HashMap<String, Boolean> checkEmail(@RequestBody HashMap<String, String> usernameObj) {
+        return memberService.checkEmail(usernameObj.get("username"));
     }
 
     @PostMapping("/check/nickname")
     @ResponseBody
-    public HashMap<String, Boolean> checkNickname(@RequestBody Object nicknameObj) throws SQLException {
-        HashMap<String, String> obj = (HashMap<String, String>) nicknameObj;
-        return memberService.checkNickname(obj.get("id"), obj.get("nickname"), obj.get("view"));
+    public HashMap<String, Boolean> checkNickname(@RequestBody HashMap<String, String> nicknameObj) throws SQLException {
+        return memberService.checkNickname(nicknameObj.get("id"), nicknameObj.get("nickname"), nicknameObj.get("view"));
     }
 
     // 회원가입 페이지

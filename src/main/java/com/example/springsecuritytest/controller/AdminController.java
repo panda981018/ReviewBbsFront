@@ -1,19 +1,21 @@
 package com.example.springsecuritytest.controller;
 
 
+import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,14 +30,13 @@ public class AdminController { // admin
     }
 
     @GetMapping("/manage")
-    public String adminPage(Authentication authentication, Model model) {
-        List<MemberDto> members = memberService.findAllMembers();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    public String adminPage(Authentication auth, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                            Model model) {
+        Page<MemberEntity> members = memberService.findAllMembers(auth.getName(), pageable);
+        Page<MemberDto> memberList = members.map(member -> member.toDto());
 
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("members", members);
-        map.put("adminId", userDetails.getUsername());
-        model.addAllAttributes(map);
+
+        model.addAttribute("memberList", memberList);
 
         return "admin/manage";
     }
@@ -43,7 +44,6 @@ public class AdminController { // admin
     @PostMapping("/check/admin")
     @ResponseBody
     public HashMap<String, Boolean> checkPassword(@RequestBody HashMap<String, String> password) {
-
         return memberService.checkPassword(password.get("adminId"), password.get("password"));
     }
 
