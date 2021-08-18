@@ -1,6 +1,5 @@
 package com.example.springsecuritytest.controller;
 
-
 import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.MemberService;
@@ -30,11 +29,10 @@ public class AdminController { // admin
     }
 
     @GetMapping("/manage")
-    public String adminPage(Authentication auth, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+    public String adminPage(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
                             Model model) {
-        Page<MemberEntity> members = memberService.findAllMembers(auth.getName(), pageable);
+        Page<MemberEntity> members = memberService.findAllMembers(pageable);
         Page<MemberDto> memberList = members.map(member -> member.toDto());
-
 
         model.addAttribute("memberList", memberList);
 

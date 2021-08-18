@@ -149,7 +149,7 @@ public class MemberService implements UserDetailsService {
         }
     }
 
-    public Page<MemberEntity> findAllMembers(String admin, Pageable pageable) { // 모든 멤버들 리스트 출력
-        return memberQueryRepository.findAllExceptAdmin(admin, pageable);
+    public Page<MemberEntity> findAllMembers(Pageable pageable) { // 모든 멤버들 리스트 출력
+        return memberQueryRepository.findAllExceptAdmin(pageable);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.springsecuritytest.domain.repository;
 
 import com.example.springsecuritytest.domain.entity.MemberEntity;
+import com.example.springsecuritytest.enumclass.Role;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +40,9 @@ public class MemberQueryRepository { // CRUD
                 .fetch();
     }
 
-    public Page<MemberEntity> findAllExceptAdmin(String admin, Pageable pageable) {
+    public Page<MemberEntity> findAllExceptAdmin(Pageable pageable) {
         QueryResults<MemberEntity> rt = jpaQueryFactory.selectFrom(memberEntity)
-                .where(memberEntity.username.ne(admin))
+                .where(memberEntity.role.ne(Role.ADMIN))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
