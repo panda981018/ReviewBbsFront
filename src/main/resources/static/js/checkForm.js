@@ -71,7 +71,7 @@ function passwordValidate(view) {
     passwordObj.on('focusout', function () {
         const password = passwordObj.val().toString();
 
-        passwordObj.removeAttr('data-toggle');
+        passwordObj.removeAttr('data-bs-toggle');
         passwordObj.removeAttr('title');
         passwordObj.removeAttr('data-placement');
         passwordObj.removeAttr('data-html');
@@ -101,7 +101,7 @@ function passwordTooltip() {
     const passwordObj = $('#signUpPassword');
 
     passwordObj.on('focusin', function () {
-        passwordObj.attr('data-toggle', 'tooltip');
+        passwordObj.attr('data-bs-toggle', 'tooltip');
         passwordObj.attr('title', '<b>비밀번호 설정 조건</b><br>' +
             '<small>영문, 숫자, 특수문자를 최소 1개 이상 포함</small><br>' +
             '<small>8자 이상 20자 이하</small>');

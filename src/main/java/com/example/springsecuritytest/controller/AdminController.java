@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -29,14 +30,17 @@ public class AdminController { // admin
     }
 
     @GetMapping("/manage")
-    public String adminPage(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-                            Model model) {
+    public ModelAndView adminPage(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC)
+                                        Pageable pageable, Model model) {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("admin/manage");
+
         Page<MemberEntity> members = memberService.findAllMembers(pageable);
-        Page<MemberDto> memberList = members.map(member -> member.toDto());
+        Page<MemberDto> memberList = members.map(MemberEntity::toDto);
 
-        model.addAttribute("memberList", memberList);
+        view.addObject("memberList", memberList);
 
-        return "admin/manage";
+        return view;
     }
 
     @PostMapping("/check/admin")

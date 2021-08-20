@@ -8,7 +8,7 @@ public class RoleConverter implements AttributeConverter<Role, String> {
 
     @Override
     // Entity to Database
-    public String convertToDatabaseColumn(Role attribute) { // Entity -> DB
+    public String convertToDatabaseColumn(Role attribute) { // Entity(Role) -> DB(String)
 
         if (attribute == Role.ADMIN) {
             return Role.ADMIN.getValue();

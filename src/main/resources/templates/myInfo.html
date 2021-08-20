@@ -20,8 +20,6 @@
                 <small id="emailHelpBlock" class="text-muted">이메일은 바꿀 수 없습니다.</small>
                 <input type="email" class="form-control" name="username" th:field="*{username}"
                        placeholder="이메일을 입력해주세요" readonly/>
-                <p class="mt-3 alert alert-danger" th:if="${ #fields.hasErrors('username')}" th:errors="*{username}"
-                   id="emailError" name="emailError">Email Error</p>
             </div>
             <!-- password -->
             <div class="mb-3">
@@ -36,8 +34,12 @@
                 <label th:for="nickname" class="form-label"><b>Nickname</b></label>
                 <input type="text" class="form-control" th:field="*{nickname}" placeholder="이름"/>
                 <p class="mt-3 alert alert-danger valid" id="nicknameError" name="nicknameError"></p>
-                <p class="mt-3 alert alert-danger error" th:if="${ #fields.hasErrors('nickname') }"
-                   th:errors="*{nickname}"></p>
+            </div>
+            <!-- Gender -->
+            <div class="mb-3">
+                <label th:for="gender" class="form-label"><b>Gender</b></label><br>
+                <input type="radio" name="gender" id="male" th:field="*{gender}" value="남성" checked> Male
+                <input type="radio" name="gender" id="female" th:field="*{gender}" value="여성"> Female
             </div>
             <!-- birth -->
             <div class="mb-3 dropdown">
@@ -67,8 +69,8 @@
                 </div>
                 <div id="birthError" class="mt-3 valid"></div>
             </div>
-            <button type="submit" class="btn btn-primary btn-lg">Update</button>
-            <button type="button" class="btn btn-outline-secondary btn-lg" onclick="window.history.back();">Back</button>
+            <button type="submit" class="btn btn-primary btn-lg form-button">Update</button>
+            <button type="button" class="btn btn-outline-secondary btn-lg form-button" onclick="window.history.back();">Back</button>
         </form>
     </div>
 </div>

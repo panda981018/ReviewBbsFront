@@ -2,6 +2,7 @@ package com.example.springsecuritytest.domain.entity;
 
 import com.example.springsecuritytest.converter.RoleConverter;
 import com.example.springsecuritytest.dto.MemberDto;
+import com.example.springsecuritytest.enumclass.Gender;
 import com.example.springsecuritytest.enumclass.Role;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -9,6 +10,10 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 @SequenceGenerator(
         name = "USER_SEQ_GEN",
         sequenceName = "USER_SEQ",
@@ -41,32 +46,32 @@ public class MemberEntity {
     private String nickname;
 
     @Column(length = 10)
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(length = 4)
     @ColumnDefault("0")
     private int age;
 
     @Column(length = 15)
-    private String birth;
+    @Temporal(value = TemporalType.DATE)
+    private Calendar birth;
 
     @Column(length = 25)
     private String regDate;
 
     public MemberDto toDto() {
         if (role == Role.MEMBER) { // member
-            String[] str = birth.split("-");
-
             return MemberDto.builder()
                     .id(id)
                     .username(username)
                     .password(password)
                     .nickname(nickname)
-                    .role(Role.MEMBER.getValue())
-                    .gender(gender)
-                    .year(str[0])
-                    .month(str[1])
-                    .day(str[2])
+                    .role(Role.MEMBER.getTitle())
+                    .gender(gender == Gender.MALE ? Gender.MALE.getValue() : Gender.FEMALE.getValue())
+                    .year(Integer.toString(birth.get(Calendar.YEAR)))
+                    .month(String.format("%02d", birth.get(Calendar.MONTH)+1))
+                    .day(String.format("%02d", birth.get(Calendar.DAY_OF_MONTH)))
                     .regDate(regDate)
                     .build();
         } else { // admin
@@ -74,8 +79,8 @@ public class MemberEntity {
                     .id(id)
                     .username(username)
                     .nickname(nickname)
-                    .gender(gender)
-                    .role(Role.ADMIN.getValue())
+                    .gender(gender == Gender.MALE ? Gender.MALE.getValue() : Gender.FEMALE.getValue())
+                    .role(Role.ADMIN.getTitle())
                     .regDate(regDate)
                     .build();
         }
@@ -84,7 +89,7 @@ public class MemberEntity {
 
     @Builder
     public MemberEntity(Long id, String username, String password, Role role,
-                        String nickname, String gender, int age, String birth, String regDate) {
+                        String nickname, Gender gender, int age, Calendar birth, String regDate) {
         this.id = id;
         this.username = username;
         this.password = password;

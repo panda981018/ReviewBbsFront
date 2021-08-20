@@ -25,12 +25,13 @@
             </div>
             <div class="dropdown" sec:authorize="isAuthenticated()">
                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="myMenu"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        data-bs-toggle="dropdown" aria-expanded="false">
                     My Menu
                 </button>
                 <div class="dropdown-menu" aria-labelledby="myMenu">
                     <a class="dropdown-item btn btn-outline-secondary" th:href="@{/member/info}" sec:authorize="hasRole('ROLE_MEMBER')">My Info</a>
-                    <a class="dropdown-item btn btn-outline-secondary" th:href="@{/admin/manage}" sec:authorize="hasRole('ROLE_ADMIN')">Admin Page</a>
+                    <a class="dropdown-item btn btn-outline-secondary" th:href="@{/admin/manage?page=0}" sec:authorize="hasRole('ROLE_ADMIN')">Admin Page</a>
+                    <hr class="dropdown-divider">
                     <a class="dropdown-item btn btn-outline-secondary" th:href="@{/logout}">Logout</a>
                 </div>
             </div>

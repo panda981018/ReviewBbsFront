@@ -1,11 +1,12 @@
 package com.example.springsecuritytest.dto;
 
 import com.example.springsecuritytest.domain.entity.MemberEntity;
+import com.example.springsecuritytest.enumclass.Gender;
 import com.example.springsecuritytest.enumclass.Role;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.Calendar;
 
 @Getter
 @Setter
@@ -14,12 +15,9 @@ import java.time.LocalDate;
 public class MemberDto {
 
     private Long id;
-    @NotBlank
     private String username;
-    @NotBlank
     private String password;
     private String role;
-    @NotBlank
     private String nickname;
     private String gender;
 
@@ -37,21 +35,26 @@ public class MemberDto {
                     .password(password)
                     .role(Role.ADMIN)
                     .nickname(nickname)
-                    .gender(gender)
+                    .gender(null)
                     .age(0)
-                    .birth("")
+                    .birth(null)
                     .regDate(regDate)
                     .build();
         } else { // member
+            Calendar birth = Calendar.getInstance();
+            birth.set(Calendar.YEAR, Integer.parseInt(year));
+            birth.set(Calendar.MONTH, Integer.parseInt(month));
+            birth.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+
             return MemberEntity.builder()
                     .id(id)
                     .username(username)
                     .password(password)
                     .role(Role.MEMBER)
                     .nickname(nickname)
-                    .gender(gender)
+                    .gender(gender.equals(Gender.MALE.getValue()) ? Gender.MALE : Gender.FEMALE)
                     .age(calcAge(year))
-                    .birth(year + "-" + month + "-" + day)
+                    .birth(birth)
                     .regDate(regDate)
                     .build();
         }

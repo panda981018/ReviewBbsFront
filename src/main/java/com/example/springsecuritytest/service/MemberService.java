@@ -4,6 +4,7 @@ import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.domain.repository.MemberQueryRepository;
 import com.example.springsecuritytest.domain.repository.MemberRepository;
 import com.example.springsecuritytest.dto.MemberDto;
+import com.example.springsecuritytest.enumclass.Gender;
 import com.example.springsecuritytest.enumclass.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,10 +23,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -47,6 +45,29 @@ public class MemberService implements UserDetailsService {
         memberRepository.save(memberDto.toEntity());
     }
 
+    public void updateMember(MemberDto memberDto) { // 회원 정보 update
+
+        Optional<MemberEntity> memberEntity = memberRepository.findByUsername(memberDto.getUsername());
+
+        if (memberEntity.isPresent()) {
+            MemberEntity member = memberEntity.get();
+
+            if (memberDto.getPassword().isEmpty()) { // 비밀번호를 수정하지 않은 경우
+                memberDto.setId(member.getId());
+                memberDto.setPassword(member.getPassword());
+            } else { // 비밀번호를 수정한 경우
+                String cryptoPassword = passwordEncoder.encode(memberDto.getPassword());
+                memberDto.setId(member.getId());
+                memberDto.setPassword(cryptoPassword);
+            }
+
+            memberDto.setRole(member.getRole() == Role.ADMIN ? Role.ADMIN.getValue() : Role.MEMBER.getValue());
+            memberDto.setRegDate(member.getRegDate());
+
+            memberRepository.save(memberDto.toEntity());
+        }
+    }
+
     public MemberDto findByUsername(String username) throws SQLException { // 이름으로 회원정보 get
 
         Optional<MemberEntity> memberEntity = memberRepository.findByUsername(username);
@@ -66,6 +87,10 @@ public class MemberService implements UserDetailsService {
         }
     }
 
+    public Page<MemberEntity> findAllMembers(Pageable pageable) { // 모든 멤버들 리스트 출력
+        return memberQueryRepository.findAllExceptAdmin(pageable);
+    }
+
     // 이메일 중복 체크 함수
     public HashMap<String, Boolean> checkEmail(String username) {
         boolean result = memberRepository.existsByUsername(username);
@@ -80,7 +105,7 @@ public class MemberService implements UserDetailsService {
 
         if (view.equals("myInfo")) {
             result = memberQueryRepository.findByNickname(Long.parseLong(id)).getResults().contains(nickname);
-        } else { // signup에서
+        } else {
             result = memberRepository.existsByNickname(nickname);
         }
 
@@ -95,37 +120,6 @@ public class MemberService implements UserDetailsService {
         HashMap<String, Boolean> map = new HashMap<>();
         map.put("result", passwordList.get(0).equals(passwordEncoder.encode(password)));
         return map;
-    }
-
-    public void updateMember(MemberDto memberDto) { // 회원 정보 update
-
-        Optional<MemberEntity> memberEntity = memberRepository.findByUsername(memberDto.getUsername());
-
-        if (memberEntity.isPresent()) {
-            MemberEntity member = memberEntity.get();
-
-            if (memberDto.getPassword().isEmpty()) { // 비밀번호를 수정하지 않은 경우
-                memberDto.setId(member.getId());
-                memberDto.setPassword(member.getPassword());
-            } else { // 비밀번호를 수정한 경우
-                String cryptoPassword = passwordEncoder.encode(memberDto.getPassword());
-                memberDto.setId(member.getId());
-                memberDto.setPassword(cryptoPassword);
-            }
-
-            if (member.getRole() == Role.ADMIN) {
-                memberDto.setRole(Role.ADMIN.getValue());
-            } else if (member.getRole() == Role.MEMBER) {
-                memberDto.setRole(Role.MEMBER.getValue());
-            } else {
-                memberDto.setRole(null);
-            }
-
-            memberDto.setGender(member.getGender());
-            memberDto.setRegDate(member.getRegDate());
-
-            memberRepository.save(memberDto.toEntity());
-        }
     }
 
     @Override
@@ -147,9 +141,5 @@ public class MemberService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException(username);
         }
-    }
-
-    public Page<MemberEntity> findAllMembers(Pageable pageable) { // 모든 멤버들 리스트 출력
-        return memberQueryRepository.findAllExceptAdmin(pageable);
     }
 }

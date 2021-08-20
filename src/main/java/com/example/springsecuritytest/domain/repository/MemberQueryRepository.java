@@ -2,12 +2,16 @@ package com.example.springsecuritytest.domain.repository;
 
 import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.enumclass.Role;
+import com.example.springsecuritytest.util.QueryDslUtil;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,8 +45,11 @@ public class MemberQueryRepository { // CRUD
     }
 
     public Page<MemberEntity> findAllExceptAdmin(Pageable pageable) {
+        List<OrderSpecifier> order = QueryDslUtil.getAllOrderSpecifiers(pageable);
+
         QueryResults<MemberEntity> rt = jpaQueryFactory.selectFrom(memberEntity)
                 .where(memberEntity.role.ne(Role.ADMIN))
+                .orderBy(order.stream().toArray(OrderSpecifier[]::new))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

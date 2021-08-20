@@ -64,23 +64,10 @@ public class HomeController { // anonymous
 
     // 회원가입 처리
     @PostMapping("/signup")
-    public String signUp(MemberDto memberDto, Errors errors) {
+    public String signUp(MemberDto memberDto) {
 
-        if (errors.hasErrors()) {
-            return "signup";
-        } else {
-            if (memberDto.getRole().equals("ADMIN")) {
-                memberDto.setRole(Role.ADMIN.getValue());
-                memberDto.setGender("");
-                memberDto.setYear(null);
-                memberDto.setMonth(null);
-                memberDto.setDay(null);
-            } else if (memberDto.getRole().equals("MEMBER")) {
-                memberDto.setRole(Role.MEMBER.getValue());
-            }
-
-            memberService.signUp(memberDto);
-        }
+        memberDto.setRole(memberDto.getRole().equals("ADMIN") ? Role.ADMIN.getValue() : Role.MEMBER.getValue());
+        memberService.signUp(memberDto);
         return "redirect:/";
     }
 
