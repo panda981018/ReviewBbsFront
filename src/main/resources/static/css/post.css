@@ -1,0 +1,13 @@
+#categoryEmpty {
+    margin: 0 auto;
+    text-align: center;
+}
+
+#postNav {
+    width: 15%;
+    margin: 0 auto;
+}
+#postContent {
+    width: 80%;
+    margin: 0 auto;
+}

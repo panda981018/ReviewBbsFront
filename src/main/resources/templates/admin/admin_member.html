@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/form.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+    <title>Admin Page</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div layout:replace="fragments/adminnav :: NaviAdmin"></div>
+    <div id="adminContent" class="d-flex flex-column flex-md-shrink-1 justify-content-start mt-3">
+        <div id="pageInfo" class="align-self-center">
+            <h1 class="py-2">Members</h1>
+            <span class="py-1">전체 회원을 관리하는 페이지입니다.</span>
+        </div>
+        <div id="tableInfo" class="d-flex flex-row justify-content-between align-items-center">
+            <div class="dropdown d-flex">
+                <select id="sortSelect" class="btn dropdown-toggle" data-toggle="dropdown">
+                    <option class="dropdown-item" id="sortId" value="id">ID</option>
+                    <option class="dropdown-item" id="sortUsername" value="username">Username</option>
+                    <option class="dropdown-item" id="sortNickname" value="nickname">Nickname</option>
+                    <option class="dropdown-item" id="sortBirth" value="birth">Birth</option>
+                    <option class="dropdown-item" id="sortGender" value="gender">Gender</option>
+                    <option class="dropdown-item" id="sortReg" value="regdate">RegDate</option>
+                </select>
+            </div>
+            <span class="d-flex" th:text="'총 회원 수 : ' + ${memberList.getTotalElements()}"></span>
+        </div>
+        <table class="flex-column justify-content-around align-items-stretch table table-striped table-responsive table-hover">
+            <thead>
+            <tr>
+                <th>Member_ID</th>
+                <th>Username</th>
+                <th>Nickname</th>
+                <th>Role</th>
+                <th>Birth</th>
+                <th>Gender</th>
+                <th>Register Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${memberList.getContent()}"
+                th:onclick="|location.href='@{/admin/info(id=${member.id})}'|">
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.username}"></td>
+                <td th:text="${member.nickname}"></td>
+                <td th:text="${member.role}"></td>
+                <td th:if="${member.role == '일반회원'}"
+                    th:text="${member.year} + '-' + ${member.month} + '-' + ${member.day}"></td>
+                <td th:unless="${member.role == '일반회원'}"></td>
+                <td th:text="${member.gender}"></td>
+                <td th:text="${member.regDate}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center align-items-center">
+                <li class="page-item btn" th:classappend="${0 == memberList.pageable.pageNumber} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage(page=${memberList.previousOrFirstPageable().getPageNumber()})}">
+                        Previous
+                    </a>
+                </li>
+                <th:block
+                        th:each="page : ${#numbers.sequence(memberList.pageable.first().pageNumber+1, memberList.getTotalPages())}">
+                    <li class="page-item btn">
+                        <a class="page-link" th:text="${page}" th:href="@{/admin/manage(page=${page}-1)}"></a>
+                    </li>
+                </th:block>
+                <li class="page-item btn"
+                    th:classappend="${memberList.getNumber()+1 == memberList.getTotalPages()} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage(page=${memberList.nextOrLastPageable().getPageNumber()})}">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="/js/checkAdminRole.js"></script>
+    <script>
+        window.onload = function () {
+            sortBy();
+        }
+    </script>
+</th:block>
+</body>
+</html>

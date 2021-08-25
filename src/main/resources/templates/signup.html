@@ -9,7 +9,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="form-box">
+    <div class="d-flex flex-column justify-content-center align-items-stretch align-self-center form-box">
         <h1>Sign Up</h1>
         <form class="form-group" id="signUpForm" name="signUpForm" th:action="@{/signup}" th:object="${memberDto}"
               method="post" onsubmit="return validateForm();">

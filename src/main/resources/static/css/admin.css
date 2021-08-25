@@ -1,4 +1,13 @@
-h1 {
+#adminNav {
+    flex-basis: 15%;
+    width: 15%;
+}
+#adminContent {
+    flex-basis: 70%;
+    width: 70%;
+}
+
+#pageInfo > h1,
+#pageInfo > span {
     text-align: center;
-    margin-bottom: 1.3rem;
 }

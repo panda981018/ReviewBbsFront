@@ -9,21 +9,21 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="form-box">
+    <div class="d-flex flex-column justify-content-center align-items-stretch align-self-center form-box">
         <h1>My Info</h1>
-        <form class="form-group" th:action="@{/member/info}" th:object="${member}" method="post" onsubmit="return validateForm();">
+        <form class="form-group" th:action="@{/member/info}" th:object="${memberInfo}" method="post" onsubmit="return validateForm();">
             <input type="hidden" id="hiddenId" th:field="*{id}">
             <!--  username  -->
             <div class="mb-3">
                 <label th:for="username" class="form-label" aria-describedby="emailHelpBlock">
                     <b>Email address</b></label>
                 <small id="emailHelpBlock" class="text-muted">이메일은 바꿀 수 없습니다.</small>
-                <input type="email" class="form-control" name="username" th:field="*{username}"
+                <input type="email" class="form-control" id="username" name="username" th:field="*{username}"
                        placeholder="이메일을 입력해주세요" readonly/>
             </div>
             <!-- password -->
             <div class="mb-3">
-                <label th:for="password" class="form-label" aria-describedby="passwordHelpBlock"><b>Password</b></label>
+                <label th:for="signUpPassword" class="form-label" aria-describedby="passwordHelpBlock"><b>Password</b></label>
                 <small id="passwordHelpBlock" class="text-muted">비밀번호는 8자 이상으로 해주세요.</small>
                 <input type="password" class="form-control" id="signUpPassword" name="password"
                        th:field="*{password}" placeholder="비밀번호" autocomplete="false"/>
@@ -32,7 +32,7 @@
             <!-- nickname -->
             <div class="mb-3">
                 <label th:for="nickname" class="form-label"><b>Nickname</b></label>
-                <input type="text" class="form-control" th:field="*{nickname}" placeholder="이름"/>
+                <input type="text" class="form-control" id="nickname" th:field="*{nickname}" placeholder="이름"/>
                 <p class="mt-3 alert alert-danger valid" id="nicknameError" name="nicknameError"></p>
             </div>
             <!-- Gender -->
@@ -69,8 +69,8 @@
                 </div>
                 <div id="birthError" class="mt-3 valid"></div>
             </div>
-            <button type="submit" class="btn btn-primary btn-lg form-button">Update</button>
-            <button type="button" class="btn btn-outline-secondary btn-lg form-button" onclick="window.history.back();">Back</button>
+            <button type="submit" class="btn btn-primary form-button">Update</button>
+            <button type="button" class="btn btn-outline-secondary form-button" onclick="window.history.back();">Back</button>
         </form>
     </div>
 </div>

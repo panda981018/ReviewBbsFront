@@ -5,6 +5,7 @@ import com.example.springsecuritytest.enumclass.Gender;
 import com.example.springsecuritytest.enumclass.Role;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Calendar;
 
@@ -12,7 +13,7 @@ import java.util.Calendar;
 @Setter
 @ToString
 @NoArgsConstructor
-public class MemberDto {
+public class MemberDto implements Serializable {
 
     private Long id;
     private String username;

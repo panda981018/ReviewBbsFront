@@ -1,6 +1,5 @@
 package com.example.springsecuritytest.controller;
 
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 
 @Controller
-public class CustomErrorController implements ErrorController {
+public class ErrorController implements org.springframework.boot.web.servlet.error.ErrorController {
 
     private final String DEFAULT_ERROR_PATH = "/error";
 
@@ -39,7 +37,7 @@ public class CustomErrorController implements ErrorController {
     @RequestMapping(value = "/access-denied", method = RequestMethod.GET)
     public String accessDenied(Model model) {
         model.addAttribute("errorCode", "403");
-        model.addAttribute("errorMessage", "Forbidden");
+        model.addAttribute("errorMessage", "접근 권한이 없습니다.\n다른 계정으로 접근하십시오.");
 
         return DEFAULT_ERROR_PATH;
     }

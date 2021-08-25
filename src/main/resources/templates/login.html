@@ -9,8 +9,8 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="form-box justify-content-center align-items-center">
-        <h1 class="mb-5">Login</h1>
+    <div class="d-flex flex-column justify-content-center align-items-stretch align-self-center form-box">
+        <h1>Login</h1>
         <form th:action="@{/login}" method="post">
             <!-- 로그인 시 아이디의 name attribute 값은 username이어야 함. -->
             <div class="mb-3">
@@ -28,7 +28,7 @@
             <div th:if="${errorMessage}">
                 <p class="alert alert-danger" th:text="${errorMessage}">Username or Password invalid. Please verify</p>
             </div>
-            <button type="submit" class="btn btn-primary form-button mt-3">LOGIN</button>
+            <button type="submit" class="btn btn-primary form-button">LOGIN</button>
         </form>
     </div>
 </div>

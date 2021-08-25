@@ -13,6 +13,8 @@ import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @SequenceGenerator(
         name = "USER_SEQ_GEN",
@@ -22,8 +24,6 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 무분별한 Entity 생성을 막기 위해 protected
 @Getter
 @Entity
-@DynamicInsert
-@DynamicUpdate
 @Table(name = "MEMBER")
 public class MemberEntity {
     @Id

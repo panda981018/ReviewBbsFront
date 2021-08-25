@@ -26,7 +26,6 @@ public class HomeController { // anonymous
     // 메인 페이지
     @GetMapping("/")
     public String index(Authentication auth) {
-
         if (auth == null) {
             return "home/index";
         } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority(Role.MEMBER.getValue()))) {

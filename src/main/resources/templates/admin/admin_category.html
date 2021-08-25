@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/form.css">
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+    <title>Admin Page</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div layout:replace="fragments/adminnav :: NaviAdmin"></div>
+    <div id="adminContent" class="d-flex flex-column flex-md-shrink-1 justify-content-start mt-3">
+        <div id="pageInfo" class="mb-4 align-self-center">
+            <h1 class="py-2">Category</h1>
+            <span class="py-1">카테고리를 추가하는 페이지입니다.</span>
+        </div>
+        <form id="categoryForm" class="form-group d-flex flex-column justify-content-around align-items-center"
+              th:action="@{/admin/category}" th:object="${category}" method="post">
+            <label for="name" class="form-label"><b>Category Name</b></label>
+            <input type="text" id="name" th:name="name" class="form-control mb-3" placeholder="카테고리 이름 입력">
+            <label for="description" class="form-label"><b>Category Description</b></label>
+            <input type="text" id="description" th:name="description" class="form-control mb-3"
+                   placeholder="카테고리 설명 입력">
+            <button type="submit" class="btn btn-primary form-button">등록</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
