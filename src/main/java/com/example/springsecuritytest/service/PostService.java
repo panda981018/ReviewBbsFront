@@ -4,6 +4,7 @@ import com.example.springsecuritytest.domain.entity.CategoryEntity;
 import com.example.springsecuritytest.domain.repository.CategoryRepository;
 import com.example.springsecuritytest.dto.CategoryDto;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class PostService {
     private final CategoryRepository categoryRepository;
 
     public List<CategoryDto> getAllCategories() {
-        List<CategoryEntity> categoryEntities = categoryRepository.findAll();
+        List<CategoryEntity> categoryEntities = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         List<CategoryDto> categories = new ArrayList<>();
 
         for (CategoryEntity category : categoryEntities) {

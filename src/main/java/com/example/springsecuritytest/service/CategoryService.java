@@ -12,6 +12,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public void createCategory(CategoryDto categoryDto) {
+        categoryDto.setName(categoryDto.getName().toUpperCase());
         categoryRepository.save(categoryDto.toEntity());
     }
 }

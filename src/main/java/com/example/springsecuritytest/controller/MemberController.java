@@ -1,8 +1,11 @@
 package com.example.springsecuritytest.controller;
 
+import com.example.springsecuritytest.dto.CategoryDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.enumclass.Role;
+import com.example.springsecuritytest.service.CategoryService;
 import com.example.springsecuritytest.service.MemberService;
+import com.example.springsecuritytest.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -20,13 +24,18 @@ import java.sql.SQLException;
 public class MemberController { // member
 
     private final MemberService memberService;
+    private final PostService postService;
 
     @GetMapping("/home")
     public String memberHome(HttpSession session, Authentication auth) throws SQLException {
 
         MemberDto member = memberService.findByUsername(auth.getName());
+        List<CategoryDto> categoryList = postService.getAllCategories();
         if (session.getAttribute("memberInfo") == null) {
             session.setAttribute("memberInfo", member);
+        }
+        if (session.getAttribute("categoryList") == null) {
+            session.setAttribute("categoryList", categoryList);
         }
         return "home/memberHome";
     }

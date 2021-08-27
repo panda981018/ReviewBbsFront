@@ -3,11 +3,13 @@ package com.example.springsecuritytest.dto;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class CategoryDto {
+public class CategoryDto implements Serializable {
 
     private Long id;
     private String name;

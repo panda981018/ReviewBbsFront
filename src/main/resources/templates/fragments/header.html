@@ -12,7 +12,16 @@
         <div class="collapse navbar-collapse justify-content-evenly" id="navbarSupportedContent">
             <ul class="navbar-nav my-0" id="navMenu">
                 <li class="nav-item mx-4">
-                    <a class="nav-link" th:href="@{/post/}"><b>Post</b></a>
+                    <th:block th:if="${session.categoryList != null}">
+                        <a class="nav-link"
+                           th:href="@{'/post/bbs?category=' + ${session.categoryList.get(0).getName().toLowerCase()}}">
+                            <b>Post</b>
+                        </a>
+                    </th:block>
+                    <th:block th:unless="${session.categoryList != null}">
+                        <a class="nav-link" th:href="@{/post/}"><b>Post</b></a>
+                    </th:block>
+
                 </li>
                 <li class="nav-item mx-4">
                     <a class="nav-link" href="#"><b>Map</b></a>

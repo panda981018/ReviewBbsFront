@@ -3,9 +3,20 @@
     width: 50%;
 }
 
-.form-box > h1 {
-    margin-bottom : 0.5rem;
-    align-self: center;
+/*.form-box > h1 {*/
+/*    margin-: 3rem;*/
+/*    text-align: center;*/
+/*    flex-grow: 1;*/
+/*}*/
+
+#loginText {
+    margin-top: 3rem;
+    text-align: center;
+    flex-grow: 1;
+}
+
+#loginForm {
+    flex-grow: 3;
 }
 
 #categoryForm {

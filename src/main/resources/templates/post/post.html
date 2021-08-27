@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/post.css">
+    <title>Post</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="postNav" class="d-flex flex-nowrap flex-column flex-shrink-0 p-3 bg-white" layout:fragment="NaviPost">
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item" th:each="category : ${session.categoryList}">
+                <a th:href="@{'/post/bbs?category=' + ${category.name.toLowerCase()}}" th:text="${category.name.toUpperCase()}"></a>
+            </li>
+        </ul>
+    </div>
+    <div id="postContent" class="d-flex flex-column justify-content-around">
+        <table class="flex-column justify-content-around align-items-stretch table table-striped table-responsive table-hover">
+            <thead>
+            <tr>
+                <td>번호</td>
+                <td>제목</td>
+                <td>작성자</td>
+                <td>작성날짜</td>
+                <td>조회수</td>
+            </tr>
+            </thead>
+        </table>
+        <div class="d-flex flex-row justify-content-end">
+            <button type="button" class="btn btn-primary form-button">작성</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

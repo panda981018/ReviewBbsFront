@@ -9,9 +9,9 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="d-flex flex-column justify-content-center align-items-stretch align-self-center form-box">
-        <h1>Login</h1>
-        <form th:action="@{/login}" method="post">
+    <div class="d-flex flex-column form-box">
+        <h1 id="loginText">Login</h1>
+        <form id="loginForm" th:action="@{/login}" method="post">
             <!-- 로그인 시 아이디의 name attribute 값은 username이어야 함. -->
             <div class="mb-3">
                 <label th:for="username" class="form-label"><b>Email address</b></label>
