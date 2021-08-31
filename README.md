@@ -6,6 +6,6 @@
 ## 사용 기술
   * Spring Boot 2.5.2
   * Oracle 19c
-  * Redis
+  * Redis (Windows local 설치)
   * Thymeleaf
   * jQuery
