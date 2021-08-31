@@ -14,7 +14,7 @@
                 <li class="nav-item mx-4">
                     <th:block th:if="${session.categoryList != null}">
                         <a class="nav-link"
-                           th:href="@{'/post/bbs?category=' + ${session.categoryList.get(0).getName().toLowerCase()}}">
+                           th:href="@{'/post/bbs?category=' + ${session.categoryList.get(0).getId()}}">
                             <b>Post</b>
                         </a>
                     </th:block>
@@ -35,19 +35,15 @@
 
     <div class="col-3 d-flex flex-row justify-content-end align-items-center">
         <small class="text-muted me-3 align-self-center" sec:authorize="isAnonymous()">어서오세요!</small>
-        <!--        <small class="text-muted me-1 align-self-center" sec:authorize="hasRole('ROLE_ADMIN')">관리자 <span sec:authentication="name"></span>님,-->
-        <!--            반갑습니다!</small>-->
-        <!--        <small class="text-muted me-1 align-self-center" sec:authorize="hasRole('ROLE_MEMBER')"><span sec:authentication="name"></span>님,-->
-        <!--            반갑습니다!</small>-->
         <!--                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"-->
         <!--                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-3">-->
         <!--                        <circle cx="10.5" cy="10.5" r="7.5"></circle>-->
         <!--                        <line x1="21" y1="21" x2="15.8" y2="15.8"></line>-->
         <!--                    </svg>-->
         <div id="anonymousMenu" sec:authorize="isAnonymous()">
-            <a class="btn btn-sm btn-outline-secondary" th:href="@{/signup}" sec:authorize="!isAuthenticated()">Sign
+            <a class="btn btn-sm btn-outline-secondary" th:href="@{/signup}">Sign
                 up</a>
-            <a class="btn btn-sm btn-outline-secondary" th:href="@{/login}" sec:authorize="!isAuthenticated()">Log
+            <a class="btn btn-sm btn-outline-secondary" th:href="@{/login}">Log
                 in</a>
         </div>
         <div id="authorizeMenu" class="dropdown" sec:authorize="isAuthenticated()">

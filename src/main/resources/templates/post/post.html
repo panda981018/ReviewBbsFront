@@ -5,34 +5,57 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
-    <link rel="stylesheet" type="text/css" href="/css/post.css">
+    <link rel="stylesheet" type="text/css" href="/css/editbbs.css">
     <title>Post</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <div id="postNav" class="d-flex flex-nowrap flex-column flex-shrink-0 p-3 bg-white" layout:fragment="NaviPost">
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item" th:each="category : ${session.categoryList}">
-                <a th:href="@{'/post/bbs?category=' + ${category.name.toLowerCase()}}" th:text="${category.name.toUpperCase()}"></a>
-            </li>
-        </ul>
-    </div>
-    <div id="postContent" class="d-flex flex-column justify-content-around">
-        <table class="flex-column justify-content-around align-items-stretch table table-striped table-responsive table-hover">
+    <div layout:replace="fragments/postnav :: NaviPost"></div>
+    <div id="postContent" class="d-flex flex-column">
+        <div id="pageInfo" class="d-flex flex-column align-items-center align-self-center pb-4">
+            <h1 class="py-2" th:text="${session.categoryList.get(categoryIndex).getName()}"></h1>
+            <span class="py-1" th:text="${session.categoryList.get(categoryIndex).getDescription()}"></span>
+        </div>
+
+        <table id="table"
+               class="flex-column justify-content-around align-items-stretch table table-striped table-responsive table-hover">
             <thead>
             <tr>
-                <td>번호</td>
-                <td>제목</td>
-                <td>작성자</td>
-                <td>작성날짜</td>
-                <td>조회수</td>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성날짜</th>
+                <th>조회수</th>
             </tr>
             </thead>
+            <tbody>
+            <tr th:each="bbs : ${bbsList}"
+                th:onclick="|location.href='@{/post/bbs/view(id=${bbs.id})}'|">
+                <td th:text="${bbs.getId()}"></td>
+                <td th:text="${bbs.getBbsTitle()}"></td>
+                <td th:text="${bbs.getBbsWriter()}"></td>
+                <td th:text="${bbs.getBbsDate()}"></td>
+                <td th:text="${bbs.getBbsViews()}"></td>
+            </tr>
+            </tbody>
         </table>
         <div class="d-flex flex-row justify-content-end">
-            <button type="button" class="btn btn-primary form-button">작성</button>
+            <a th:href="@{/post/bbs/write}" class="btn btn-primary">
+                작성
+            </a>
         </div>
     </div>
 </div>
+<th:block layout:fragment="script">
+    <!--  없으면 ajax가 동작하지 않음  -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="/js/post.js"></script>
+    <script>
+        window.onload = function () {
+            updateViews();
+        }
+    </script>
+
+</th:block>
 </body>
 </html>

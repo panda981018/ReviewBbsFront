@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/post.css">
+    <title>Post</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="postContent"
+         class="d-flex flex-column justify-content-evenly align-items-stretch form-box">
+        <h1 class="flex-grow-0 pb-3 border-bottom">Write Review</h1>
+        <form class="form-group d-grid mt-3" id="formEdit" th:action="@{/post/bbs/write}" th:object="${bbs}" method="post">
+            <!-- id -->
+            <input type="hidden" id="hiddenId" name="bbsId">
+            <!-- category 선택 -->
+            <label id="categoryLabel" class="form-label" for="bbsCategory"><b>Category</b></label>
+            <select id="bbsCategory" class="btn dropdown-toggle" data-bs-toggle="dropdown" name="categoryId">
+                <th:block th:each="category : ${session.categoryList}">
+                    <option class="dropdown-item" th:value="${category.id}" th:text="${category.name}"></option>
+                </th:block>
+            </select>
+            <!-- 제목 -->
+            <label id="titleLabel" class="form-label" for="bbsTitle"><b>Title</b></label>
+            <input type="text" id="bbsTitle" class="form-control" name="bbsTitle"><br>
+            <!-- 내용 -->
+            <label id="contentsLabel" for="bbsContents" class="form-label"><b>Contents</b></label><br>
+            <textarea id="bbsContents" class="form-box" name="bbsContents"></textarea>
+            <div id="btnGroup">
+                <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button" onclick="window.history.back();">취소</button>
+                <button type="submit" id="submitBtn" class="btn btn-primary form-button">등록</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

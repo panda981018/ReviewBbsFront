@@ -33,14 +33,6 @@ public class CategoryEntity {
     @Column(length = 200)
     private String description;
 
-    @OneToMany(mappedBy = "categoryId") // Bbs의 categoryId와 관계 매핑
-    private Set<BbsEntity> bbsEntities = new HashSet<>();
-
-    public void addBbs(BbsEntity bbs) {
-        bbs.setCategory(this);
-        this.bbsEntities.add(bbs);
-    }
-
     public CategoryDto toDto() {
         return CategoryDto.builder()
                 .id(id)

@@ -5,7 +5,6 @@ import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.enumclass.Role;
 import com.example.springsecuritytest.service.CategoryService;
 import com.example.springsecuritytest.service.MemberService;
-import com.example.springsecuritytest.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -24,17 +23,17 @@ import java.util.List;
 public class MemberController { // member
 
     private final MemberService memberService;
-    private final PostService postService;
+    private final CategoryService categoryService;
 
     @GetMapping("/home")
     public String memberHome(HttpSession session, Authentication auth) throws SQLException {
 
         MemberDto member = memberService.findByUsername(auth.getName());
-        List<CategoryDto> categoryList = postService.getAllCategories();
+        List<CategoryDto> categoryList = categoryService.getAllCategories();
         if (session.getAttribute("memberInfo") == null) {
             session.setAttribute("memberInfo", member);
         }
-        if (session.getAttribute("categoryList") == null) {
+        if (!categoryList.isEmpty() && session.getAttribute("categoryList") == null) {
             session.setAttribute("categoryList", categoryList);
         }
         return "home/memberHome";

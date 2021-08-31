@@ -8,11 +8,10 @@
 <body>
 <div id="postNav" class="d-flex flex-nowrap flex-column flex-shrink-0 p-3 bg-white" layout:fragment="NaviPost">
     <ul class="nav nav-pills flex-column mb-auto">
-        <th:block th:each="category : ${categoryList}">
-            <li class="nav-item">
-                <a th:href="@{/post/${category.categoryName}}" th:text="${category.categoryName}"></a>
-            </li>
-        </th:block>
+        <li class="nav-item" th:each="category : ${session.categoryList}">
+            <a th:href="@{'/post/bbs?category=' + ${category.getId()}}"
+               th:text="${category.name.toUpperCase()}"></a>
+        </li>
     </ul>
 </div>
 </body>

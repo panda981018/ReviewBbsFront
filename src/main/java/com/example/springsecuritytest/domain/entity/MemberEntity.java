@@ -23,6 +23,7 @@ import java.util.Set;
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 무분별한 Entity 생성을 막기 위해 protected
 @Getter
+@Setter
 @Entity
 @Table(name = "MEMBER")
 public class MemberEntity {

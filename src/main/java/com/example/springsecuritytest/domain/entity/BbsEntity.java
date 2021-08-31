@@ -1,5 +1,6 @@
 package com.example.springsecuritytest.domain.entity;
 
+import com.example.springsecuritytest.dto.BbsDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,6 +50,18 @@ public class BbsEntity {
 
     public void setBbsWriter(MemberEntity member) {
         this.bbsWriter = member;
+    }
+
+    public BbsDto toDto() {
+        return BbsDto.builder()
+                .id(id)
+                .bbsTitle(bbsTitle)
+                .bbsContents(bbsContents)
+                .bbsDate(bbsDate)
+                .bbsViews(bbsViews)
+                .categoryId(categoryId.getId())
+                .bbsWriter(bbsWriter.getNickname())
+                .build();
     }
 
     @Builder
