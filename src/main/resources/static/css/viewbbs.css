@@ -27,19 +27,26 @@ a {
     width: 35%;
 }
 
-th {
+#bbsTitleTr > th,
+#bbsWriterTr > th {
     width: 15%;
     margin-top: 2px;
     margin-bottom: 2px;
+    background-color: #dbdbdb;
+}
+
+td, th {
+    vertical-align: middle;
 }
 #bbsContents {
     height: 80%;
     text-align: start;
+    vertical-align: baseline;
     font-size: 1.2rem;
 }
 
-#btnGroup {
-    grid-row: 4 / 5;
-    grid-column: 4 / 5;
-    justify-self: end;
-}
+/*#ownerBtnGroup {*/
+/*    grid-row: 4 / 5;*/
+/*    grid-column: 4 / 5;*/
+/*    justify-self: end;*/
+/*}*/

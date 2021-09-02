@@ -26,16 +26,7 @@ public class MemberController { // member
     private final CategoryService categoryService;
 
     @GetMapping("/home")
-    public String memberHome(HttpSession session, Authentication auth) throws SQLException {
-
-        MemberDto member = memberService.findByUsername(auth.getName());
-        List<CategoryDto> categoryList = categoryService.getAllCategories();
-        if (session.getAttribute("memberInfo") == null) {
-            session.setAttribute("memberInfo", member);
-        }
-        if (!categoryList.isEmpty() && session.getAttribute("categoryList") == null) {
-            session.setAttribute("categoryList", categoryList);
-        }
+    public String memberHome(HttpSession session) {
         return "home/memberHome";
     }
 

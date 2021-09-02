@@ -16,9 +16,10 @@
             <h1 class="py-2" th:text="${session.categoryList.get(categoryIndex).getName()}"></h1>
             <span class="py-1" th:text="${session.categoryList.get(categoryIndex).getDescription()}"></span>
         </div>
-
-        <table id="table"
-               class="flex-column justify-content-around align-items-stretch table table-striped table-responsive table-hover">
+        <h2 th:unless="${!bbsList.isEmpty()}">아직 글이 없습니다.</h2>
+        <table id="table" th:if="${!bbsList.isEmpty()}"
+            class="flex-column justify-content-around align-items-stretch
+                table table-striped table-responsive table-hover">
             <thead>
             <tr>
                 <th>번호</th>
@@ -40,7 +41,7 @@
             </tbody>
         </table>
         <div class="d-flex flex-row justify-content-end">
-            <a th:href="@{/post/bbs/write}" class="btn btn-primary">
+            <a th:href="@{/post/bbs/write(category=${session.categoryList.get(categoryIndex).id})}" class="btn btn-primary">
                 작성
             </a>
         </div>

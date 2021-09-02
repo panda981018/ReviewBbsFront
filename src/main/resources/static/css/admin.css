@@ -1,13 +1,18 @@
 #adminNav {
-    flex-basis: 15%;
     width: 15%;
+    margin: 0 auto;
 }
 #adminContent {
-    flex-basis: 70%;
     width: 70%;
+    margin: 0 auto;
 }
 
 #pageInfo > h1,
 #pageInfo > span {
     text-align: center;
+}
+
+.current-page {
+    font-size: larger;
+    font-weight: bold;
 }

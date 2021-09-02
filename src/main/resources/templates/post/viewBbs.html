@@ -35,12 +35,30 @@
                 <td id="bbsContents" colspan="8" rowspan="5" class="ps-3 pt-3" th:text="${bbs.bbsContents}"></td>
             </tr>
         </table>
-        <div id="btnGroup" class="d-flex justify-content-end mt-3"
-             th:if="${bbs.bbsWriter == session.memberInfo.getNickname()}">
-            <button type="button" id="deleteBtn" class="btn btn-outline-danger me-3">삭제</button>
-            <a th:href="@{'/post/bbs/update?id=' + ${bbs.id}}" id="updateBtn" class="btn btn-primary">수정</a>
+        <div id="previousBtnDiv" class="d-flex justify-content-between align-items-center my-3">
+            <button type="button" id="previousBtn" class="btn btn-outline-secondary"
+                onclick="window.history.back();">이전</button>
+            <div id="ownerBtnGroup" class="d-flex justify-content-end align-items-center"
+                 th:if="${bbs.bbsWriter == session.memberInfo.getNickname()}">
+                <button type="button" id="deleteBtn" class="btn btn-outline-danger me-3">삭제</button>
+                <a th:href="@{'/post/bbs/update?id=' + ${bbs.id}}" id="updateBtn" class="btn btn-primary">수정</a>
+            </div>
         </div>
+
     </div>
 </div>
+<th:block layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="/js/post.js"></script>
+    <script>
+        window.onload = function () {
+            //<[CDATA[
+            const bbsId = [[${bbs.id}]];
+            const categoryId = [[${bbs.categoryId}]];
+            deleteBbs(bbsId, categoryId);
+            //]]>
+        }
+    </script>
+</th:block>
 </body>
 </html>

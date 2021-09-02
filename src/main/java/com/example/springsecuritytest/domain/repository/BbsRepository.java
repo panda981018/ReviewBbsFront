@@ -13,4 +13,5 @@ public interface BbsRepository extends JpaRepository<BbsEntity, Long> {
 
     Optional<List<BbsEntity>> findByCategoryId(CategoryEntity categoryId);
     Optional<BbsEntity> findById(Long id);
+    void deleteById(Long id);
 }

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class ErrorController implements org.springframework.boot.web.servlet.error.ErrorController {
 
-    private final String DEFAULT_ERROR_PATH = "/error";
+    private final String DEFAULT_ERROR_PATH = "error";
 
     @PostMapping("/login/error")
     public String loginError(HttpServletRequest request, Model model) {

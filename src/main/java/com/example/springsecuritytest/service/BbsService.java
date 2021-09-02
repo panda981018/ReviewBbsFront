@@ -92,4 +92,8 @@ public class BbsService {
         BbsEntity bbsEntity = bbsRepository.findById(id).get();
         bbsQueryRepository.updateBbsViews(id, bbsEntity.getBbsViews());
     }
+
+    public void deleteBbs(Long id) {
+        bbsRepository.deleteById(id);
+    }
 }
