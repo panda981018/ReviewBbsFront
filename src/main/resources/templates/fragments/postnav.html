@@ -3,13 +3,13 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
-<head>
-</head>
 <body>
-<div id="postNav" class="d-flex flex-nowrap flex-column flex-shrink-0 p-3 bg-white" layout:fragment="NaviPost">
-    <ul class="nav nav-pills flex-column mb-auto">
+<div id="postNav" class="d-flex flex-column flex-shrink-0 p-3" layout:fragment="NaviPost">
+    <ul class="nav flex-column mb-auto">
         <li class="nav-item" th:each="category : ${session.categoryList}">
-            <a th:href="@{'/post/bbs?category=' + ${category.getId()}}"
+            <a class="nav-link link-dark"
+               th:classappend="${category.name.toUpperCase().equals(session.categoryList.get(categoryIndex).getName())} ? 'current'"
+               th:href="@{'/post/bbs?category=' + ${category.getId()}}"
                th:text="${category.name.toUpperCase()}"></a>
         </li>
     </ul>

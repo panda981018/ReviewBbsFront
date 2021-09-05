@@ -6,6 +6,8 @@
       layout:decorator="~{layouts/layout}">
 <head>
     <link rel="stylesheet" type="text/css" href="/css/editbbs.css">
+    <script src="https://cdn.ckeditor.com/ckeditor5/29.2.0/classic/ckeditor.js"></script>
+<!--    <script src="/ckeditor/ckeditor.js"></script>-->
     <title>Post</title>
 </head>
 <body>
@@ -13,7 +15,8 @@
     <div id="postContent"
          class="d-flex flex-column justify-content-evenly align-items-stretch form-box">
         <h1 class="flex-grow-0 pb-3 border-bottom">Write Review</h1>
-        <form class="form-group d-grid mt-3" id="formEdit" th:action="@{/post/bbs/write}" th:object="${bbs}" method="post"
+        <form class="form-group d-grid mt-3" id="formEdit" th:action="@{/post/bbs/write}" th:object="${bbs}"
+              method="post"
               onsubmit="return validateBbs();">
             <!-- id -->
             <input type="hidden" id="hiddenId" name="bbsId">
@@ -34,7 +37,8 @@
             <textarea id="bbsContents" class="form-box" name="bbsContents"></textarea>
             <div id="btnGroup">
                 <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button"
-                        onclick="window.history.back();">취소</button>
+                        onclick="window.history.back();">취소
+                </button>
                 <button type="submit" id="submitBtn" class="btn btn-primary form-button">등록</button>
             </div>
         </form>
@@ -47,9 +51,20 @@
         const categoryId = [[${categoryId}]];
         //]]>
         window.onload = function () {
+            ClassicEditor
+                .create(document.querySelector('#bbsContents'))
+                .then(function(editor) {
+                    // $('style').append('.ck-editor__editable { min-height: '
+                    //     + $('textarea[name=bbsContents]').height() + 'px !important;}');
+                    window.editor = editor;
+                    contentValidate();
+                })
+                .catch(function(error) {
+                    console.error(error);
+                });
             selectCategory(categoryId);
             titleValidate();
-            contentValidate();
+
         }
     </script>
 </th:block>

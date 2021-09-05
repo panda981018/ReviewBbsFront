@@ -39,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         super.configure(web);
         web.ignoring()
                 .antMatchers("/static/**")
+                .antMatchers("/ckeditor/**")
                 .antMatchers("/resources/**")
                 .antMatchers("/css/**")
                 .antMatchers("/js/**")

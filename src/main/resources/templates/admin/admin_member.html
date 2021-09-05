@@ -84,10 +84,13 @@
     </div>
 </div>
 <th:block layout:fragment="script">
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="/js/adminpage.js"></script>
     <script>
         window.onload = function () {
+            //<[CDATA[
+            const pageTitle = $('#pageInfo h1').text();
+            //]]>
+            selectMenu(pageTitle);
             selectOrder();
             clickMember();
             sortBy();

@@ -1,0 +1,10 @@
+#postNav, #adminNav {
+    background-color: #ACAD9C;
+}
+
+.current {
+    background-color: #F7FADE !important;
+    border: 0;
+    border-radius: .25rem;
+    font-weight: bold;
+}

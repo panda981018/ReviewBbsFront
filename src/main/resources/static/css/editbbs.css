@@ -24,7 +24,7 @@ table {
 }
 
 #formEdit {
-    grid-template-rows: 1fr 1fr 1fr 4fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 6fr 1fr;
     grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
     gap: 0.5rem 0.25rem;
     align-items: center;
@@ -60,12 +60,14 @@ table {
     grid-column: 1 / 2;
 }
 
+.ck,
 #bbsContents {
     grid-row: 4 / 5;
     grid-column: 1 / 6;
     align-self: stretch;
     resize: none;
 }
+
 
 #bbsError {
     grid-row: 3 / 4;

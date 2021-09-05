@@ -39,21 +39,24 @@ function titleValidate() {
 }
 
 function contentValidate() {
-    const bbsContent = $('#bbsContents');
+    const ckeditor = $('.ck-content');
     const bbsError = $('#bbsError');
 
-    bbsContent.on('focusout', function () {
-        if (bbsContent.val() == '') {
-            invalidMsg(bbsError);
-        } else {
-            validMsg(bbsError);
-            bbsContent.removeClass('is-invalid');
-            bbsContent.addClass('is-valid');
-        }
+    ckeditor.on('focusout', function () {
+        console.log(ckeditor[0].firstChild);
+        // if (bbsContent.innerHTML == '') {
+        //     invalidMsg(bbsError);
+        // } else {
+        //     validMsg(bbsError);
+        //     ckeditor.removeClass('is-invalid');
+        //     ckeditor.addClass('is-valid');
+        // }
     })
 }
 
 function validateBbs() {
+    const ckeditor = $('.ck-content');
+    const bbsContent = $('#bbsContents');
     const titleError = $('#titleError');
     const bbsError = $('#bbsError');
 
@@ -61,8 +64,26 @@ function validateBbs() {
         || bbsError.hasClass('invalid-feedback')) {
         return false;
     } else {
+        bbsContent.val(ckeditor[0].firstChild);
         return true;
     }
+}
+
+function showContent() {
+    const domparser = new DOMParser();
+    const tdContent = $('#bbsContents');
+    let str = tdContent[0].innerText;
+
+    let contents = $.parseHTML(str)
+    let pre = document.createElement('pre');
+    pre.innerHTML = $.parseHTML(str);
+    tdContent[0].appendChild(pre);
+}
+
+function showCKEditorContent() {
+    const tdContent = $('#bbsContents');
+
+    CKEDITOR.instances.bbsContents.setData(tdContent[0].innerHTML);
 }
 
 function invalidMsg(object) {

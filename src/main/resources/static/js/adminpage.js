@@ -29,3 +29,15 @@ function sortBy() {
         });
     });
 }
+
+function selectMenu(menu) {
+    const aList = $('.link-dark');
+
+    for (let i = 0; i < aList.length; i++) {
+        if (aList.get(i).innerText.trim() == menu) {
+            aList.get(i).classList.add('current');
+        } else {
+            aList.get(i).classList.remove('current');
+        }
+    }
+}

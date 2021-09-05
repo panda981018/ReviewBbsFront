@@ -27,5 +27,16 @@
         </form>
     </div>
 </div>
+<th:block layout:fragment="script">
+    <script src="/js/adminpage.js"></script>
+    <script>
+        window.onload = function () {
+            //<[CDATA[
+            const pageTitle = $('#pageInfo h1').text();
+            //]]>
+            selectMenu(pageTitle);
+        }
+    </script>
+</th:block>
 </body>
 </html>

@@ -5,6 +5,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
+    <script src="https://cdn.ckeditor.com/ckeditor5/29.2.0/classic/ckeditor.js"></script>
+<!--    <script src="/ckeditor/ckeditor.js"></script>-->
     <link rel="stylesheet" type="text/css" href="/css/editbbs.css">
     <title>Post</title>
 </head>
@@ -12,7 +14,8 @@
 <div layout:fragment="content">
     <div id="postContent"
          class="d-flex flex-column justify-content-evenly align-items-stretch">
-        <form class="form-group d-grid" th:action="@{'/post/bbs/update?id=' + ${bbs.id}}" th:object="${bbs}" id="formEdit" method="post">
+        <form class="form-group d-grid" th:action="@{'/post/bbs/update?id=' + ${bbs.id}}" th:object="${bbs}"
+              id="formEdit" method="post" onsubmit="return validateBbs();">
             <!-- id -->
             <input type="hidden" id="hiddenId" th:field="*{id}">
             <!-- category 선택 -->
@@ -35,5 +38,25 @@
         </form>
     </div>
 </div>
+<th:block layout:fragment="script">
+    <script src="/js/post.js"></script>
+    <script type="text/javascript">
+        // window.onload = function() {ck = CKEDITOR.replace("bbsContents");}
+        window.onload = function () {
+            ClassicEditor
+                .create(document.querySelector('#bbsContents'))
+                .then(function () {
+                    window.editor = editor;
+                    contentValidate();
+                    showCKEditorContent();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            ClassicEditor.replace("bbsContents");
+            titleValidate();
+        }
+    </script>
+</th:block>
 </body>
 </html>
