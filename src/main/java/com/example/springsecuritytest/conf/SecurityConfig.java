@@ -62,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoringAntMatchers("/check/nickname")
                 .ignoringAntMatchers("/post/bbs/update/views")
                 .ignoringAntMatchers("/post/bbs/delete/**")
+                .ignoringAntMatchers("/post/bbs/uploadImg")
                 .and()
                 .formLogin()
                 .loginPage("/login")

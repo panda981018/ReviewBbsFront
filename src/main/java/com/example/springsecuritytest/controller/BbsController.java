@@ -4,13 +4,21 @@ import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.BbsService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.io.FileUtils;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @AllArgsConstructor
@@ -84,7 +92,13 @@ public class BbsController {
 
     @ResponseBody
     @DeleteMapping("/bbs/delete/{id}")
-    public void deleteBbs(@PathVariable String id, @RequestParam String category) {
+    public void deleteBbs(@PathVariable String id) {
         bbsService.deleteBbs(Long.parseLong(id));
+    }
+
+    @ResponseBody
+    @PostMapping("/bbs/uploadImg")
+    public HashMap<String, String> uploadSummernoteImage(@RequestParam("file") MultipartFile multipartFile) {
+        return bbsService.uploadImage(multipartFile);
     }
 }

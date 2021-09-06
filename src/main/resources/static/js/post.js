@@ -1,4 +1,4 @@
-function updateViews() {
+function updateViews() { // 조회수 업데이트
 
     $('tr').on('click', function () {
         const tr = $(this).children();
@@ -22,7 +22,7 @@ function selectCategory(categoryId) {
     $('#bbsCategory').val(categoryId);
 }
 
-function titleValidate() {
+function titleValidate() { // 타이틀 비어있으면 error
     const bbsTitle = $('#bbsTitle');
     const titleError = $('#titleError');
 
@@ -38,24 +38,24 @@ function titleValidate() {
     })
 }
 
-function contentValidate() {
-    const ckeditor = $('.ck-content');
+function contentValidate() { // 내용이 비어있으면 error
+    const editor = $('.note-editable');
     const bbsError = $('#bbsError');
 
-    ckeditor.on('focusout', function () {
-        console.log(ckeditor[0].firstChild);
-        // if (bbsContent.innerHTML == '') {
-        //     invalidMsg(bbsError);
-        // } else {
-        //     validMsg(bbsError);
-        //     ckeditor.removeClass('is-invalid');
-        //     ckeditor.addClass('is-valid');
-        // }
+    editor.on('focusout', function () {
+        console.log($('#bbsContents').summernote('isEmpty'));
+        if ($('#bbsContents').summernote('isEmpty')) { // 기본으로 <p><br></p> 형식
+            invalidMsg(bbsError);
+        } else {
+            validMsg(bbsError);
+            editor.removeClass('is-invalid');
+            editor.addClass('is-valid');
+        }
     })
 }
 
-function validateBbs() {
-    const ckeditor = $('.ck-content');
+function validateBbs() { // 타이틀과 내용이 버어있는가
+    const editor = $('.note-editable');
     const bbsContent = $('#bbsContents');
     const titleError = $('#titleError');
     const bbsError = $('#bbsError');
@@ -64,39 +64,22 @@ function validateBbs() {
         || bbsError.hasClass('invalid-feedback')) {
         return false;
     } else {
-        bbsContent.val(ckeditor[0].firstChild);
+        bbsContent.val(editor[0].innerHTML);
         return true;
     }
 }
 
-function showContent() {
-    const domparser = new DOMParser();
-    const tdContent = $('#bbsContents');
-    let str = tdContent[0].innerText;
-
-    let contents = $.parseHTML(str)
-    let pre = document.createElement('pre');
-    pre.innerHTML = $.parseHTML(str);
-    tdContent[0].appendChild(pre);
-}
-
-function showCKEditorContent() {
-    const tdContent = $('#bbsContents');
-
-    CKEDITOR.instances.bbsContents.setData(tdContent[0].innerHTML);
-}
-
-function invalidMsg(object) {
+function invalidMsg(object) { // error
     object.removeClass('invisible');
     object.addClass('invalid-feedback');
 }
 
-function validMsg(object) {
+function validMsg(object) { // valid
     object.removeClass('invalid-feedback');
     object.addClass('invisible');
 }
 
-function deleteBbs(bbsId, bbsCategoryId) {
+function deleteBbs(bbsId, bbsCategoryId) { // 게시물 삭제
     $('#deleteBtn').on('click', function () {
         const address = '/post/bbs?category=' + bbsCategoryId;
         $.ajax({
@@ -107,6 +90,21 @@ function deleteBbs(bbsId, bbsCategoryId) {
                 location.href = address;
             }
         })
+    })
+}
 
+function uploadSummernoteImage(file, editor) {
+    const data = new FormData();
+    data.append('file', file);
+
+    $.ajax({
+        type: 'POST',
+        data: data,
+        url: '/post/bbs/uploadImg',
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            $(editor).summernote('insertImage', data.url);
+        }
     })
 }

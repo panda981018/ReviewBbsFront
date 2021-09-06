@@ -9,7 +9,7 @@
 }
 
 #postContent {
-    width: 70%;
+    width: 80%;
     margin: 0 auto;
 }
 
@@ -24,7 +24,7 @@ table {
 }
 
 #formEdit {
-    grid-template-rows: 1fr 1fr 1fr 6fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 5fr 1fr;
     grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
     gap: 0.5rem 0.25rem;
     align-items: center;
@@ -59,8 +59,7 @@ table {
     grid-row: 3 / 4;
     grid-column: 1 / 2;
 }
-
-.ck,
+.note-editor,
 #bbsContents {
     grid-row: 4 / 5;
     grid-column: 1 / 6;
@@ -78,4 +77,5 @@ table {
     grid-row: 5 / 6;
     grid-column: 5 / 6;
     justify-self: end;
+
 }

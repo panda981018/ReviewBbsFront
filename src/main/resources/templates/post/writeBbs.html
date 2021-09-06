@@ -5,9 +5,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
+    <!-- include summernote css/js -->
+    <link href="/css/summernote/summernote-lite.css" rel="stylesheet">
+    <script src="/js/summernote/summernote-lite.js" defer></script>
+    <!-- include summernote-ko-KR -->
+    <script src="/js/summernote/summernote-ko-KR.js"></script>
+
     <link rel="stylesheet" type="text/css" href="/css/editbbs.css">
-    <script src="https://cdn.ckeditor.com/ckeditor5/29.2.0/classic/ckeditor.js"></script>
-<!--    <script src="/ckeditor/ckeditor.js"></script>-->
     <title>Post</title>
 </head>
 <body>
@@ -35,7 +39,7 @@
             <label id="contentsLabel" for="bbsContents" class="form-label"><b>Contents</b></label><br>
             <span id="bbsError" class="invisible">내용을 채워주세요</span>
             <textarea id="bbsContents" class="form-box" name="bbsContents"></textarea>
-            <div id="btnGroup">
+            <div id="btnGroup" class="flex-wrap">
                 <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button"
                         onclick="window.history.back();">취소
                 </button>
@@ -45,26 +49,55 @@
     </div>
 </div>
 <th:block layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="/js/post.js"></script>
     <script>
         //<[CDATA[
         const categoryId = [[${categoryId}]];
         //]]>
         window.onload = function () {
-            ClassicEditor
-                .create(document.querySelector('#bbsContents'))
-                .then(function(editor) {
-                    // $('style').append('.ck-editor__editable { min-height: '
-                    //     + $('textarea[name=bbsContents]').height() + 'px !important;}');
-                    window.editor = editor;
-                    contentValidate();
-                })
-                .catch(function(error) {
-                    console.error(error);
-                });
+            //여기 아래 부분
+            $('#bbsContents').summernote({
+                height: 200,                 // 에디터 높이
+                minHeight: null,             // 최소 높이
+                maxHeight: null,             // 최대 높이
+                lang: "ko-KR",					// 한글 설정
+                placeholder: '장소에 대한 리뷰를 적어주세요!',	//placeholder 설정
+                disableResize: true,
+                disableGrammar: true,
+                toolbar: [
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+                    ['color', ['forecolor','color']],
+                    ['table', ['table']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['insert',['picture','link','video']],
+                    ['view', ['fullscreen', 'help']]
+                ],
+                fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+                fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+                callbacks: {
+                    onImageUpload: function (files) {
+                        uploadSummernoteImage(files[0], this);
+                    },
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        if (clipboardData && clipboardData.items
+                            && clipboardData.items.length) {
+                            let item = clipboardData.items[0];
+                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            });
+            $('.note-statusbar').hide();
             selectCategory(categoryId);
             titleValidate();
-
+            contentValidate();
         }
     </script>
 </th:block>

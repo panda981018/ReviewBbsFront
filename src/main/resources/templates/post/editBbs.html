@@ -5,8 +5,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
-    <script src="https://cdn.ckeditor.com/ckeditor5/29.2.0/classic/ckeditor.js"></script>
-<!--    <script src="/ckeditor/ckeditor.js"></script>-->
+    <!-- include summernote css/js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link href="/css/summernote/summernote-lite.css" type="text/css" rel="stylesheet">
+    <script src="/js/summernote/summernote-lite.js" defer></script>
+    <!-- include summernote-ko-KR -->
+    <script src="/js/summernote/summernote-ko-KR.js"></script>
+
     <link rel="stylesheet" type="text/css" href="/css/editbbs.css">
     <title>Post</title>
 </head>
@@ -14,13 +19,15 @@
 <div layout:fragment="content">
     <div id="postContent"
          class="d-flex flex-column justify-content-evenly align-items-stretch">
+        <h1 class="flex-grow-0 pb-3 border-bottom">Edit Review</h1>
         <form class="form-group d-grid" th:action="@{'/post/bbs/update?id=' + ${bbs.id}}" th:object="${bbs}"
               id="formEdit" method="post" onsubmit="return validateBbs();">
             <!-- id -->
             <input type="hidden" id="hiddenId" th:field="*{id}">
             <!-- category 선택 -->
             <label id="categoryLabel" class="form-label" th:for="bbsCategory"><b>Category</b></label>
-            <select id="bbsCategory" class="btn dropdown-toggle" th:field="*{categoryId}" data-bs-toggle="dropdown" name="categoryId">
+            <select id="bbsCategory" class="btn dropdown-toggle" th:field="*{categoryId}" data-bs-toggle="dropdown"
+                    name="categoryId">
                 <th:block th:each="category : ${session.categoryList}">
                     <option class="dropdown-item" th:value="${category.id}" th:text="${category.name}"></option>
                 </th:block>
@@ -32,7 +39,9 @@
             <label id="contentsLabel" for="bbsContents" class="form-label"><b>Contents</b></label><br>
             <textarea id="bbsContents" class="form-box" name="bbsContents" th:field="*{bbsContents}"></textarea>
             <div id="btnGroup">
-                <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button" onclick="window.history.back();">취소</button>
+                <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button"
+                        onclick="window.history.back();">취소
+                </button>
                 <button type="submit" id="updateBtn" class="btn btn-primary form-button">수정</button>
             </div>
         </form>
@@ -41,19 +50,33 @@
 <th:block layout:fragment="script">
     <script src="/js/post.js"></script>
     <script type="text/javascript">
-        // window.onload = function() {ck = CKEDITOR.replace("bbsContents");}
         window.onload = function () {
-            ClassicEditor
-                .create(document.querySelector('#bbsContents'))
-                .then(function () {
-                    window.editor = editor;
-                    contentValidate();
-                    showCKEditorContent();
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-            ClassicEditor.replace("bbsContents");
+            //여기 아래 부분
+            $('#bbsContents').summernote({
+                height: 200,                 // 에디터 높이
+                minHeight: null,             // 최소 높이
+                maxHeight: null,             // 최대 높이
+                lang: "ko-KR",					// 한글 설정
+                placeholder: '장소에 대한 리뷰를 적어주세요!',	//placeholder 설정
+                disableResize: true,
+                disableGrammar: true,
+                toolbar: [
+                    // [groupName, [list of button]]
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+                    ['color', ['forecolor','color']],
+                    ['table', ['table']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['insert',['picture','link','video']],
+                    ['view', ['fullscreen', 'help']]
+                ],
+                fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+                fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
+            });
+            $('.note-statusbar').hide();
+            contentValidate();
             titleValidate();
         }
     </script>

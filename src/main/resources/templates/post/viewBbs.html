@@ -32,7 +32,8 @@
             </tr>
 
             <tr id="bbsContentsTr">
-                <td id="bbsContents" colspan="8" rowspan="5" class="ps-3 pt-3" th:text="${bbs.bbsContents}"></td>
+                <td id="bbsContents" colspan="8" rowspan="5" class="ps-3 pt-3"
+                    th:utext="${bbs.bbsContents}"></td>
             </tr>
         </table>
         <div id="previousBtnDiv" class="d-flex justify-content-between align-items-center my-3">
@@ -55,7 +56,6 @@
             //<[CDATA[
             const bbsId = [[${bbs.id}]];
             const categoryId = [[${bbs.categoryId}]];
-            showContent();
             deleteBbs(bbsId, categoryId);
             //]]>
         }

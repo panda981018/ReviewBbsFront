@@ -21,12 +21,8 @@
             flex-direction: column;
         }
 
-        .container {
-            width: 80%;
-        }
-
         #footer {
-            margin: 1rem 13vw;
+            margin: 1rem 5vw;
         }
 
         .box > h2 {
@@ -43,7 +39,7 @@
     <!-- 공통 header -->
     <header th:replace="fragments/header :: header"></header>
 
-    <div id="main-content" class="container d-flex justify-content-center"
+    <div id="main-content" class="container d-flex justify-content-lg-around"
          layout:fragment="content"></div>
 
     <!-- 공통 footer -->
