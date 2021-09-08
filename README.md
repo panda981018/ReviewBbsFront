@@ -9,3 +9,4 @@
   * Redis (Windows local 설치)
   * Thymeleaf
   * jQuery
+  * WYSIWYG Editor : summernote
