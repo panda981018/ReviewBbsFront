@@ -48,10 +48,10 @@
     </div>
 </div>
 <th:block layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="/js/post.js"></script>
     <script type="text/javascript">
         window.onload = function () {
-            //여기 아래 부분
             $('#bbsContents').summernote({
                 height: 200,                 // 에디터 높이
                 minHeight: null,             // 최소 높이
@@ -61,7 +61,6 @@
                 disableResize: true,
                 disableGrammar: true,
                 toolbar: [
-                    // [groupName, [list of button]]
                     ['fontname', ['fontname']],
                     ['fontsize', ['fontsize']],
                     ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
@@ -70,14 +69,34 @@
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['height', ['height']],
                     ['insert',['picture','link','video']],
-                    ['view', ['fullscreen', 'help']]
+                    ['view', ['fullscreen', 'help']],
+                    ['lineHeights', ['lineHeights']]
                 ],
                 fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
-                fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
+                fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+                lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+                callbacks: {
+                    onImageUpload: function (files) {
+                        for(let i = files.length - 1; i >= 0; i--) {
+                            uploadSummernoteImage(files[i]);
+                        }
+                    },
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        if (clipboardData && clipboardData.items
+                            && clipboardData.items.length) {
+                            let item = clipboardData.items[0];
+                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
             });
             $('.note-statusbar').hide();
             contentValidate();
             titleValidate();
+            validateBbs();
         }
     </script>
 </th:block>

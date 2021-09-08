@@ -43,7 +43,6 @@ function contentValidate() { // 내용이 비어있으면 error
     const bbsError = $('#bbsError');
 
     editor.on('focusout', function () {
-        console.log($('#bbsContents').summernote('isEmpty'));
         if ($('#bbsContents').summernote('isEmpty')) { // 기본으로 <p><br></p> 형식
             invalidMsg(bbsError);
         } else {
@@ -67,6 +66,34 @@ function validateBbs() { // 타이틀과 내용이 버어있는가
         bbsContent.val(editor[0].innerHTML);
         return true;
     }
+    // $('#formEdit').on('submit',function (event) {
+    //     event.preventDefault();
+    //
+    //     const editor = $('.note-editable'); // summernote
+    //     const bbsContent = $('#bbsContents'); // 내용(textarea)
+    //     const titleError = $('#titleError'); // 제목 에러
+    //     const bbsError = $('#bbsError'); // 내용 에러
+    //
+    //     if ($('#bbsTitle').val() == '') {
+    //         invalidMsg(titleError);
+    //         return false;
+    //     } else if ($('#bbsContents').summernote('isEmpty')) {
+    //         invalidMsg(bbsError);
+    //         return false;
+    //     }
+    //     else if (titleError.hasClass('invalid-feedback')
+    //         || bbsError.hasClass('invalid-feedback')) {
+    //         return false;
+    //     } else {
+    //         // const imgList = $('.note-editable img');
+    //         // for(let i = imgList.length - 1; i >= 0; i--) {
+    //         //     let str = uploadSummernoteImage(imgList[i].currentSrc);
+    //         //     imgList[i].currentSrc = str;
+    //         // }
+    //         bbsContent.val(editor[0].innerHTML);
+    //         return true;
+    //     }
+    // })
 }
 
 function invalidMsg(object) { // error
@@ -82,10 +109,18 @@ function validMsg(object) { // valid
 function deleteBbs(bbsId, bbsCategoryId) { // 게시물 삭제
     $('#deleteBtn').on('click', function () {
         const address = '/post/bbs?category=' + bbsCategoryId;
+        let arr = []; // '/'로 split한 것을 가진 배열
+        let urlList = []; // 사진 src만 갖고 있는 배열
+        const imgList = $('#bbsContents img');
+        for(let i = 0; i < imgList.length; i++) {
+            arr = imgList[i].currentSrc.split('/');
+            urlList.push("/" + arr[3] + "/" + arr[4]);
+        }
         $.ajax({
             method: "DELETE",
-            url: "/post/bbs/delete/" + bbsId + "?category=" + bbsCategoryId,
-            dataType: "text",
+            data: JSON.stringify({'id' : bbsId, 'urls' : urlList}),
+            contentType: 'application/json;charset=utf-8;',
+            url: "/post/bbs/delete",
             success: function () {
                 location.href = address;
             }
@@ -93,18 +128,21 @@ function deleteBbs(bbsId, bbsCategoryId) { // 게시물 삭제
     })
 }
 
-function uploadSummernoteImage(file, editor) {
+function uploadSummernoteImage(file) {
     const data = new FormData();
     data.append('file', file);
 
     $.ajax({
+        async: false,
         type: 'POST',
         data: data,
         url: '/post/bbs/uploadImg',
         contentType: false,
         processData: false,
         success: function (data) {
-            $(editor).summernote('insertImage', data.url);
+            // localSrc = data.url;
+
+            $('#bbsContents').summernote('insertImage', data.url);
         }
     })
 }

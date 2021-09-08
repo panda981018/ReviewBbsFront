@@ -96,30 +96,42 @@ public class BbsService {
         bbsQueryRepository.updateBbsViews(id, bbsEntity.getBbsViews());
     }
 
-    public void deleteBbs(Long id) {
-        bbsRepository.deleteById(id);
+    public void deleteBbs(Long id, ArrayList<String> urls) {
+        if (urls != null) {
+            deleteUploadedImg(urls);
+        }
+        bbsRepository.deleteById(id); // 게시글 삭제
     }
 
-    public HashMap<String, String> uploadImage(MultipartFile multipartFile) {
+    public void deleteUploadedImg(ArrayList<String> urls) {
+        for (String url: urls) { // 게시글에 포함된 이미지 삭제
+            FileUtils.deleteQuietly(new File(url));
+        }
+    }
+
+    public HashMap<String, String> uploadImage(List<MultipartFile> multipartFile) {
         HashMap<String,String> data = new HashMap<>();
 
         String fileRoot = "D:\\summernoteImg\\"; // 저장될 경로
-        String originalFileName = multipartFile.getOriginalFilename();
-        String type = originalFileName.substring(originalFileName.lastIndexOf("."));
 
-        String savedFileName = UUID.randomUUID() + type;
+        for (int i = 0; i < multipartFile.size(); i++) {
+            String originalFileName = multipartFile.get(i).getOriginalFilename();
+            String type = originalFileName.substring(originalFileName.lastIndexOf("."));
 
-        File targetFile = new File(fileRoot + savedFileName);
+            String savedFileName = UUID.randomUUID() + type;
 
-        try {
-            InputStream fileStream = multipartFile.getInputStream();
-            FileUtils.copyInputStreamToFile(fileStream, targetFile); // inputstream, 파일저장경로
-            data.put("url", "/summernoteImg/" + savedFileName);
-            data.put("responseCode", "success");
-        } catch (IOException e) {
-            FileUtils.deleteQuietly(targetFile); // 에러나면 저장된 파일 삭제
-            data.put("responseCode", "error");
-            e.printStackTrace();
+            File targetFile = new File(fileRoot + savedFileName);
+
+            try {
+                InputStream fileStream = multipartFile.get(i).getInputStream();
+                FileUtils.copyInputStreamToFile(fileStream, targetFile); // inputstream, 파일저장경로
+                data.put("url", "/summernoteImg/" + savedFileName);
+                data.put("responseCode", "success");
+            } catch (IOException e) {
+                FileUtils.deleteQuietly(targetFile); // 에러나면 저장된 파일 삭제
+                data.put("responseCode", "error");
+                e.printStackTrace();
+            }
         }
 
         return data;

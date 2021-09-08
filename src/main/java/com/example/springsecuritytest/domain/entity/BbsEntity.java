@@ -29,6 +29,7 @@ public class BbsEntity {
     private String bbsTitle;
 
     @Column(nullable = false)
+    @Lob
     private String bbsContents;
 
     @Column(length = 25)
