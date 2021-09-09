@@ -1,3 +1,14 @@
 #logoutBtn {
     color: red;
 }
+
+#navMenu {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#navMenu > li {
+    display: table-cell;
+    text-align: center;
+    font-size: 1.1rem;
+}

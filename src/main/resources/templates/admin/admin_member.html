@@ -18,14 +18,14 @@
         </div>
         <div id="tableInfo" class="my-3 d-flex flex-row justify-content-between align-items-center">
             <div class="dropdown d-flex align-items-center">
-                <label for="sortSelect"><b>정렬기준</b></label>
-                <select id="sortSelect" class="btn dropdown-toggle" data-toggle="dropdown">
-                    <option class="dropdown-item" id="sortId" value="id">ID</option>
-                    <option class="dropdown-item" id="sortUsername" value="username">Username</option>
-                    <option class="dropdown-item" id="sortNickname" value="nickname">Nickname</option>
-                    <option class="dropdown-item" id="sortBirth" value="birth">Birth</option>
-                    <option class="dropdown-item" id="sortGender" value="gender">Gender</option>
-                    <option class="dropdown-item" id="sortReg" value="regdate">RegDate</option>
+                <label for="sortSelect" id="sortLabel" class="me-2"><b>정렬기준</b></label>
+                <select id="sortSelect" class="form-select dropdown-toggle" data-toggle="dropdown">
+                    <option class="dropdown-item" id="sortId" value="id">번호</option>
+                    <option class="dropdown-item" id="sortUsername" value="username">아이디</option>
+                    <option class="dropdown-item" id="sortNickname" value="nickname">닉네임</option>
+                    <option class="dropdown-item" id="sortBirth" value="birth">생년월일</option>
+                    <option class="dropdown-item" id="sortGender" value="gender">성별</option>
+                    <option class="dropdown-item" id="sortReg" value="regdate">가입일자</option>
                 </select>
             </div>
             <span class="d-flex" th:text="'총 회원 수 : ' + ${memberList.getTotalElements()}"></span>
@@ -33,13 +33,12 @@
         <table id="table" class="flex-column justify-content-around align-items-stretch table table-striped table-responsive table-hover">
             <thead>
             <tr>
-                <th>Member_ID</th>
-                <th>Username</th>
-                <th>Nickname</th>
-                <th>Role</th>
-                <th>Birth</th>
-                <th>Gender</th>
-                <th>Register Date</th>
+                <th style="width: 5%;">No.</th>
+                <th style="width: 20%;">아이디</th>
+                <th style="width: 10%;">닉네임</th>
+                <th style="width: 10%;">생년월일</th>
+                <th style="width: 5%;">성별</th>
+                <th style="width: 20%;">가입일자</th>
             </tr>
             </thead>
             <tbody>
@@ -47,7 +46,6 @@
                 <td th:text="${member.id}"></td>
                 <td th:text="${member.username}"></td>
                 <td th:text="${member.nickname}"></td>
-                <td th:text="${member.role}"></td>
                 <td th:if="${member.role == '일반회원'}"
                     th:text="${member.year} + '-' + ${member.month} + '-' + ${member.day}"></td>
                 <td th:unless="${member.role == '일반회원'}"></td>

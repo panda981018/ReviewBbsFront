@@ -55,6 +55,8 @@ public class AdminController { // admin
         HashMap<String, Page<MemberDto>> memberInfo = new HashMap<>();
         memberInfo.put("rs", memberList);
 
+        System.out.println(memberInfo);
+
         return memberInfo;
     }
 

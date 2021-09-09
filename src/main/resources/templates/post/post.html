@@ -22,21 +22,21 @@
                 table table-striped table-responsive table-hover">
             <thead>
             <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>작성날짜</th>
-                <th>조회수</th>
+                <th style="width:8%;">번호</th>
+                <th style="width:30%;">제목</th>
+                <th style="width:20%;">작성자</th>
+                <th style="width:20%;">작성날짜</th>
+                <th style="width:8%;">조회수</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="bbs : ${bbsList}"
                 th:onclick="|location.href='@{/post/bbs/view(id=${bbs.id})}'|">
-                <td th:text="${bbs.getId()}"></td>
-                <td th:text="${bbs.getBbsTitle()}"></td>
-                <td th:text="${bbs.getBbsWriter()}"></td>
-                <td th:text="${bbs.getBbsDate()}"></td>
-                <td th:text="${bbs.getBbsViews()}"></td>
+                <td style="width:8%;" th:text="${bbs.getId()}"></td>
+                <td style="width:30%;"><a class="bbs-link link-dark" th:text="${bbs.getBbsTitle()}"></a></td>
+                <td style="width:20%;" th:text="${bbs.getBbsWriter()}"></td>
+                <td style="width:20%;" th:text="${bbs.getBbsDate()}"></td>
+                <td style="width:8%;"  th:text="${bbs.getBbsViews()}"></td>
             </tr>
             </tbody>
         </table>

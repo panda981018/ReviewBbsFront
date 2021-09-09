@@ -38,9 +38,10 @@ a {
 td, th {
     vertical-align: middle;
 }
+
 #bbsContents {
     height: 80%;
     text-align: start;
     vertical-align: baseline;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
