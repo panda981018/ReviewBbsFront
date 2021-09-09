@@ -21,12 +21,12 @@
          class="d-flex flex-column justify-content-evenly align-items-stretch">
         <h1 class="flex-grow-0 pb-3 border-bottom">Edit Review</h1>
         <form class="form-group d-grid" th:action="@{'/post/bbs/update?id=' + ${bbs.id}}" th:object="${bbs}"
-              id="formEdit" method="post" onsubmit="return validateBbs();">
+              id="formEdit" method="post">
             <!-- id -->
             <input type="hidden" id="hiddenId" th:field="*{id}">
             <!-- category 선택 -->
             <label id="categoryLabel" class="form-label" th:for="bbsCategory"><b>Category</b></label>
-            <select id="bbsCategory" class="btn dropdown-toggle" th:field="*{categoryId}" data-bs-toggle="dropdown"
+            <select id="bbsCategory" class="form-select dropdown-toggle" th:field="*{categoryId}" data-bs-toggle="dropdown"
                     name="categoryId">
                 <th:block th:each="category : ${session.categoryList}">
                     <option class="dropdown-item" th:value="${category.id}" th:text="${category.name}"></option>
@@ -34,9 +34,11 @@
             </select>
             <!-- 제목 -->
             <label id="titleLabel" class="form-label" for="bbsTitle"><b>Title</b></label>
-            <input type="text" id="bbsTitle" class="form-control" name="bbsTitle" th:field="*{bbsTitle}"><br>
+            <input type="text" id="bbsTitle" class="form-control" name="bbsTitle" th:field="*{bbsTitle}">
+            <span id="titleError" class="valid">빈칸을 채워주세요</span>
             <!-- 내용 -->
-            <label id="contentsLabel" for="bbsContents" class="form-label"><b>Contents</b></label><br>
+            <label id="contentsLabel" for="bbsContents" class="form-label"><b>Contents</b></label>
+            <span id="bbsError" class="valid">내용을 채워주세요</span>
             <textarea id="bbsContents" class="form-box" name="bbsContents" th:field="*{bbsContents}"></textarea>
             <div id="btnGroup">
                 <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button"
@@ -52,50 +54,10 @@
     <script src="/js/post.js"></script>
     <script type="text/javascript">
         window.onload = function () {
-            $('#bbsContents').summernote({
-                height: 200,                 // 에디터 높이
-                minHeight: null,             // 최소 높이
-                maxHeight: null,             // 최대 높이
-                lang: "ko-KR",					// 한글 설정
-                placeholder: '장소에 대한 리뷰를 적어주세요!',	//placeholder 설정
-                disableResize: true,
-                disableGrammar: true,
-                toolbar: [
-                    ['fontname', ['fontname']],
-                    ['fontsize', ['fontsize']],
-                    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
-                    ['color', ['forecolor','color']],
-                    ['table', ['table']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']],
-                    ['insert',['picture','link','video']],
-                    ['view', ['fullscreen', 'help']],
-                    ['lineHeights', ['lineHeights']]
-                ],
-                fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
-                fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
-                lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
-                callbacks: {
-                    onImageUpload: function (files) {
-                        for(let i = files.length - 1; i >= 0; i--) {
-                            uploadSummernoteImage(files[i]);
-                        }
-                    },
-                    onPaste: function (e) {
-                        let clipboardData = e.originalEvent.clipboardData;
-                        if (clipboardData && clipboardData.items
-                            && clipboardData.items.length) {
-                            let item = clipboardData.items[0];
-                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
-                                e.preventDefault();
-                            }
-                        }
-                    }
-                }
-            });
-            $('.note-statusbar').hide();
-            contentValidate();
+            $('#bbsContents').summernote(setting);
             titleValidate();
+            contentValidate();
+            cancelBbs();
             validateBbs();
         }
     </script>

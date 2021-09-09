@@ -23,6 +23,7 @@ function sortBy() {
             url: "/admin/manage/sort?sort=" + sort,
             dataType: "json",
             success: function (result) {
+                console.log(result.rs);
                 const address = '/admin/manage?page=' + result.rs.number + '&sort=' + sort;
                 location.href = address;
             }

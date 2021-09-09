@@ -2,8 +2,9 @@
     width: 15%;
     margin: 0 auto;
 }
+
 #adminContent {
-    width: 70%;
+    width: 75%;
     margin: 0 auto;
 }
 
@@ -15,4 +16,8 @@
 .current-page {
     font-size: larger;
     font-weight: bold;
+}
+
+#sortLabel {
+    flex-basis: 75%;
 }

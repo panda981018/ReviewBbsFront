@@ -58,7 +58,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         if (savedRequest != null) {
             String uri = savedRequest.getRedirectUrl(); // 저장된 uri
             // 조건 1 : 주소에 /post가 저장되어 있으면서 일반회원인가
-            if (uri.contains("/post") && roles.contains(Role.MEMBER.getValue())) {
+            if (uri.contains("/post")) {
                 List<CategoryDto> categoryList = categoryService.getAllCategories();
                 // 조건 2 : 카테고리가 있는가
                 if (!categoryList.isEmpty()) {
@@ -72,12 +72,13 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
                 response.sendRedirect(uri);
             }
         } else { // 저장된 uri가 없으면 role에 따라 디폴트 화면으로 이동
+            if (!categoryService.getAllCategories().isEmpty()) {
+                session.setAttribute("categoryList", categoryService.getAllCategories());
+            }
+
             if (roles.contains(Role.ADMIN.getValue())) {
                 redirectStrategy.sendRedirect(request, response, "/admin" + DEFAULT_LOGIN_SUCCESS_URL);
             } else if (roles.contains(Role.MEMBER.getValue())) {
-                if (!categoryService.getAllCategories().isEmpty()) {
-                    session.setAttribute("categoryList", categoryService.getAllCategories());
-                }
                 redirectStrategy.sendRedirect(request, response, "/member" + DEFAULT_LOGIN_SUCCESS_URL);
             } else {
                 redirectStrategy.sendRedirect(request, response, "/");

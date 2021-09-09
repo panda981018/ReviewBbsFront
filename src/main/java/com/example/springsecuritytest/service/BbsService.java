@@ -47,7 +47,7 @@ public class BbsService {
 
     }
 
-    public List<BbsDto> getBbsList(Long categoryId) {
+    public List<BbsDto> getBbsList(Long categoryId) { // 카테고리에 맞는 게시글 가져옴
 
         Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryId);
         Optional<List<BbsEntity>> bbsEntities = bbsRepository.findByCategoryId(categoryEntity.get());
@@ -63,7 +63,7 @@ public class BbsService {
         return bbsDtoList;
     }
 
-    public BbsDto getBbs(Long bbsId) {
+    public BbsDto getBbs(Long bbsId) { // 게시물 1개
 
         Optional<BbsEntity> bbsEntity = bbsRepository.findById(bbsId);
         BbsDto bbsDto = new BbsDto();
@@ -74,7 +74,7 @@ public class BbsService {
         return bbsDto;
     }
 
-    public void updateBbs(BbsDto bbsDto, MemberDto memberDto) {
+    public void updateBbs(BbsDto bbsDto, MemberDto memberDto) { // 게시글 수정
         Optional<CategoryEntity> category = categoryRepository.findById(bbsDto.getCategoryId());
         Optional<BbsEntity> bbsEntity = bbsRepository.findById(bbsDto.getId());
 
@@ -91,25 +91,29 @@ public class BbsService {
         }
     }
 
-    public void updateViews(Long id) {
+    public void updateViews(Long id) { // 조회수 업데이트
         BbsEntity bbsEntity = bbsRepository.findById(id).get();
         bbsQueryRepository.updateBbsViews(id, bbsEntity.getBbsViews());
     }
 
-    public void deleteBbs(Long id, ArrayList<String> urls) {
+    public void deleteBbs(Long id, List<String> urls) { // 게시글 삭제
         if (urls != null) {
             deleteUploadedImg(urls);
         }
-        bbsRepository.deleteById(id); // 게시글 삭제
+        bbsRepository.deleteById(id);
     }
 
-    public void deleteUploadedImg(ArrayList<String> urls) {
-        for (String url: urls) { // 게시글에 포함된 이미지 삭제
+    public void deleteUploadedImg(List<String> urls) { // 게시글에 포함된 이미지 삭제
+        for (String url: urls) {
             FileUtils.deleteQuietly(new File(url));
         }
     }
 
-    public HashMap<String, String> uploadImage(List<MultipartFile> multipartFile) {
+    public void deleteEditorImg(String src) { // summernote editor에서 이미지 삭제
+        FileUtils.deleteQuietly(new File(src));
+    }
+
+    public HashMap<String, String> uploadImage(List<MultipartFile> multipartFile) { // 이미지 업로드
         HashMap<String,String> data = new HashMap<>();
 
         String fileRoot = "D:\\summernoteImg\\"; // 저장될 경로

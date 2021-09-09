@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -80,26 +82,35 @@ public class BbsController {
     }
 
     @ResponseBody
-    @PostMapping("/bbs/update/views") // 조회수 업데이트 기능
+    @PostMapping("/bbs/ajax/update/views") // 조회수 업데이트 기능
     public void updateViews(@RequestBody HashMap<String, String> bbsIdObj) {
         bbsService.updateViews(Long.parseLong(bbsIdObj.get("id")));
     }
 
     @ResponseBody
-    @DeleteMapping("/bbs/delete")
-    public void deleteBbs(@RequestBody HashMap<String, Object> data) throws JSONException {
-        Double dId = (Double) data.get("id");
+    @DeleteMapping("/bbs/ajax/delete")
+    public void deleteBbs(@RequestBody HashMap<String, Object> data) {
+
         if (data.containsKey("urls")) {
-            ArrayList<String> urls = (ArrayList<String>) data.get("urls");
-            bbsService.deleteBbs(dId.longValue(), urls);
+            bbsService.deleteBbs(((Integer) data.get("id")).longValue(), (List<String>) data.get("urls"));
         } else {
-            bbsService.deleteBbs(dId.longValue(), null);
+            bbsService.deleteBbs(((Integer) data.get("id")).longValue(), null);
         }
     }
 
     @ResponseBody
-    @PostMapping("/bbs/uploadImg")
+    @PostMapping("/bbs/ajax/uploadImg")
     public HashMap<String, String> uploadSummernoteImage(@RequestParam("file") List<MultipartFile> multipartFile) {
         return bbsService.uploadImage(multipartFile);
+    }
+
+    @ResponseBody
+    @PostMapping("/bbs/ajax/deleteImg")
+    public String deleteEditorImage(@RequestBody HashMap<String, List<String>> target) {
+
+        System.out.println("Delete Image files : " + target.get("src"));
+        bbsService.deleteUploadedImg(target.get("src"));
+
+        return "ok";
     }
 }
