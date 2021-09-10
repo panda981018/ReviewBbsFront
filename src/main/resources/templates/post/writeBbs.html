@@ -49,7 +49,7 @@
 </div>
 <th:block layout:fragment="script">
     <script src="/js/post.js"></script>
-    <script>
+    <script th:inline="javascript">
         //<[CDATA[
         const categoryId = [[${categoryId}]];
         //]]>

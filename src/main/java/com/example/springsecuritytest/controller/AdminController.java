@@ -30,7 +30,7 @@ public class AdminController { // admin
     private final CategoryService categoryService;
 
     @GetMapping("/home")
-    public String adminHome(HttpSession session) throws SQLException {
+    public String adminHome() throws SQLException {
 
         return "home/adminHome";
     }

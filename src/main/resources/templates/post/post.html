@@ -45,6 +45,31 @@
                 작성
             </a>
         </div>
+        <nav aria-label="Page navigation" th:if="${!bbsList.isEmpty()}">
+            <ul id="classUl" class="pagination justify-content-center align-items-center">
+                <li class="page-item btn" th:classappend="${!bbsList.pageable.hasPrevious()} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/post/bbs(category=${#request.getParameter('category')}, page=${bbsList.pageable.previousOrFirst().pageNumber}, sort=${#request.getParameter('sort')})}">
+                        Previous
+                    </a>
+                </li>
+                <th:block
+                        th:each="page : ${#numbers.sequence(bbsList.pageable.first().pageNumber+1, bbsList.getTotalPages())}">
+                    <li class="page-item btn"
+                        th:classappend="${page == bbsList.pageable.getPageNumber()+1} ? 'active'">
+                        <a class="page-link" th:text="${page}"
+                           th:href="@{/post/bbs(category=${#request.getParameter('category')}, page=${page}-1, sort=${#request.getParameter('sort')})}"></a>
+                    </li>
+                </th:block>
+                <li class="page-item btn"
+                    th:classappend="${bbsList.pageable.next().pageNumber == bbsList.getTotalPages()} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/post/bbs(category=${#request.getParameter('category')}, page=${bbsList.pageable.next().pageNumber}, sort=${#request.getParameter('sort')})}">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 <th:block layout:fragment="script">
@@ -53,6 +78,10 @@
     <script src="/js/post.js"></script>
     <script>
         window.onload = function () {
+            //<[CDATA[
+            const categoryId = [[${categoryIndex}]] + 1;
+            //]]>
+            changeUrl(categoryId);
             updateViews();
         }
     </script>

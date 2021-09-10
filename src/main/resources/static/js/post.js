@@ -43,6 +43,21 @@ let setting = { // summernote 설정
         }
     }};
 
+function changeUrl(categoryId) { // page, sort 파라미터가 보이지 않게 처리
+    let newUrl = location.origin + location.pathname + '?category=' + categoryId;
+    console.log("location.href = " + location.href);
+    const params = new URLSearchParams(location.href);
+    const page = params.get('page');
+    const sort = params.get('sort');
+    const state = { 'category': categoryId, 'page' : page, 'sort' : sort};
+
+    history.pushState(state, null, newUrl);
+
+    window.onpopstate = function (event) {
+        alert(event.state);
+    }
+}
+
 function updateViews() { // 조회수 업데이트
 
     $('tr').on('click', function () {

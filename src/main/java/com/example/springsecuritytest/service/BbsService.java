@@ -9,6 +9,9 @@ import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FileUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,22 +48,6 @@ public class BbsService {
             bbsRepository.save(bbs);
         }
 
-    }
-
-    public List<BbsDto> getBbsList(Long categoryId) { // 카테고리에 맞는 게시글 가져옴
-
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryId);
-        Optional<List<BbsEntity>> bbsEntities = bbsRepository.findByCategoryId(categoryEntity.get());
-        List<BbsDto> bbsDtoList = new ArrayList<>();
-
-        if (bbsEntities.isPresent()) {
-            List<BbsEntity> bbsList = bbsEntities.get();
-
-            for (BbsEntity bbs : bbsList) {
-                bbsDtoList.add(bbs.toDto());
-            }
-        }
-        return bbsDtoList;
     }
 
     public BbsDto getBbs(Long bbsId) { // 게시물 1개
@@ -109,10 +96,6 @@ public class BbsService {
         }
     }
 
-    public void deleteEditorImg(String src) { // summernote editor에서 이미지 삭제
-        FileUtils.deleteQuietly(new File(src));
-    }
-
     public HashMap<String, String> uploadImage(List<MultipartFile> multipartFile) { // 이미지 업로드
         HashMap<String,String> data = new HashMap<>();
 
@@ -139,5 +122,17 @@ public class BbsService {
         }
 
         return data;
+    }
+
+    public Page<BbsEntity> findAllBbs(Pageable pageable, Long categoryId) {
+        List<String> fields = new ArrayList<>();
+        for(Sort.Order order : pageable.getSort()) {
+            fields.add(order.getProperty());
+        }
+
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryId);
+        Page<BbsEntity> bbsEntities = bbsQueryRepository.findAllCategoryBbs(categoryEntity.get(), pageable, fields);
+
+        return bbsEntities;
     }
 }

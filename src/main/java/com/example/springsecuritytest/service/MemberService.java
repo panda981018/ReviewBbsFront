@@ -115,14 +115,6 @@ public class MemberService implements UserDetailsService {
         return map;
     }
 
-    // 관리자 비밀번호 체크
-    public HashMap<String, Boolean> checkPassword(String adminId, String password) {
-        List<String> passwordList = memberQueryRepository.findPasswordByUsername(adminId);
-        HashMap<String, Boolean> map = new HashMap<>();
-        map.put("result", passwordList.get(0).equals(passwordEncoder.encode(password)));
-        return map;
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
