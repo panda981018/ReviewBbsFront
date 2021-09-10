@@ -1,19 +1,23 @@
 package com.example.springsecuritytest.controller;
 
+import com.example.springsecuritytest.domain.entity.BbsEntity;
+import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.BbsService;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,10 +34,13 @@ public class BbsController {
     }
 
     @GetMapping("/bbs")
-    public String showCategoryBbs(@RequestParam(required = false) String category, Model model) {
-        // bbs 테이블로 가서 categoryId가 같은 것을 가져온다.
+    public String showCategoryBbs(@RequestParam(required = false) String category,
+                                  @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                                  Model model) {
         if (category != null) {
-            List<BbsDto> bbsList = bbsService.getBbsList(Long.parseLong(category));
+            Page<BbsEntity> bbsEntities = bbsService.findAllBbs(pageable, Long.parseLong(category));
+            Page<BbsDto> bbsList = bbsEntities.map(BbsEntity::toDto);
+
             // view에서 category에 대한 정보를 표시하기 위해
             // (session.categoryList는 index 0 부터 시작. DB의 카테고리는 1부터 시작. 따라서 -1)
             model.addAttribute("categoryIndex", Long.parseLong(category) - 1);

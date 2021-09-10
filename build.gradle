@@ -31,7 +31,7 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.3'
     implementation 'commons-io:commons-io:2.6' // FileUtils
-    implementation 'com.google.code.gson:gson:2.8.5'
+//    implementation 'com.google.code.gson:gson:2.8.5'
 
     // https://mvnrepository.com/artifact/javax.validation/validation-api
     implementation 'javax.validation:validation-api:2.0.1.Final'

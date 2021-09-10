@@ -40,7 +40,7 @@ function emailValidate() {
                 type: "POST",
                 url: "/check/email",
                 data: JSON.stringify({"username": username}),
-                contentType: 'application/json; charset=utf-8',
+                contentType: 'application/json;charset=utf-8;',
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
