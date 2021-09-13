@@ -1,12 +1,10 @@
 package com.example.springsecuritytest.controller;
 
-import com.example.springsecuritytest.dto.CategoryDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.enumclass.Role;
 import com.example.springsecuritytest.service.CategoryService;
 import com.example.springsecuritytest.service.MemberService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
-import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -27,6 +24,9 @@ public class MemberController { // member
 
     @GetMapping("/home")
     public String memberHome(HttpSession session) {
+        if (session.getAttribute("categoryList") == null) {
+            session.setAttribute("categoryList", categoryService.getAllCategories());
+        }
         return "home/memberHome";
     }
 

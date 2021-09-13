@@ -52,6 +52,7 @@ public class BbsQueryRepository {
         QueryResults<BbsEntity> rt = jpaQueryFactory.selectFrom(bbsEntity)
                 .where(bbsEntity.categoryId.eq(category))
                 .orderBy(orders.stream().toArray(OrderSpecifier[]::new))
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
 

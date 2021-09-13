@@ -1,10 +1,11 @@
 package com.example.springsecuritytest.controller;
 
 import com.example.springsecuritytest.domain.entity.BbsEntity;
-import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.dto.BbsDto;
+import com.example.springsecuritytest.dto.CategoryDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.BbsService;
+import com.example.springsecuritytest.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,25 +28,31 @@ import java.util.List;
 public class BbsController {
 
     private final BbsService bbsService;
+    private final CategoryService categoryService;
 
     @GetMapping
-    public String noCategory() {
-        return "post/nocategory";
+    public String defaultCategory(HttpSession session) {
+        if (categoryService.getAllCategories().isEmpty()) {
+            return "post/nocategory";
+        } else {
+            List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
+            session.setAttribute("categoryList", categoryDtoList);
+
+            return "redirect:/post/bbs?category=" + categoryDtoList.get(0).getId();
+        }
     }
 
     @GetMapping("/bbs")
-    public String showCategoryBbs(@RequestParam(required = false) String category,
-                                  @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+    public String showCategoryBbs(HttpServletRequest request, @RequestParam(required = false) String category,
+                                  @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                                   Model model) {
-        if (category != null) {
-            Page<BbsEntity> bbsEntities = bbsService.findAllBbs(pageable, Long.parseLong(category));
-            Page<BbsDto> bbsList = bbsEntities.map(BbsEntity::toDto);
+        Page<BbsEntity> bbsEntities = bbsService.findAllBbs(pageable, Long.parseLong(category));
+        Page<BbsDto> bbsList = bbsEntities.map(BbsEntity::toDto);
 
-            // view에서 category에 대한 정보를 표시하기 위해
-            // (session.categoryList는 index 0 부터 시작. DB의 카테고리는 1부터 시작. 따라서 -1)
-            model.addAttribute("categoryIndex", Long.parseLong(category) - 1);
-            model.addAttribute("bbsList", bbsList);
-        }
+        // view에서 category에 대한 정보를 표시하기 위해
+        // (session.categoryList는 index 0 부터 시작. DB의 카테고리는 1부터 시작. 따라서 -1)
+        model.addAttribute("categoryIndex", Long.parseLong(category) - 1);
+        model.addAttribute("bbsList", bbsList);
         return "post/post";
     }
 
@@ -66,7 +73,7 @@ public class BbsController {
     @GetMapping("/bbs/view") // 게시글 보기
     public String viewBbs(@RequestParam(required = false) String id, Model model) {
         BbsDto bbs = bbsService.getBbs(Long.parseLong(id));
-        Long viewCategoryId = bbs.getCategoryId()-1;
+        Long viewCategoryId = bbs.getCategoryId() - 1;
 
         model.addAttribute("bbs", bbs);
         model.addAttribute("categoryId", viewCategoryId);
@@ -92,6 +99,24 @@ public class BbsController {
     @PostMapping("/bbs/ajax/update/views") // 조회수 업데이트 기능
     public void updateViews(@RequestBody HashMap<String, String> bbsIdObj) {
         bbsService.updateViews(Long.parseLong(bbsIdObj.get("id")));
+    }
+
+    @ResponseBody
+    @GetMapping("/bbs/ajax/sort")
+    public HashMap<String, Page<BbsDto>> bbsPaging(@RequestParam String sort,
+                                                   @RequestParam String category) {
+        System.out.println(sort);
+        String[] sortStandard = sort.split(",");
+        Sort.Direction direction = (sortStandard[1].equals("asc")) ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Pageable pageable = PageRequest.of(0, 5, direction, sortStandard[0]);
+        Page<BbsEntity> bbsEntities = bbsService.findAllBbs(pageable, Long.parseLong(category));
+        Page<BbsDto> bbsList = bbsEntities.map(BbsEntity::toDto);
+
+        HashMap<String, Page<BbsDto>> bbsObj = new HashMap<>();
+        bbsObj.put("bbsList", bbsList);
+
+        return bbsObj;
     }
 
     @ResponseBody
