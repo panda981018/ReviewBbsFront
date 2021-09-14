@@ -42,7 +42,7 @@ public class MemberController { // member
     @PostMapping("/info")
     public String postMyInfo(HttpSession session, MemberDto memberDto){
 
-        memberService.updateMember(memberDto);
+        memberService.updateMember(session, memberDto);
         MemberDto oldDto = (MemberDto) session.getAttribute("memberInfo");
         if (oldDto.getRole().equals(Role.ADMIN.getTitle())) {
             return "redirect:/admin/home";

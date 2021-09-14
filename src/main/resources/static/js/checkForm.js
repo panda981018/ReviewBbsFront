@@ -213,18 +213,13 @@ function birthValidate() {
         }
     })
 }
-
-function validateForm() {
+let submitCallback = function (event) {
+    event.preventDefault();
 
     const emailError = $('#emailError');
     const pwError = $('#passwordError');
     const nicknameError = $('#nicknameError');
     const birthError = $('#birthError');
-
-    console.log('email error: ' + emailError.hasClass('error'));
-    console.log('password error: ' + pwError.hasClass('error'));
-    console.log('nickname error: ' + nicknameError.hasClass('error'));
-    console.log('birth error: ' + birthError.hasClass('error'));
 
     if (emailError.hasClass('error')
         || pwError.hasClass('error')
@@ -232,7 +227,10 @@ function validateForm() {
         || birthError.hasClass('error')) {
         return false;
     } else {
-        return true;
+        $('form').eq(0).submit();
     }
+}
+function validateForm() {
+    $('button :submit').on('submit', submitCallback);
 }
 

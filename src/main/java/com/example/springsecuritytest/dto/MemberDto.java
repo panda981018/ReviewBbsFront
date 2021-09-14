@@ -44,7 +44,7 @@ public class MemberDto implements Serializable {
         } else { // member
             Calendar birth = Calendar.getInstance();
             birth.set(Calendar.YEAR, Integer.parseInt(year));
-            birth.set(Calendar.MONTH, Integer.parseInt(month));
+            birth.set(Calendar.MONTH, Integer.parseInt(month)-1);
             birth.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
 
             return MemberEntity.builder()
