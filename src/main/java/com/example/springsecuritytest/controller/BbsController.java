@@ -4,8 +4,10 @@ import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.CategoryDto;
 import com.example.springsecuritytest.dto.MemberDto;
+import com.example.springsecuritytest.dto.ReplyDto;
 import com.example.springsecuritytest.service.BbsService;
 import com.example.springsecuritytest.service.CategoryService;
+import com.example.springsecuritytest.service.ReplyService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,7 @@ public class BbsController {
 
     private final BbsService bbsService;
     private final CategoryService categoryService;
+    private final ReplyService replyService;
 
     @GetMapping
     public String defaultCategory(HttpSession session) {
@@ -72,8 +75,14 @@ public class BbsController {
 
     @GetMapping("/bbs/view") // 게시글 보기
     public String viewBbs(@RequestParam(required = false) String id, Model model) {
+
         BbsDto bbs = bbsService.getBbs(Long.parseLong(id));
         Long viewCategoryId = bbs.getCategoryId() - 1;
+
+        List<ReplyDto> replies = replyService.getReplies(Long.parseLong(id));
+        if (!replies.isEmpty()) {
+            model.addAttribute("replyList", replies);
+        }
 
         model.addAttribute("bbs", bbs);
         model.addAttribute("categoryId", viewCategoryId);
