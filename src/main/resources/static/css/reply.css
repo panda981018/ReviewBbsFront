@@ -1,0 +1,9 @@
+#replyTextarea {
+    flex: 1;
+    resize: vertical;
+    word-break: break-all;
+}
+
+#replyText {
+    font-size: 1.2rem;
+}

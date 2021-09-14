@@ -53,9 +53,9 @@
             <!-- birth -->
             <div class="mb-3 dropdown" id="birthDiv">
                 <label class="form-label" for="birth"><b>Birth</b></label><br/>
-                <div id="birth">
+                <div id="birth" class="d-flex flex-row align-items-center justify-content-evenly">
                     <!-- year -->
-                    <select class="btn dropdown-toggle form-select-button" data-toggle="dropdown" id="selectYear"
+                    <select class="form-select dropdown-toggle me-3" data-toggle="dropdown" id="selectYear"
                             name="year">
                         <option class="dropdown-item" value="">년</option>
                         <th:block th:each="year : ${#numbers.sequence(1970, #dates.year(#dates.createNow()))}">
@@ -63,7 +63,7 @@
                         </th:block>
                     </select>
                     <!-- month-->
-                    <select class="btn dropdown-toggle form-select-button" data-toggle="dropdown" id="selectMonth"
+                    <select class="form-select dropdown-toggle me-3" data-toggle="dropdown" id="selectMonth"
                             name="month">
                         <option class="dropdown-item" value="">월</option>
                         <th:block th:each="month : ${#numbers.listFormatInteger(#numbers.sequence(1, 12), 2)}">
@@ -71,7 +71,7 @@
                         </th:block>
                     </select>
                     <!-- day of month -->
-                    <select class="btn dropdown-toggle form-select-button" data-toggle="dropdown" id="selectDay"
+                    <select class="form-select dropdown-toggle" data-toggle="dropdown" id="selectDay"
                             name="day">
                         <option class="dropdown-item" value="">일</option>
                         <th:block th:each="day : ${#numbers.listFormatInteger(#numbers.sequence(1, 31), 2)}">

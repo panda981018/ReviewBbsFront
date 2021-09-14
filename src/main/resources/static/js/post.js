@@ -16,10 +16,10 @@ function changeUrl(categoryId) { // page, sort 파라미터가 보이지 않게 
         sortStandard = sort.split(','); // sort=id,asc 이런 query를 [id,asc]로 나누는 작업
     }
 
-    const state= (sort != "")
+    const state= (sort !== '')
         ? { 'category': categoryId, 'page' : page, 'sort' : sort} : { 'category': categoryId, 'page' : page}
 
-    if (sort == "") { // 주소에 sort가 없을 때는 id를 선택하게
+    if (sort === '') { // 주소에 sort가 없을 때는 id를 선택하게
         $('#sortStandard').val('id');
     } else {
         $('#sortStandard').val(sortStandard[0]);
@@ -94,3 +94,4 @@ function sortBbs(categoryId) {
         });
     });
 }
+
