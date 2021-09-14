@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,7 +47,7 @@ public class MemberService implements UserDetailsService {
         memberRepository.save(memberDto.toEntity());
     }
 
-    public void updateMember(MemberDto memberDto) { // 회원 정보 update
+    public void updateMember(HttpSession session, MemberDto memberDto) { // 회원 정보 update
 
         Optional<MemberEntity> memberEntity = memberRepository.findByUsername(memberDto.getUsername());
 
@@ -66,6 +67,11 @@ public class MemberService implements UserDetailsService {
             memberDto.setRegDate(member.getRegDate());
 
             memberRepository.save(memberDto.toEntity());
+
+            MemberDto myInfo = (MemberDto) session.getAttribute("memberInfo");
+            if (myInfo.getRole().equals(Role.MEMBER.getTitle())) {
+                session.setAttribute("memberInfo", memberRepository.getById(myInfo.getId()).toDto());
+            }
         }
     }
 

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @SequenceGenerator(
         name = "BBS_SEQ_GEN",
@@ -45,12 +47,20 @@ public class BbsEntity {
     @JoinColumn(name = "BBS_WRITER")
     private MemberEntity bbsWriter;
 
+    @OneToMany(mappedBy = "bbs", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ReplyEntity> replies = new ArrayList<>(); // DB에 들어가지는 않는다.
+
     public void setCategory(CategoryEntity category) {
         this.categoryId = category;
     }
 
     public void setBbsWriter(MemberEntity member) {
         this.bbsWriter = member;
+    }
+
+    public void addReply(ReplyEntity replyEntity) {
+        this.getReplies().add(replyEntity);
+        replyEntity.setBbs(this);
     }
 
     public BbsDto toDto() {

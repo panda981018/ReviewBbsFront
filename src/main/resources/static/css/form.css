@@ -3,12 +3,6 @@
     width: 50%;
 }
 
-/*.form-box > h1 {*/
-/*    margin-: 3rem;*/
-/*    text-align: center;*/
-/*    flex-grow: 1;*/
-/*}*/
-
 #loginText {
     margin-top: 3rem;
     text-align: center;
@@ -28,6 +22,10 @@ table {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+}
+
+.form-select {
+    display: inline-block;
 }
 
 .form-button {

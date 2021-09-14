@@ -62,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoringAntMatchers("/check/email")
                 .ignoringAntMatchers("/check/nickname")
                 .ignoringAntMatchers("/post/bbs/ajax/**")
+                .ignoringAntMatchers("/reply/ajax/**")
                 .and()
                 .formLogin()
                 .loginPage("/login")

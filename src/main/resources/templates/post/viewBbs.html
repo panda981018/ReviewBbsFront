@@ -6,6 +6,7 @@
       layout:decorator="~{layouts/layout}">
 <head>
     <link rel="stylesheet" type="text/css" href="/css/viewbbs.css">
+    <link rel="stylesheet" type="text/css" href="/css/reply.css">
     <title>Post</title>
 </head>
 <body>
@@ -45,19 +46,23 @@
                 <a th:href="@{'/post/bbs/update?id=' + ${bbs.id}}" id="updateBtn" class="btn btn-primary">수정</a>
             </div>
         </div>
-
+        <div layout:replace="fragments/reply :: replyFragment"></div>
     </div>
+
 </div>
 <th:block layout:fragment="script">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="/js/post.js"></script>
+    <script src="/js/reply.js"></script>
     <script>
         window.onload = function () {
             //<[CDATA[
             const bbsId = [[${bbs.id}]];
             const categoryId = [[${bbs.categoryId}]];
+            createReply(bbsId);
             deleteBbs(bbsId, categoryId);
             //]]>
+
         }
     </script>
 </th:block>
