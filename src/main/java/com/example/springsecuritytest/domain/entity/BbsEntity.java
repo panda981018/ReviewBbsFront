@@ -72,6 +72,7 @@ public class BbsEntity {
                 .bbsViews(bbsViews)
                 .categoryId(categoryId.getId())
                 .bbsWriter(bbsWriter.getNickname())
+                .replyCnt(replies.size())
                 .build();
     }
 

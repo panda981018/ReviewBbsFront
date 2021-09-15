@@ -16,6 +16,7 @@ public class BbsDto {
     private int bbsViews;
     private String bbsWriter;
     private Long categoryId;
+    private int replyCnt = 0;
 
     public BbsEntity toEntity() {
         return BbsEntity.builder()
@@ -28,7 +29,7 @@ public class BbsDto {
     }
 
     @Builder
-    public BbsDto(Long id, String bbsTitle, String bbsContents, String bbsDate, int bbsViews, Long categoryId, String bbsWriter) {
+    public BbsDto(Long id, String bbsTitle, String bbsContents, String bbsDate, int bbsViews, Long categoryId, String bbsWriter, int replyCnt) {
         this.id = id;
         this.bbsTitle = bbsTitle;
         this.bbsContents = bbsContents;
@@ -36,5 +37,6 @@ public class BbsDto {
         this.bbsViews = bbsViews;
         this.categoryId = categoryId;
         this.bbsWriter = bbsWriter;
+        this.replyCnt = replyCnt;
     }
 }

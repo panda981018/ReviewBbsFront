@@ -47,12 +47,21 @@ public class ReplyEntity {
     public void setBbs(BbsEntity bbs) { this.bbs = bbs; }
 
     public ReplyDto toDto() {
+
+        String updateDateStr = "";
+        boolean isUpdated = false;
+
+        if (updateDate != null) {
+            this.updateDate.toString().replace("T", " ");
+            isUpdated = true;
+        }
         return ReplyDto.builder()
                 .id(id)
                 .contents(contents)
-                .createDate(createDate)
-                .updateDate(updateDate)
+                .createDate(createDate.toString().replace("T", " "))
+                .updateDate(updateDateStr)
                 .writer(writer.getNickname())
+                .isUpdated(isUpdated)
                 .bbs(bbs.getId())
                 .build();
     }
@@ -64,5 +73,4 @@ public class ReplyEntity {
         this.createDate = createDate;
         this.updateDate = updateDate;
     }
-
 }

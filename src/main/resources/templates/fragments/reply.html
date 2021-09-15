@@ -7,15 +7,23 @@
     <b id="replyText">댓글</b>
     <div id="replySpace" class="d-flex flex-row align-items-center mb-3">
         <textarea id="replyTextarea" rows="1"></textarea>
-        <button type="button" id="createReply" class="btn btn-outline-secondary ms-1">등록</button>
+        <button type="button" id="createReply" class="btn btn-outline-secondary ms-3">등록</button>
     </div>
-    <div id="writtenReply" class="mb-4" th:each="reply : ${replyList}">
-        <div id="replyInfo">
-            <b class="me-3">작성자</b><span class="me-3" th:text="${reply.writer}"></span>
-            <b class="me-2">작성일자</b><span th:text="${reply.createDate}"></span>
-            <span th:if="${reply.updateDate != null}" th:text="${reply.updateDate}"></span>
+    <div id="writtenReply" class="mb-4 p-2" th:if="${replyList != null}" th:each="reply : ${replyList}">
+        <div class="d-flex flex-column align-items-stretch">
+            <div id="replyInfo" class="d-flex align-items-center">
+                <input type="hidden" th:value="${reply.id}">
+                <b class="me-3">작성자</b><span class="me-3" th:text="${reply.writer}"></span>
+                <b class="me-2">작성일자</b><span th:text="${reply.createDate}"></span>
+                <span class="text-muted" th:if="${reply.isUpdated == true}">(수정됨)</span>
+                <div class="d-flex align-items-center flex-wrap"
+                     th:if="${reply.writer == session.memberInfo.getNickname()}">
+                    <button type="button" id="updateReplyBtn" class="btn">수정</button>
+                    <button type="button" id="deleteReplyBtn" class="btn">삭제</button>
+                </div>
+            </div>
+            <span id="replyContents" th:text="${reply.contents}"></span>
         </div>
-        <span id="replyContents" th:text="${reply.contents}"></span>
     </div>
 </div>
 </html>

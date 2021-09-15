@@ -83,7 +83,6 @@ public class BbsController {
         if (!replies.isEmpty()) {
             model.addAttribute("replyList", replies);
         }
-
         model.addAttribute("bbs", bbs);
         model.addAttribute("categoryId", viewCategoryId);
 

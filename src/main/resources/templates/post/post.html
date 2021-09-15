@@ -40,6 +40,7 @@
                 <th style="width:20%;">작성자</th>
                 <th style="width:20%;">작성날짜</th>
                 <th style="width:8%;">조회수</th>
+                <th style="width:8%;">댓글수</th>
             </tr>
             </thead>
             <tbody>
@@ -50,6 +51,7 @@
                 <td style="width:20%;" th:text="${bbs.bbsWriter}"></td>
                 <td style="width:20%;" th:text="${bbs.bbsDate}"></td>
                 <td style="width:8%;"  th:text="${bbs.bbsViews}"></td>
+                <td style="width:8%;" th:text="${bbs.replyCnt}"></td>
             </tr>
             </tbody>
         </table>

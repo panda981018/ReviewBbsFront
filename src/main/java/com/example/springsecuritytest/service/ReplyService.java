@@ -29,8 +29,8 @@ public class ReplyService {
     public void createReply(HttpSession session, ReplyDto replyDto) {
 
         LocalDateTime createTime = LocalDateTime.now();
-        createTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        replyDto.setCreateDate(createTime); // 생성날짜 setting
+        String createTimeStr = createTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        replyDto.setCreateDate(createTimeStr); // 생성날짜 setting
 
         MemberDto replyWriter = (MemberDto) session.getAttribute("memberInfo");
         Optional<BbsEntity> bbsEntity = bbsRepository.findById(replyDto.getBbs());
@@ -47,22 +47,28 @@ public class ReplyService {
         BbsEntity bbsEntity = bbsRepository.findById(bbsId).isPresent() ? bbsRepository.findById(bbsId).get() : null;
 
         List<ReplyEntity> replies = bbsEntity.getReplies();
-//        List<ReplyEntity> replyEntities = replyRepository.findByBbs(bbsEntity);
         List<ReplyDto> replyDtoList = new ArrayList<>();
 
-        for (int i = 0; i < replies.size(); i++) {
-            replyDtoList.add(replies.get(i).toDto());
+        if (!replies.isEmpty()) {
+            for (int i = 0; i < replies.size(); i++) {
+                replyDtoList.add(replies.get(i).toDto());
+            }
         }
         return replyDtoList;
     }
 
-    public void updateReply(ReplyDto replyDto) {
+    public void updateReply(String contents, Long replyId) {
 
-        LocalDateTime updateNow = LocalDateTime.now();
-        updateNow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        replyDto.setUpdateDate(updateNow);
+        Optional<ReplyEntity> reply = replyRepository.findById(replyId);
+        if (reply.isPresent()) {
+            ReplyDto replyDto = reply.get().toDto();
+            LocalDateTime updateNow = LocalDateTime.now();
+            String updateTimeStr = updateNow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            replyDto.setUpdateDate(updateTimeStr);
+            replyDto.setContents(contents);
 
-        replyRepository.save(replyDto.toEntity());
+            replyRepository.save(replyDto.toEntity());
+        }
     }
 
     public void removeReply(Long replyId, Long bbsId) {
@@ -70,5 +76,6 @@ public class ReplyService {
         Optional<BbsEntity> bbs = bbsRepository.findById(bbsId);
         BbsEntity bbsEntity = bbs.get();
         bbsEntity.getReplies().remove(reply);
+        replyRepository.deleteById(replyId);
     }
 }

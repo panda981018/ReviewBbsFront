@@ -4,10 +4,7 @@ import com.example.springsecuritytest.dto.ReplyDto;
 import com.example.springsecuritytest.service.ReplyService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -35,4 +32,17 @@ public class ReplyController {
         return map;
     }
 
+    @ResponseBody
+    @DeleteMapping("/ajax/delete")
+    public void deleteReply(@RequestBody HashMap<String, String> deleteData) {
+        String bbsId = deleteData.get("bbsId");
+        String replyId = deleteData.get("replyId");
+        replyService.removeReply(Long.parseLong(replyId), Long.parseLong(bbsId));
+    }
+
+    @ResponseBody
+    @PostMapping("/ajax/update")
+    public void updateReply(@RequestBody HashMap<String, String> updateObj) {
+        replyService.updateReply(updateObj.get("contents"), Long.parseLong(updateObj.get("replyId")));
+    }
 }

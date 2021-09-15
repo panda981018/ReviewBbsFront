@@ -4,6 +4,7 @@ import com.example.springsecuritytest.domain.entity.ReplyEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -13,26 +14,39 @@ public class ReplyDto {
 
     private Long id;
     private String contents;
-    private LocalDateTime createDate;
-    private LocalDateTime updateDate;
+    private String createDate;
+    private String updateDate;
+    private boolean isUpdated;
     private String writer;
     private Long bbs;
 
     public ReplyEntity toEntity() {
-        return ReplyEntity.builder()
-                .id(id)
-                .contents(contents)
-                .createDate(createDate)
-                .updateDate(updateDate)
-                .build();
+        if (updateDate != null) {
+            String updateDateStr = this.updateDate.replace(" ", "T");
+
+            return ReplyEntity.builder()
+                    .id(id)
+                    .contents(contents)
+                    .createDate(LocalDateTime.parse(createDate.replace(" ", "T"), DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                    .updateDate(LocalDateTime.parse(updateDateStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                    .build();
+        } else {
+            return ReplyEntity.builder()
+                    .id(id)
+                    .contents(contents)
+                    .createDate(LocalDateTime.parse(createDate.replace(" ", "T"), DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                    .updateDate(null)
+                    .build();
+        }
     }
 
     @Builder
-    public ReplyDto(Long id, String contents, LocalDateTime createDate, LocalDateTime updateDate, String writer, Long bbs) {
+    public ReplyDto(Long id, String contents, String createDate, String updateDate, String writer, Long bbs, boolean isUpdated) {
         this.id = id;
         this.contents = contents;
         this.createDate = createDate;
         this.updateDate = updateDate;
+        this.isUpdated = isUpdated;
         this.writer = writer;
         this.bbs = bbs;
     }

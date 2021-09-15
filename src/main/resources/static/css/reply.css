@@ -1,9 +1,15 @@
 #replyTextarea {
     flex: 1;
-    resize: vertical;
+    resize: none;
     word-break: break-all;
 }
 
 #replyText {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+}
+
+#writtenReply {
+    border: 1px solid gray;
+    border-radius: 1.1rem;
+    background-color: white;
 }

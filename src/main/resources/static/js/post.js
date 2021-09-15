@@ -52,7 +52,7 @@ function updateViews() { // 조회수 업데이트
 }
 
 function deleteBbs(bbsId, bbsCategoryId) { // 게시물 삭제
-    $('#deleteBtn').on('click', function () {
+    $('#deleteBbsBtn').on('click', function () {
         const address = '/post/bbs?category=' + bbsCategoryId;
         let data = new Object();
         data.id = bbsId;
