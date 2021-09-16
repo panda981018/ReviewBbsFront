@@ -1,5 +1,6 @@
 package com.example.springsecuritytest.controller;
 
+import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.dto.ReplyDto;
 import com.example.springsecuritytest.service.ReplyService;
 import lombok.AllArgsConstructor;
@@ -42,7 +43,8 @@ public class ReplyController {
 
     @ResponseBody
     @PostMapping("/ajax/update")
-    public void updateReply(@RequestBody HashMap<String, String> updateObj) {
-        replyService.updateReply(updateObj.get("contents"), Long.parseLong(updateObj.get("replyId")));
+    public void updateReply(@RequestBody HashMap<String, String> updateObj, HttpSession session) {
+        MemberDto member = (MemberDto) session.getAttribute("memberInfo");
+        replyService.updateReply(updateObj.get("contents"), Long.parseLong(updateObj.get("id")), member);
     }
 }

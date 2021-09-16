@@ -1,18 +1,8 @@
-#categoryEmpty {
-    margin: 0 auto;
-    text-align: center;
-}
-
 .bbs-link {
     text-decoration: none;
 }
 .bbs-link:hover {
     text-decoration-line: underline;
-}
-
-#postNav {
-    width: 15%;
-    margin: 0 auto;
 }
 
 #writeContent {
@@ -32,39 +22,29 @@ table {
 }
 
 #formEdit {
-    grid-template-rows: 1fr 1fr 1fr 5fr 1fr;
+    grid-template-rows: 1fr 1fr 5fr 1fr;
     grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
     gap: 0.5rem 0.25rem;
     align-items: center;
 }
 
-#categoryLabel {
-    grid-row: 1 / 2;
-    grid-column: 1 / 2;
-}
-
-#bbsCategory {
-    grid-row: 1 / 2;
-    grid-column: 2 / 3;
-}
-
 #titleLabel {
-    grid-row: 2 / 3;
+    grid-row: 1 / 2;
     grid-column: 1/ 2;
 }
 
-#bbsTitle {
-    grid-row: 2 / 3;
+#noticeTitle {
+    grid-row: 1 / 2;
     grid-column: 2 / 4;
 }
 
 #titleError {
-    grid-row: 2 / 3;
+    grid-row: 1 / 2;
     grid-column: 4 / 6;
 }
 
 #contentsLabel {
-    grid-row: 3 / 4;
+    grid-row: 2 / 3;
     grid-column: 1 / 2;
 }
 
@@ -75,22 +55,21 @@ tr > td {
 }
 
 .note-editor,
-#bbsContents {
-    grid-row: 4 / 5;
+#noticeContents {
+    grid-row: 3 / 4;
     grid-column: 1 / 6;
     align-self: stretch;
     resize: none;
     word-break: break-all;
 }
 
-
-#bbsError {
-    grid-row: 3 / 4;
+#noticeError {
+    grid-row: 2 / 3;
     grid-column: 2 / 4;
 }
 
 #btnGroup {
-    grid-row: 5 / 6;
+    grid-row: 4 / 5;
     grid-column: 5 / 6;
     justify-self: end;
 

@@ -16,8 +16,8 @@ function changeUrl(categoryId) { // page, sort 파라미터가 보이지 않게 
         sortStandard = sort.split(','); // sort=id,asc 이런 query를 [id,asc]로 나누는 작업
     }
 
-    const state= (sort !== '')
-        ? { 'category': categoryId, 'page' : page, 'sort' : sort} : { 'category': categoryId, 'page' : page}
+    const state = (sort !== '')
+        ? {'category': categoryId, 'page': page, 'sort': sort} : {'category': categoryId, 'page': page}
 
     if (sort === '') { // 주소에 sort가 없을 때는 id를 선택하게
         $('#sortStandard').val('id');
@@ -42,7 +42,7 @@ function updateViews() { // 조회수 업데이트
             type: 'POST',
             url: '/post/bbs/ajax/update/views',
             dataType: 'json',
-            data: JSON.stringify({ "id": bbsId}),
+            data: JSON.stringify({"id": bbsId}),
             contentType: 'application/json; charset=utf-8',
             error: function () {
                 console.log('view update failed.');
@@ -53,29 +53,35 @@ function updateViews() { // 조회수 업데이트
 
 function deleteBbs(bbsId, bbsCategoryId) { // 게시물 삭제
     $('#deleteBbsBtn').on('click', function () {
-        const address = '/post/bbs?category=' + bbsCategoryId;
-        let data = new Object();
-        data.id = bbsId;
 
-        const imgList = $('#bbsContents img');
-        if (imgList != null) {
-            urlList = [];
-            for(let i = 0; i < imgList.length; i++) {
-                const startIndex = imgList[i].currentSrc.indexOf('/summernoteImg/');
-                urlList.push(imgList[i].currentSrc.substring(startIndex, imgList[i].currentSrc.length));
+        const result = confirm('게시글을 삭제하시겠습니까?');
+        if (result) {
+            const address = '/post/bbs?category=' + bbsCategoryId;
+            let data = new Object();
+            data.id = bbsId;
+
+            const imgList = $('#bbsContents img');
+            if (imgList != null) {
+                urlList = [];
+                for (let i = 0; i < imgList.length; i++) {
+                    const startIndex = imgList[i].currentSrc.indexOf('/summernoteImg/');
+                    urlList.push(imgList[i].currentSrc.substring(startIndex, imgList[i].currentSrc.length));
+                }
+                data.urls = urlList;
             }
-            data.urls = urlList;
+            console.log(data);
+            $.ajax({
+                method: 'DELETE',
+                data: JSON.stringify(data),
+                contentType: 'application/json;charset=utf-8;',
+                url: '/post/bbs/ajax/delete',
+                success: function () {
+                    location.href = address;
+                }
+            })
+        } else {
+            $(this).focused = false;
         }
-        console.log(data);
-        $.ajax({
-            method: 'DELETE',
-            data: JSON.stringify(data),
-            contentType: 'application/json;charset=utf-8;',
-            url: '/post/bbs/ajax/delete',
-            success: function () {
-                location.href = address;
-            }
-        })
     })
 }
 

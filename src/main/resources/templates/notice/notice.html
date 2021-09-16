@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/editnotice.css">
+    <title>Notice</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="writeContent" class="d-flex flex-column">
+        <h1 class="align-self-center py-2"><b>공지사항</b></h1>
+        <div id="noticesDiv" class="mt-4">
+            <h2 th:unless="${!noticeList.isEmpty()}" class="align-self-center">아직 공지사항이 등록되지 않았습니다.</h2>
+            <table id="table" th:if="${!noticeList.isEmpty()}"
+                   class="flex-column justify-content-around align-items-stretch
+               table table-striped table-responsive table-hover">
+                <thead>
+                <tr>
+                    <th style="width:8%;">번호</th>
+                    <th style="width:30%;">제목</th>
+                    <th style="width:20%;">작성날짜</th>
+                    <th style="width:8%;">조회수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="notice : ${noticeList.getContent()}"
+                    th:onclick="|location.href='@{/notice/view(id=${notice.id})}'|">
+                    <td style="width:8%;" th:text="${notice.id}"></td>
+                    <td style="width:30%;"><a class="bbs-link link-dark" th:text="${notice.title}"></a></td>
+                    <td style="width:20%;" th:text="${notice.createDate}"></td>
+                    <td style="width:8%;" th:text="${notice.views}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="d-flex flex-row justify-content-end"
+                 th:if="${session.memberInfo.getRole() == '관리자'}">
+                <a th:href="@{/notice/write}" class="btn btn-primary">
+                    작성
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <!--  없으면 ajax가 동작하지 않음  -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="/js/notice.js"></script>
+    <script>
+        window.onload = function () {
+            //<[CDATA[
+            //]]>
+            updateNoticeViews();
+        }
+    </script>
+</th:block>
+</body>
+</html>

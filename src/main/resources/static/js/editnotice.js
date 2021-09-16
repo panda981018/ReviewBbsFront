@@ -29,6 +29,7 @@ const setting = { // summernote 설정
             const startIndex = target[0].src.indexOf('/summernoteImg/');
             let imageUrl = target[0].src.substring(startIndex, target[0].src.length);
             deleteImageFile(imageUrl);
+            deleteImageFile(imageUrl);
         },
         onPaste: function (e) { // 복붙 핸들러
             let clipboardData = e.originalEvent.clipboardData;
@@ -43,17 +44,12 @@ const setting = { // summernote 설정
     }};
 let urlList = []; // 사진 src만 갖고 있는 배열
 
-// 보고 있는 카테고리에서 작성을 누르면 write로 넘어갔을 때 그 카테고리로 세팅되도록 설정하는 함수
-function selectCategory(categoryId) {
-    $('#bbsCategory').val(categoryId);
-}
-
-function titleValidate() { // 타이틀 비어있으면 error
-    const bbsTitle = $('#bbsTitle').eq(0);
+function noticeTitleValidate() { // 타이틀 비어있으면 error
+    const noticeTitle = $('#noticeTitle').eq(0);
     const titleError = $('#titleError');
 
-    bbsTitle.on('focusout', function () {
-        if (bbsTitle.val() == '') {
+    noticeTitle.on('focusout', function () {
+        if (noticeTitle.val() == '') {
             invalidMsg(titleError);
         } else {
             validMsg(titleError);
@@ -61,32 +57,32 @@ function titleValidate() { // 타이틀 비어있으면 error
     })
 }
 
-function contentValidate() { // 내용이 비어있으면 error
-    const bbsError = $('#bbsError');
+function noticeContentValidate() { // 내용이 비어있으면 error
+    const noticeError = $('#noticeError');
 
     // summernote에서 제공하는 콜백 사용
-    $('#bbsContents').on('summernote.blur', function () {
-        if ($('#bbsContents').summernote('isEmpty')) {
-            invalidMsg(bbsError);
+    $('#noticeContents').on('summernote.blur', function () {
+        if ($('#noticeContents').summernote('isEmpty')) {
+            invalidMsg(noticeError);
         } else {
-            validMsg(bbsError);
+            validMsg(noticeError);
         }
     });
 }
 
-function validateBbs() { // 타이틀과 내용이 버어있는가
+function validateNotice() { // 타이틀과 내용이 버어있는가
     $('#submitBtn').on('click', function () {
         const editor = $('.note-editable');
-        const bbsContent = $('#bbsContents');
+        const noticeContent = $('#noticeContents');
         const titleError = $('#titleError');
-        const bbsError = $('#bbsError');
+        const noticeError = $('#noticeError');
 
         if (titleError.hasClass('error')
-            || bbsError.hasClass('error')) {
+            || noticeError.hasClass('error')) {
             alert('내용을 모두 채워주세요 :)');
             return false;
         } else {
-            bbsContent.val(editor[0].innerHTML);
+            noticeContent.val(editor[0].innerHTML);
             $('form').eq(0).submit();
         }
     })
@@ -105,7 +101,7 @@ function validMsg(object) { // valid
 function cancelBbs() { // 취소버튼 클릭
     const cancel = $('#cancelBtn');
     cancel.on('click', function () {
-        let data = {}; // ajax data object
+        let data = {};
 
         const imgList = $('.note-editable p').eq(0).children('img');
         if (imgList != null) {
@@ -120,7 +116,7 @@ function cancelBbs() { // 취소버튼 클릭
                 method: 'POST',
                 data: JSON.stringify(data),
                 contentType: 'application/json;charset=utf-8;',
-                url: '/post/bbs/ajax/deleteImg',
+                url: '/notice/ajax/deleteImg',
                 success: function (response) {
                     if (response === 'ok') {
                         window.history.back();
@@ -139,11 +135,11 @@ function uploadSummernoteImage(file) {
         type: 'POST',
         data: data,
         enctype: 'multipart/form-data',
-        url: '/post/bbs/ajax/uploadImg',
+        url: '/notice/ajax/uploadImg',
         contentType: false,
         processData: false,
         success: function (data) {
-            $('#bbsContents').summernote('insertImage', data.url);
+            $('#noticeContents').summernote('insertImage', data.url);
         }
     })
 }
@@ -154,7 +150,7 @@ function deleteImageFile(src) {
     $.ajax({
         type: 'POST',
         data: JSON.stringify({ 'src' : obj }),
-        url: '/post/bbs/ajax/deleteImg',
+        url: '/notice/ajax/deleteImg',
         contentType: 'application/json;charset=utf-8;',
         dataType: 'text',
         success: function (response) {

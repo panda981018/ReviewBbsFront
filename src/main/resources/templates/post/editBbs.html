@@ -17,7 +17,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div id="postContent"
+    <div id="writeContent"
          class="d-flex flex-column justify-content-evenly align-items-stretch">
         <h1 class="flex-grow-0 pb-3 border-bottom">Edit Review</h1>
         <form class="form-group d-grid" th:action="@{'/post/bbs/update?id=' + ${bbs.id}}" th:object="${bbs}"

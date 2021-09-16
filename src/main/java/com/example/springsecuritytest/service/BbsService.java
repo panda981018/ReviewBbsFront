@@ -61,6 +61,18 @@ public class BbsService {
         return bbsDto;
     }
 
+    public Page<BbsEntity> findAllBbs(Pageable pageable, Long categoryId) {
+        List<String> fields = new ArrayList<>();
+        for(Sort.Order order : pageable.getSort()) {
+            fields.add(order.getProperty());
+        }
+
+        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryId);
+        Page<BbsEntity> bbsEntities = bbsQueryRepository.findAllCategoryBbs(categoryEntity.get(), pageable, fields);
+
+        return bbsEntities;
+    }
+
     public void updateBbs(BbsDto bbsDto, MemberDto memberDto) { // 게시글 수정
         Optional<CategoryEntity> category = categoryRepository.findById(bbsDto.getCategoryId());
         Optional<BbsEntity> bbsEntity = bbsRepository.findById(bbsDto.getId());
@@ -122,17 +134,5 @@ public class BbsService {
         }
 
         return data;
-    }
-
-    public Page<BbsEntity> findAllBbs(Pageable pageable, Long categoryId) {
-        List<String> fields = new ArrayList<>();
-        for(Sort.Order order : pageable.getSort()) {
-            fields.add(order.getProperty());
-        }
-
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryId);
-        Page<BbsEntity> bbsEntities = bbsQueryRepository.findAllCategoryBbs(categoryEntity.get(), pageable, fields);
-
-        return bbsEntities;
     }
 }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<head>
+    <!-- include summernote css/js -->
+    <link href="/css/summernote/summernote-lite.css" rel="stylesheet">
+    <script src="/js/summernote/summernote-lite.js" defer></script>
+    <!-- include summernote-ko-KR -->
+    <script src="/js/summernote/summernote-ko-KR.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/editnotice.css">
+    <title>Notice</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="writeContent"
+         class="d-flex flex-column justify-content-evenly align-items-stretch form-box">
+        <h1 class="flex-grow-0 pb-3 border-bottom">Edit Notice</h1>
+        <form class="form-group d-grid mt-3" id="formEdit" th:action="@{/notice/update}" th:object="${noticeDto}"
+              method="post">
+            <!-- id -->
+            <input type="hidden" id="hiddenId" th:field="*{id}">
+            <!-- 제목 -->
+            <label id="titleLabel" class="form-label" for="noticeTitle"><b>Title</b></label>
+            <input type="text" id="noticeTitle" class="form-control" th:field="*{title}"><br>
+            <span id="titleError" class="valid">빈칸을 채워주세요</span>
+            <!-- 내용 -->
+            <label id="contentsLabel" for="noticeContents" class="form-label"><b>Contents</b></label><br>
+            <span id="noticeError" class="valid">내용을 채워주세요</span>
+            <textarea id="noticeContents" class="form-box" th:field="*{contents}"></textarea>
+            <div id="btnGroup" class="flex-wrap">
+                <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button">
+                    취소
+                </button>
+                <button type="submit" id="submitBtn" class="btn btn-primary form-button">수정</button>
+            </div>
+        </form>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script src="/js/editnotice.js"></script>
+    <script th:inline="javascript">
+        //<[CDATA[
+        //]]>
+        window.onload = function () {
+            //여기 아래 부분
+            $('#noticeContents').summernote(setting);
+            noticeTitleValidate();
+            noticeContentValidate();
+            cancelBbs();
+            validateNotice();
+        }
+    </script>
+</th:block>
+</body>
+</html>

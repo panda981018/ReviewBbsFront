@@ -11,7 +11,7 @@
 <body>
 <div layout:fragment="content">
     <div layout:replace="fragments/postnav :: NaviPost"></div>
-    <div id="postContent" class="d-flex flex-column">
+    <div id="writeContent" class="d-flex flex-column">
         <div id="pageInfo" class="d-flex flex-column align-items-center align-self-center pb-3">
             <h1 class="py-2" th:text="${session.categoryList.get(categoryIndex).getName()}"></h1>
             <span class="py-1" th:text="${session.categoryList.get(categoryIndex).getDescription()}"></span>

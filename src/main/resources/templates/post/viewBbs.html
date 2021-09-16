@@ -11,7 +11,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div id="postContent" class="d-flex flex-column justify-content-evenly">
+    <div id="writeContent" class="d-flex flex-column justify-content-evenly">
         <div id="categoryInfo" class="mb-3">
             <h1>
                 <a th:href="@{'/post/bbs?category=' + ${session.categoryList.get(categoryId).getId()}}"
@@ -63,7 +63,9 @@
             deleteBbs(bbsId, categoryId);
             autoResizing();
             deleteReply(bbsId);
-            updateReply();
+            showReplyModal();
+            modalListener();
+            // updateReply();
             //]]>
 
         }

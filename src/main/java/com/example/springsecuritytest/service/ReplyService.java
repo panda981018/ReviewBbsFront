@@ -57,17 +57,25 @@ public class ReplyService {
         return replyDtoList;
     }
 
-    public void updateReply(String contents, Long replyId) {
+    public void updateReply(String contents, Long replyId, MemberDto memberDto) {
 
         Optional<ReplyEntity> reply = replyRepository.findById(replyId);
+
         if (reply.isPresent()) {
-            ReplyDto replyDto = reply.get().toDto();
+            ReplyEntity oldReply = reply.get(); // 저장되어 있던 reply
+            ReplyDto replyDto = oldReply.toDto(); // updateDate와 contents 세팅을 위해서 dto로 만듦
+
             LocalDateTime updateNow = LocalDateTime.now();
             String updateTimeStr = updateNow.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             replyDto.setUpdateDate(updateTimeStr);
             replyDto.setContents(contents);
 
-            replyRepository.save(replyDto.toEntity());
+            ReplyEntity newEntity = replyDto.toEntity();
+            Optional<BbsEntity> bbsEntity = bbsRepository.findById(replyDto.getBbs()); // writer 매핑을 위해
+            newEntity.setBbs(bbsEntity.get());
+            newEntity.setWriter(memberDto.toEntity());
+
+            replyRepository.save(newEntity);
         }
     }
 

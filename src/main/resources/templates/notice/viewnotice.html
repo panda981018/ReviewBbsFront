@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/viewnotice.css">
+    <title>Notice</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="writeContent" class="d-flex flex-column justify-content-evenly">
+        <table id="tableDiv" class="table table-responsive">
+            <tr id="noticeTitleTr">
+                <th>제목</th>
+                <td colspan="7" th:text="${notice.title}"></td>
+            </tr>
+
+            <tr id="noticeWriterTr">
+                <th>작성 날짜</th>
+                <td th:text="${notice.createDate}"></td>
+            </tr>
+
+            <tr id="bbsContentsTr">
+                <td id="noticeContents" colspan="8" rowspan="5" class="ps-3 pt-3"
+                    th:utext="${notice.contents}"></td>
+            </tr>
+        </table>
+        <div id="previousBtnDiv" class="d-flex justify-content-between align-items-center my-3">
+            <button type="button" id="previousBtn" class="btn btn-outline-secondary"
+                    onclick="window.history.back();">이전</button>
+            <div id="ownerBtnGroup" class="d-flex justify-content-end align-items-center"
+                th:if="${session.memberInfo.getRole() == notice.writerRole}">
+                <button type="button" id="deleteNoticeBtn" class="btn btn-outline-danger me-3">삭제</button>
+                <a th:href="@{'/notice/update?id=' + ${notice.id}}" id="updateBtn" class="btn btn-primary">수정</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+<th:block layout:fragment="script">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="/js/notice.js"></script>
+    <script>
+        window.onload = function () {
+            //<[CDATA[
+            const noticeId = [[${notice.id}]];
+            deleteNotice(noticeId);
+            //]]>
+
+        }
+    </script>
+</th:block>
+</body>
+</html>

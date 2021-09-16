@@ -1,6 +1,5 @@
 const replyBtn = $('#createReply');
 const textEle = $('#replyTextarea');
-const updateBtn = $('#updateReplyBtn');
 
 function createReply(bbsId) {
     replyBtn.on('click', function () {
@@ -26,23 +25,26 @@ function createReply(bbsId) {
 }
 
 function adjustHeight() {
-    textEle.eq(0).css('height', 'auto');
-
-    const textEleHeight = textEle.prop('scrollHeight');
-    textEle.css('height', textEleHeight);
-}
-
-function autoResizing() { // 컨텐츠 길이에 따라 높이가 늘어나게
-    textEle.on('keyup', function () {
-        adjustHeight();
+    $('textarea').each(function (index, element) {
+        $(this).css('height', 'auto');
+        const textEleHeight = $(this).prop('scrollHeight');
+        $(this).css('height', textEleHeight);
     })
 }
 
-function deleteReply(bbsId) {
-    $('#writtenReply').on('click', "button[id='deleteReplyBtn']", function (event) {
+function autoResizing() { // 컨텐츠 길이에 따라 높이가 늘어나게
 
-        console.log($(this).parent().siblings('input').val());
-        const replyId = $(this).siblings('input').val();
+    $('textarea').each(function () {
+        $(this).on('keyup', function (index, element) {
+            adjustHeight();
+        })
+    })
+}
+
+function deleteReply(bbsId) { // 삭제 버튼 눌렀을 때
+    $('#writtenReply').on('click', "button[id='deleteReplyBtn']", function () {
+
+        const replyId = $(this).parent().siblings('input').val();
 
         let result = confirm('댓글을 삭제하시겠습니까?');
         if (result) {
@@ -56,54 +58,36 @@ function deleteReply(bbsId) {
                 }
             })
         } else {
-            return false;
+            $(this).focused = false;
         }
     })
 }
 
-function updateReply() {
-    $('#writtenReply').on('click', "button[id='updateReplyBtn']", function (event) {
-        const replyId = $(this).siblings('input').val();
+function showReplyModal() { // 댓글의 수정버튼 눌렀을 때의 이벤트 리스너
+    $(document).on('click', '#updateReplyBtn', function () {
+        const replyId = $(this).parent().siblings('input').val();
         const replyContent = $(this).parents().siblings('span[id=replyContents]')[0]; // 원래 내용이 포함된 span
-        const replyInfo = $(this).parents("div[id=replyInfo]").eq(0); // 댓글 정보를 가진 div
         const oldText = replyContent.innerHTML;
 
-        replyContent.remove();
+        const modalTextarea = $('#updateReplyTextarea')[0];
+        const modalReplyId = $('#hiddenReplyId');
+        modalReplyId.val(replyId);
+        modalTextarea.innerHTML = oldText;
 
-        const editableElement = $("<textarea id='updateReplyContents'></textarea>")[0];
-        const submitBtn = $("<button type='button' id='updateReplySubmit' class='btn btn-outline-secondary'>확인</button>")[0];
-        // replyContent.replaceWith(editableElement);
-        editableElement.innerHTML = oldText;
-        replyInfo.after(editableElement);
-        editableElement.after(submitBtn);
-        let data = { 'replyId' : replyId };
-
-        submitBtn.onclick = function () {
-            //const replyId = $('#updateReplySubmit').siblings('div[id=replyInfo]').children("input")[0].val();
-            //console.log(replyId);
-            let text = $('#updateReplyContents')[0].innerHTML;
-            console.log($('#updateReplyContents')[0].innerText);
-            data.contents = $('#updateReplyContents')[0].innerText;
-            // $.ajax({
-            //     url: "/reply/ajax/update",
-            //     type: "post",
-            //     data: JSON.stringify(data),
-            //     contentType: "application/json;charset=utf-8;",
-            //     success: function () {
-            //         location.reload();
-            //     }
-            // })
-        }
+        $('#updateReplyDialog').modal('show');
     })
 }
 
-function submitUpdateReply(replyId) {
-    $('#updateReplySubmit').on('click', function () {
-        let data = {'contents': $('#updateReplyContents')[0].innerHTML, 'replyId': replyId} ;
+function modalListener() { // modal 수정 클릭 리스너
+    const modalSaveBtn = $('#modalUpdateBtn').eq(0);
+    const modalReplyId = $('#hiddenReplyId').eq(0);
+    modalSaveBtn.on('click', function () {
+        const updateReply = $('#updateReplyTextarea')[0].value;
+        const replyId = modalReplyId.val();
         $.ajax({
-            url: "/reply/ajax/update",
+            url: '/reply/ajax/update',
             type: "post",
-            data: JSON.stringify(data),
+            data: JSON.stringify({ "id" : replyId, "contents" : updateReply }),
             contentType: "application/json;charset=utf-8;",
             success: function () {
                 location.reload();
