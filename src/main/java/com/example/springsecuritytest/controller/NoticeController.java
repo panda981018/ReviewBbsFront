@@ -3,6 +3,7 @@ package com.example.springsecuritytest.controller;
 import com.example.springsecuritytest.domain.entity.NoticeEntity;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.dto.NoticeDto;
+import com.example.springsecuritytest.service.ImageService;
 import com.example.springsecuritytest.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -83,21 +84,5 @@ public class NoticeController {
         String id = noticeData.get("id").toString();
         List<String> urls = (List<String>) noticeData.get("urls");
         noticeService.deleteNotice(Long.valueOf(id), urls);
-    }
-
-    @ResponseBody
-    @PostMapping("/ajax/deleteImg")
-    public String deleteEditorImage(@RequestBody HashMap<String, List<String>> target) {
-
-        System.out.println("Delete Image files : " + target.get("src"));
-        noticeService.deleteUploadedImg(target.get("src"));
-
-        return "ok";
-    }
-
-    @ResponseBody
-    @PostMapping("/ajax/uploadImg")
-    public HashMap<String, String> uploadSummernoteImage(@RequestParam("file") List<MultipartFile> multipartFile) {
-        return noticeService.uploadImage(multipartFile);
     }
 }

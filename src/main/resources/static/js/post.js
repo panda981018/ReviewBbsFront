@@ -1,3 +1,21 @@
+$(document).on('click', '.tui-grid-cell', function () { // 해당 게시글로 이동
+    const td = $(this).siblings()[0];
+    const bid = td.children[0].innerHTML;
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/bbs/update/views',
+        dataType: 'json',
+        data: JSON.stringify({"id": bid}),
+        contentType: 'application/json; charset=utf-8',
+        error: function () {
+            console.log('view update failed.');
+        }
+    })
+
+    location.href = '/post/bbs/view?id=' + bid;
+})
+
 let urlList = []; // 사진 src만 갖고 있는 배열
 
 function changeUrl(categoryId) { // page, sort 파라미터가 보이지 않게 처리
@@ -32,25 +50,6 @@ function changeUrl(categoryId) { // page, sort 파라미터가 보이지 않게 
     }
 }
 
-function updateViews() { // 조회수 업데이트
-    $('tr').on('click', function () {
-        const tr = $(this).children();
-        const bbsId = tr.first().text();
-
-        console.log("bbsId : " + bbsId);
-        $.ajax({
-            type: 'POST',
-            url: '/post/bbs/ajax/update/views',
-            dataType: 'json',
-            data: JSON.stringify({"id": bbsId}),
-            contentType: 'application/json; charset=utf-8',
-            error: function () {
-                console.log('view update failed.');
-            }
-        })
-    })
-}
-
 function deleteBbs(bbsId, bbsCategoryId) { // 게시물 삭제
     $('#deleteBbsBtn').on('click', function () {
 
@@ -74,7 +73,7 @@ function deleteBbs(bbsId, bbsCategoryId) { // 게시물 삭제
                 method: 'DELETE',
                 data: JSON.stringify(data),
                 contentType: 'application/json;charset=utf-8;',
-                url: '/post/bbs/ajax/delete',
+                url: '/api/bbs/delete',
                 success: function () {
                     location.href = address;
                 }
@@ -90,7 +89,7 @@ function sortBbs(categoryId) {
         let sort = $('#sortStandard option:selected').val();
         $.ajax({
             method: "GET",
-            url: '/post/bbs/ajax/sort?sort=' + sort + ',desc' + '&category=' + categoryId,
+            url: '/api/bbs/sort?sort=' + sort + ',desc' + '&category=' + categoryId,
             dataType: "json",
             success: function (result) {
                 console.log(result.bbsList);

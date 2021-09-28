@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
@@ -38,8 +37,7 @@
             </tr>
         </table>
         <div id="previousBtnDiv" class="d-flex justify-content-between align-items-center my-3">
-            <button type="button" id="previousBtn" class="btn btn-outline-secondary"
-                onclick="window.history.back();">이전</button>
+            <button type="button" id="previousBtn" class="btn btn-outline-secondary" onclick="window.history.back();">이전</button>
             <div id="ownerBtnGroup" class="d-flex justify-content-end align-items-center"
                  th:if="${bbs.bbsWriter == session.memberInfo.getNickname()}">
                 <button type="button" id="deleteBbsBtn" class="btn btn-outline-danger me-3">삭제</button>

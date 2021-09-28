@@ -53,7 +53,7 @@ table {
     grid-column: 1/ 2;
 }
 
-#bbsTitle {
+#titleInput {
     grid-row: 2 / 3;
     grid-column: 2 / 4;
 }
@@ -75,7 +75,7 @@ tr > td {
 }
 
 .note-editor,
-#bbsContents {
+#writeSpace {
     grid-row: 4 / 5;
     grid-column: 1 / 6;
     align-self: stretch;
@@ -84,7 +84,7 @@ tr > td {
 }
 
 
-#bbsError {
+#contentsError {
     grid-row: 3 / 4;
     grid-column: 2 / 4;
 }

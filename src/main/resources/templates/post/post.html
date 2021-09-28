@@ -5,7 +5,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
-    <link rel="stylesheet" type="text/css" href="/css/editbbs.css">
+    <link rel="stylesheet" type="text/css" href="/css/editpost.css">
+    <link rel="stylesheet" type="text/css" href="/tui-grid/dist/tui-grid.css">
     <title>Post</title>
 </head>
 <body>
@@ -16,50 +17,27 @@
             <h1 class="py-2" th:text="${session.categoryList.get(categoryIndex).getName()}"></h1>
             <span class="py-1" th:text="${session.categoryList.get(categoryIndex).getDescription()}"></span>
         </div>
-        <div id="tableInfo" class="mb-3 d-flex flex-row justify-content-start align-items-center"
-             th:if="${!bbsList.isEmpty()}">
-            <label for="sortStandard" id="sortLabel" class="me-2"><b>정렬기준</b></label>
-            <div class="dropdown d-flex align-items-center">
-                <select id="sortStandard" class="form-select dropdown-toggle" data-toggle="dropdown">
-                    <option class="dropdown-item" id="sortId" value="id">글번호</option>
-                    <option class="dropdown-item" id="sortTitle" value="bbsTitle">제목</option>
-                    <option class="dropdown-item" id="sortWriter" value="bbsWriter">작성자</option>
-                    <option class="dropdown-item" id="sortDate" value="bbsDate">작성날짜</option>
-                    <option class="dropdown-item" id="sortViews" value="bbsViews">조회수</option>
-                </select>
-            </div>
-        </div>
-        <h2 th:unless="${!bbsList.isEmpty()}">아직 글이 없습니다.</h2>
-        <table id="table" th:if="${!bbsList.isEmpty()}"
-               class="flex-column justify-content-around align-items-stretch
-               table table-striped table-responsive table-hover">
-            <thead>
-            <tr>
-                <th style="width:8%;">번호</th>
-                <th style="width:30%;">제목</th>
-                <th style="width:20%;">작성자</th>
-                <th style="width:20%;">작성날짜</th>
-                <th style="width:8%;">조회수</th>
-                <th style="width:8%;">댓글수</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="bbs : ${bbsList.getContent()}"
-                th:onclick="|location.href='@{/post/bbs/view(id=${bbs.id})}'|">
-                <td style="width:8%;" th:text="${bbs.id}"></td>
-                <td style="width:30%;"><a class="bbs-link link-dark" th:text="${bbs.bbsTitle}"></a></td>
-                <td style="width:20%;" th:text="${bbs.bbsWriter}"></td>
-                <td style="width:20%;" th:text="${bbs.bbsDate}"></td>
-                <td style="width:8%;"  th:text="${bbs.bbsViews}"></td>
-                <td style="width:8%;" th:text="${bbs.replyCnt}"></td>
-            </tr>
-            </tbody>
-        </table>
+<!--        <div id="tableInfo" class="mb-3 d-flex flex-row justify-content-start align-items-center"-->
+<!--             th:if="${!bbsList.isEmpty()}">-->
+<!--            <label for="sortStandard" id="sortLabel" class="me-2"><b>정렬기준</b></label>-->
+<!--            <div class="dropdown d-flex align-items-center">-->
+<!--                <select id="sortStandard" class="form-select dropdown-toggle" data-toggle="dropdown">-->
+<!--                    <option class="dropdown-item" id="sortId" value="id">글번호</option>-->
+<!--                    <option class="dropdown-item" id="sortTitle" value="bbsTitle">제목</option>-->
+<!--                    <option class="dropdown-item" id="sortWriter" value="bbsWriter">작성자</option>-->
+<!--                    <option class="dropdown-item" id="sortDate" value="bbsDate">작성날짜</option>-->
+<!--                    <option class="dropdown-item" id="sortViews" value="bbsViews">조회수</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+        <h2 th:if="${bbsList.isEmpty()}">아직 글이 없습니다.</h2>
+        <div th:unless="${bbsList.isEmpty()}" id="grid" class="flex-column justify-content-around align-items-stretch table-responsive table-hover mb-3"></div>
         <div class="d-flex flex-row justify-content-end">
             <a th:href="@{/post/bbs/write(category=${session.categoryList.get(categoryIndex).id})}" class="btn btn-primary">
                 작성
             </a>
         </div>
+
         <nav aria-label="Page navigation" th:if="${!bbsList.isEmpty()}">
             <ul id="classUl" class="pagination justify-content-center align-items-center">
                 <li class="page-item btn" th:classappend="${!bbsList.pageable.hasPrevious()} ? 'disabled'">
@@ -99,15 +77,17 @@
 <th:block layout:fragment="script">
     <!--  없으면 ajax가 동작하지 않음  -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="/tui-grid/dist/tui-grid.js"></script>
     <script src="/js/post.js"></script>
+    <script src="/js/postGrid.js"></script>
     <script>
         window.onload = function () {
             //<[CDATA[
             const categoryId = [[${categoryIndex}]] + 1;
             //]]>
-            changeUrl(categoryId);
+            callBbsData(categoryId);
+            // changeUrl(categoryId);
             sortBbs(categoryId);
-            updateViews();
         }
     </script>
 </th:block>

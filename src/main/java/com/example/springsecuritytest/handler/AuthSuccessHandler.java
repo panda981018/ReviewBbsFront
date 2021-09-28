@@ -60,6 +60,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             // 조건 1 : 주소에 /post가 저장되어 있으면서 일반회원인가
             if (uri.contains("/post")) {
                 List<CategoryDto> categoryList = categoryService.getAllCategories();
+
                 // 조건 2 : 카테고리가 있는가
                 if (!categoryList.isEmpty()) {
                     session.setAttribute("categoryList", categoryList);
@@ -72,8 +73,12 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
                 response.sendRedirect(uri);
             }
         } else { // 저장된 uri가 없으면 role에 따라 디폴트 화면으로 이동
-            if (!categoryService.getAllCategories().isEmpty()) {
+            List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
+            System.out.println(categoryDtoList);
+            if (categoryDtoList.size() != 0) {
                 session.setAttribute("categoryList", categoryService.getAllCategories());
+            } else {
+                session.removeAttribute("categoryList");
             }
 
             if (roles.contains(Role.ADMIN.getValue())) {

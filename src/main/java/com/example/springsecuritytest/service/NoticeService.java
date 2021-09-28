@@ -1,32 +1,26 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.BbsEntity;
-import com.example.springsecuritytest.domain.entity.CategoryEntity;
 import com.example.springsecuritytest.domain.entity.NoticeEntity;
-import com.example.springsecuritytest.domain.repository.*;
-import com.example.springsecuritytest.dto.BbsDto;
+import com.example.springsecuritytest.domain.repository.NoticeQueryRepository;
+import com.example.springsecuritytest.domain.repository.NoticeRepository;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.dto.NoticeDto;
 import lombok.AllArgsConstructor;
-import org.apache.commons.io.FileUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class NoticeService {
 
+    private final ImageService imageService;
     private final NoticeRepository noticeRepository;
     private final NoticeQueryRepository noticeQueryRepository;
 
@@ -82,42 +76,8 @@ public class NoticeService {
 
     public void deleteNotice(Long id, List<String> urls) { // 게시글 삭제
         if (urls != null) {
-            deleteUploadedImg(urls);
+            imageService.deleteUploadedImg(urls);
         }
         noticeRepository.deleteById(id);
-    }
-
-    public void deleteUploadedImg(List<String> urls) { // 게시글에 포함된 이미지 삭제
-        for (String url : urls) {
-            FileUtils.deleteQuietly(new File(url));
-        }
-    }
-
-    public HashMap<String, String> uploadImage(List<MultipartFile> multipartFile) { // 이미지 업로드
-        HashMap<String, String> data = new HashMap<>();
-
-        String fileRoot = "D:\\summernoteImg\\"; // 저장될 경로
-
-        for (int i = 0; i < multipartFile.size(); i++) {
-            String originalFileName = multipartFile.get(i).getOriginalFilename();
-            String type = originalFileName.substring(originalFileName.lastIndexOf("."));
-
-            String savedFileName = UUID.randomUUID() + type;
-
-            File targetFile = new File(fileRoot + savedFileName);
-
-            try {
-                InputStream fileStream = multipartFile.get(i).getInputStream();
-                FileUtils.copyInputStreamToFile(fileStream, targetFile); // inputstream, 파일저장경로
-                data.put("url", "/summernoteImg/" + savedFileName);
-                data.put("responseCode", "success");
-            } catch (IOException e) {
-                FileUtils.deleteQuietly(targetFile); // 에러나면 저장된 파일 삭제
-                data.put("responseCode", "error");
-                e.printStackTrace();
-            }
-        }
-
-        return data;
     }
 }

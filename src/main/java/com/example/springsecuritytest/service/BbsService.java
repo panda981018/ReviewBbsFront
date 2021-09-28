@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.HtmlUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.*;
 @AllArgsConstructor
 public class BbsService {
 
+    private final ImageService imageService;
     private final BbsRepository bbsRepository;
     private final BbsQueryRepository bbsQueryRepository;
     private final CategoryRepository categoryRepository;
@@ -47,7 +49,6 @@ public class BbsService {
             bbs.setBbsWriter(memberDto.toEntity());
             bbsRepository.save(bbs);
         }
-
     }
 
     public BbsDto getBbs(Long bbsId) { // 게시물 1개
@@ -61,7 +62,7 @@ public class BbsService {
         return bbsDto;
     }
 
-    public Page<BbsEntity> findAllBbs(Pageable pageable, Long categoryId) {
+    public Page<BbsDto> findAllBbs(Pageable pageable, Long categoryId) {
         List<String> fields = new ArrayList<>();
         for(Sort.Order order : pageable.getSort()) {
             fields.add(order.getProperty());
@@ -69,8 +70,9 @@ public class BbsService {
 
         Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryId);
         Page<BbsEntity> bbsEntities = bbsQueryRepository.findAllCategoryBbs(categoryEntity.get(), pageable, fields);
+        Page<BbsDto> bbsList = bbsEntities.map(BbsEntity::toDto);
 
-        return bbsEntities;
+        return bbsList;
     }
 
     public void updateBbs(BbsDto bbsDto, MemberDto memberDto) { // 게시글 수정
@@ -97,42 +99,8 @@ public class BbsService {
 
     public void deleteBbs(Long id, List<String> urls) { // 게시글 삭제
         if (urls != null) {
-            deleteUploadedImg(urls);
+            imageService.deleteUploadedImg(urls);
         }
         bbsRepository.deleteById(id);
-    }
-
-    public void deleteUploadedImg(List<String> urls) { // 게시글에 포함된 이미지 삭제
-        for (String url: urls) {
-            FileUtils.deleteQuietly(new File(url));
-        }
-    }
-
-    public HashMap<String, String> uploadImage(List<MultipartFile> multipartFile) { // 이미지 업로드
-        HashMap<String,String> data = new HashMap<>();
-
-        String fileRoot = "D:\\summernoteImg\\"; // 저장될 경로
-
-        for (int i = 0; i < multipartFile.size(); i++) {
-            String originalFileName = multipartFile.get(i).getOriginalFilename();
-            String type = originalFileName.substring(originalFileName.lastIndexOf("."));
-
-            String savedFileName = UUID.randomUUID() + type;
-
-            File targetFile = new File(fileRoot + savedFileName);
-
-            try {
-                InputStream fileStream = multipartFile.get(i).getInputStream();
-                FileUtils.copyInputStreamToFile(fileStream, targetFile); // inputstream, 파일저장경로
-                data.put("url", "/summernoteImg/" + savedFileName);
-                data.put("responseCode", "success");
-            } catch (IOException e) {
-                FileUtils.deleteQuietly(targetFile); // 에러나면 저장된 파일 삭제
-                data.put("responseCode", "error");
-                e.printStackTrace();
-            }
-        }
-
-        return data;
     }
 }

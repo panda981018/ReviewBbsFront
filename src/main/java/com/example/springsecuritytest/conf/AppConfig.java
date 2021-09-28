@@ -16,7 +16,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/summernoteImg/**")
-                .addResourceLocations("file:///D:/summernoteImg/");
+                .addResourceLocations("file:///C:/summernoteImg/");
     }
 
     @Bean

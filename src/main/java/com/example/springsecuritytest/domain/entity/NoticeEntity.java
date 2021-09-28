@@ -31,6 +31,7 @@ public class NoticeEntity {
     private String title;
 
     @Column(nullable = false)
+    @Lob
     private String contents;
 
     @Column(nullable = false)

@@ -46,11 +46,10 @@ public class BbsController {
     }
 
     @GetMapping("/bbs")
-    public String showCategoryBbs(HttpServletRequest request, @RequestParam(required = false) String category,
-                                  @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                                  Model model) {
-        Page<BbsEntity> bbsEntities = bbsService.findAllBbs(pageable, Long.parseLong(category));
-        Page<BbsDto> bbsList = bbsEntities.map(BbsEntity::toDto);
+    public String showBbsList(@RequestParam(required = false) String category,
+                              @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+                              Model model) {
+        Page<BbsDto> bbsList = bbsService.findAllBbs(pageable, Long.parseLong(category));
 
         // view에서 category에 대한 정보를 표시하기 위해
         // (session.categoryList는 index 0 부터 시작. DB의 카테고리는 1부터 시작. 따라서 -1)
@@ -90,7 +89,7 @@ public class BbsController {
     }
 
     @GetMapping("/bbs/update") // 수정하는 페이지
-    public String showBbs(@RequestParam(required = false) String id, Model model) {
+    public String showBbsList(@RequestParam(required = false) String id, Model model) {
         BbsDto bbs = bbsService.getBbs(Long.parseLong(id));
         model.addAttribute("bbs", bbs);
         return "post/editBbs";
@@ -101,56 +100,5 @@ public class BbsController {
         MemberDto member = (MemberDto) session.getAttribute("memberInfo");
         bbsService.updateBbs(bbsDto, member);
         return "redirect:/post/bbs?category=" + bbsDto.getCategoryId();
-    }
-
-    @ResponseBody
-    @PostMapping("/bbs/ajax/update/views") // 조회수 업데이트 기능
-    public void updateViews(@RequestBody HashMap<String, String> bbsIdObj) {
-        bbsService.updateViews(Long.parseLong(bbsIdObj.get("id")));
-    }
-
-    @ResponseBody
-    @GetMapping("/bbs/ajax/sort")
-    public HashMap<String, Page<BbsDto>> bbsPaging(@RequestParam String sort,
-                                                   @RequestParam String category) {
-        System.out.println(sort);
-        String[] sortStandard = sort.split(",");
-        Sort.Direction direction = (sortStandard[1].equals("asc")) ? Sort.Direction.ASC : Sort.Direction.DESC;
-
-        Pageable pageable = PageRequest.of(0, 5, direction, sortStandard[0]);
-        Page<BbsEntity> bbsEntities = bbsService.findAllBbs(pageable, Long.parseLong(category));
-        Page<BbsDto> bbsList = bbsEntities.map(BbsEntity::toDto);
-
-        HashMap<String, Page<BbsDto>> bbsObj = new HashMap<>();
-        bbsObj.put("bbsList", bbsList);
-
-        return bbsObj;
-    }
-
-    @ResponseBody
-    @DeleteMapping("/bbs/ajax/delete")
-    public void deleteBbs(@RequestBody HashMap<String, Object> data) {
-
-        if (data.containsKey("urls")) {
-            bbsService.deleteBbs(((Integer) data.get("id")).longValue(), (List<String>) data.get("urls"));
-        } else {
-            bbsService.deleteBbs(((Integer) data.get("id")).longValue(), null);
-        }
-    }
-
-    @ResponseBody
-    @PostMapping("/bbs/ajax/uploadImg")
-    public HashMap<String, String> uploadSummernoteImage(@RequestParam("file") List<MultipartFile> multipartFile) {
-        return bbsService.uploadImage(multipartFile);
-    }
-
-    @ResponseBody
-    @PostMapping("/bbs/ajax/deleteImg")
-    public String deleteEditorImage(@RequestBody HashMap<String, List<String>> target) {
-
-        System.out.println("Delete Image files : " + target.get("src"));
-        bbsService.deleteUploadedImg(target.get("src"));
-
-        return "ok";
     }
 }

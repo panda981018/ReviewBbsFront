@@ -33,7 +33,7 @@ table {
     grid-column: 1/ 2;
 }
 
-#noticeTitle {
+#titleInput {
     grid-row: 1 / 2;
     grid-column: 2 / 4;
 }
@@ -55,7 +55,7 @@ tr > td {
 }
 
 .note-editor,
-#noticeContents {
+#writeSpace {
     grid-row: 3 / 4;
     grid-column: 1 / 6;
     align-self: stretch;
@@ -63,7 +63,7 @@ tr > td {
     word-break: break-all;
 }
 
-#noticeError {
+#contentsError {
     grid-row: 2 / 3;
     grid-column: 2 / 4;
 }

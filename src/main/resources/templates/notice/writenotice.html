@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
@@ -24,13 +23,13 @@
             <!-- id -->
             <input type="hidden" id="hiddenId" name="id">
             <!-- 제목 -->
-            <label id="titleLabel" class="form-label" for="noticeTitle"><b>Title</b></label>
-            <input type="text" id="noticeTitle" class="form-control" name="title"><br>
+            <label id="titleLabel" class="form-label" for="titleInput"><b>Title</b></label>
+            <input type="text" id="titleInput" class="form-control" name="title"><br>
             <span id="titleError" class="valid">빈칸을 채워주세요</span>
             <!-- 내용 -->
-            <label id="contentsLabel" for="noticeContents" class="form-label"><b>Contents</b></label><br>
-            <span id="noticeError" class="valid">내용을 채워주세요</span>
-            <textarea id="noticeContents" class="form-box" name="contents"></textarea>
+            <label id="contentsLabel" for="writeSpace" class="form-label"><b>Contents</b></label><br>
+            <span id="contentsError" class="valid">내용을 채워주세요</span>
+            <textarea id="writeSpace" class="form-box" name="contents"></textarea>
             <div id="btnGroup" class="flex-wrap">
                 <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button">
                     취소
@@ -41,17 +40,18 @@
     </div>
 </div>
 <th:block layout:fragment="script">
-    <script src="/js/editnotice.js"></script>
+    <script src="/js/editorSetting.js"></script>
+    <script src="/js/validate.js"></script>
     <script th:inline="javascript">
         //<[CDATA[
         //]]>
         window.onload = function () {
             //여기 아래 부분
-            $('#noticeContents').summernote(setting);
-            noticeTitleValidate();
-            noticeContentValidate();
-            cancelBbs();
-            validateNotice();
+            $('#writeSpace').summernote(setting);
+            titleValidate();
+            contentValidate();
+            cancelingWrite();
+            validateForm();
         }
     </script>
 </th:block>
