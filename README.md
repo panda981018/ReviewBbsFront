@@ -22,6 +22,7 @@
 4. 해당 디렉토리에 /node_modules/tui-grid 복사<br/>
 
 5. Spring Boot application에서 /resources/static 에 복사한 tui-grid 붙여넣기<br/>
+![image](https://user-images.githubusercontent.com/55985137/135185519-db000921-a7f0-4a3b-bd30-ff88e241668e.png)
 
 6. grid를 적용하고 싶은 html의 <head>에 아래 코드를 적용<br/>
  ```<link rel="stylesheet" href="/tui-grid/tui-grid.css">```
