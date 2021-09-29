@@ -2,7 +2,7 @@ $(document).on('click', '.tui-grid-cell', function () { // 해당 게시글로 �
     const td = $(this).siblings()[0];
     const bid = td.children[0].innerHTML;
 
-    $.ajax({
+    $.ajax({ // 조회수 증가 코드
         type: 'POST',
         url: '/api/bbs/update/views',
         dataType: 'json',

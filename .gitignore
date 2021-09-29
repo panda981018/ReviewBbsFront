@@ -1,9 +1,11 @@
 HELP.md
 .gradle
 build/
+
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+src/main/resources/static/tui-grid/**
 
 ### STS ###
 .apt_generated
@@ -35,3 +37,13 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+
