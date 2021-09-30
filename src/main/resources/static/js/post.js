@@ -1,4 +1,4 @@
-$(document).on('click', '.tui-grid-cell', function () { // 해당 게시글로 이동
+$(document).on('click', 'td[data-column-name=title]', function () { // 해당 게시글로 이동
     const td = $(this).siblings()[0];
     const bid = td.children[0].innerHTML;
 
@@ -93,8 +93,8 @@ function sortBbs(categoryId) {
             dataType: "json",
             success: function (result) {
                 console.log(result.bbsList);
-                const address = '/post/bbs?category=' + categoryId + '&page=' + result.bbsList.number + '&sort=' + sort + ',desc';
-                location.href = address;
+                // const address = '/post/bbs?category=' + categoryId + '&page=' + result.bbsList.number + '&sort=' + sort + ',desc';
+                // location.href = address;
             }
         });
     });

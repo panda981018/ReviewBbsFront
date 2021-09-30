@@ -19,7 +19,7 @@ public class ImageService {
     public void deleteUploadedImg(List<String> urls) { // 게시글에 포함된 이미지 삭제
         for (String url : urls) {
             System.out.println("image urls : " + url);
-            FileUtils.deleteQuietly(new File(url));
+            FileUtils.deleteQuietly(new File("C:/" + url));
         }
     }
 
@@ -28,8 +28,8 @@ public class ImageService {
 
         String fileRoot = "C:\\summernoteImg\\"; // 저장될 경로
 
-        for (int i = 0; i < multipartFile.size(); i++) {
-            String originalFileName = multipartFile.get(i).getOriginalFilename();
+        for (MultipartFile file : multipartFile) {
+            String originalFileName = file.getOriginalFilename();
             String type = originalFileName.substring(originalFileName.lastIndexOf("."));
 
             String savedFileName = UUID.randomUUID() + type;
@@ -37,7 +37,7 @@ public class ImageService {
             File targetFile = new File(fileRoot + savedFileName);
 
             try {
-                InputStream fileStream = multipartFile.get(i).getInputStream();
+                InputStream fileStream = file.getInputStream();
                 FileUtils.copyInputStreamToFile(fileStream, targetFile); // inputstream, 파일저장경로
                 data.put("url", "/summernoteImg/" + savedFileName);
                 data.put("responseCode", "success");

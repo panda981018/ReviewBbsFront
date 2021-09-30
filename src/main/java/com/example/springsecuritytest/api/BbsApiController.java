@@ -2,7 +2,6 @@ package com.example.springsecuritytest.api;
 
 import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.service.BbsService;
-import com.example.springsecuritytest.service.ImageService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,11 +23,10 @@ public class BbsApiController {
 
     @ResponseBody
     @GetMapping("/get")
-    public HashMap<String, List<BbsDto>> getBbs(@RequestParam(required = false) String category,
-                                                @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<BbsDto> bbsList =  bbsService.findAllBbs(pageable, Long.parseLong(category));
+    public HashMap<String, List<BbsDto>> getAllBbsList(@RequestParam(required = false) String category) {
+        List<BbsDto> bbsList =  bbsService.findAll(Long.parseLong(category));
         HashMap<String, List<BbsDto>> map = new HashMap<>();
-        map.put("bbsList", bbsList.getContent());
+        map.put("bbsList", bbsList);
         return map;
     }
 

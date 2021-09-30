@@ -7,8 +7,6 @@
     <!-- include summernote css/js -->
     <link href="/css/summernote/summernote-lite.css" rel="stylesheet">
     <script src="/js/summernote/summernote-lite.js" defer></script>
-    <!-- include summernote-ko-KR -->
-    <script src="/js/summernote/summernote-ko-KR.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/css/editnotice.css">
     <title>Notice</title>
@@ -18,7 +16,7 @@
     <div id="writeContent"
          class="d-flex flex-column justify-content-evenly align-items-stretch form-box">
         <h1 class="flex-grow-0 pb-3 border-bottom">Write Notice</h1>
-        <form class="form-group d-grid mt-3" id="formEdit" th:action="@{/notice/write}" th:object="${notice}"
+        <form class="form-group d-grid mt-3" id="formEdit" th:action="@{/notice/write}" th:object="${noticeDto}"
               method="post">
             <!-- id -->
             <input type="hidden" id="hiddenId" name="id">

@@ -1,93 +1,60 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
-    <link rel="stylesheet" type="text/css" href="/css/editpost.css">
+    <link rel="stylesheet" type="text/css" href="/css/bbs.css">
     <link rel="stylesheet" type="text/css" href="/tui-grid/dist/tui-grid.css">
+    <link rel="stylesheet" type="text/css" href="/tui-pagination/dist/tui-pagination.css">
+    <script src="/tui-pagination/dist/tui-pagination.js" defer></script>
+    <script src="/tui-grid/dist/tui-grid.js" defer></script>
     <title>Post</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div layout:replace="fragments/postnav :: NaviPost"></div>
     <div id="writeContent" class="d-flex flex-column">
+        <input type="hidden" id="categoryId" th:value="${#request.getParameter('category')}">
         <div id="pageInfo" class="d-flex flex-column align-items-center align-self-center pb-3">
             <h1 class="py-2" th:text="${session.categoryList.get(categoryIndex).getName()}"></h1>
             <span class="py-1" th:text="${session.categoryList.get(categoryIndex).getDescription()}"></span>
         </div>
-<!--        <div id="tableInfo" class="mb-3 d-flex flex-row justify-content-start align-items-center"-->
-<!--             th:if="${!bbsList.isEmpty()}">-->
-<!--            <label for="sortStandard" id="sortLabel" class="me-2"><b>정렬기준</b></label>-->
-<!--            <div class="dropdown d-flex align-items-center">-->
-<!--                <select id="sortStandard" class="form-select dropdown-toggle" data-toggle="dropdown">-->
-<!--                    <option class="dropdown-item" id="sortId" value="id">글번호</option>-->
-<!--                    <option class="dropdown-item" id="sortTitle" value="bbsTitle">제목</option>-->
-<!--                    <option class="dropdown-item" id="sortWriter" value="bbsWriter">작성자</option>-->
-<!--                    <option class="dropdown-item" id="sortDate" value="bbsDate">작성날짜</option>-->
-<!--                    <option class="dropdown-item" id="sortViews" value="bbsViews">조회수</option>-->
-<!--                </select>-->
-<!--            </div>-->
-<!--        </div>-->
-        <h2 th:if="${bbsList.isEmpty()}">아직 글이 없습니다.</h2>
-        <div th:unless="${bbsList.isEmpty()}" id="grid" class="flex-column justify-content-around align-items-stretch table-responsive table-hover mb-3"></div>
+        <!--   데이터가 있을때만 노출    -->
+        <div id="tableInfo">
+            <label for="sortStandard" id="sortLabel" class="me-2"><b>정렬기준</b></label>
+            <div class="dropdown d-flex align-items-center">
+                <select id="sortStandard" class="form-select dropdown-toggle" data-toggle="dropdown">
+                    <option class="dropdown-item" id="sortId" value="id">글번호</option>
+                    <option class="dropdown-item" id="sortTitle" value="bbsTitle">제목</option>
+                    <option class="dropdown-item" id="sortWriter" value="bbsWriter">작성자</option>
+                    <option class="dropdown-item" id="sortDate" value="bbsDate">작성날짜</option>
+                    <option class="dropdown-item" id="sortViews" value="bbsViews">조회수</option>
+                </select>
+            </div>
+        </div>
+        <!--   데이터가 있을때만 노출    -->
+        <div id="grid" class="flex-column justify-content-around align-items-stretch table-responsive table-hover mb-3">
+        </div>
+        <!--   데이터가 없을 때만 노출    -->
+        <h2 id="noData">아직 글이 없습니다.</h2>
+        <!--   데이터가 있건 없건 노출    -->
         <div class="d-flex flex-row justify-content-end">
             <a th:href="@{/post/bbs/write(category=${session.categoryList.get(categoryIndex).id})}" class="btn btn-primary">
                 작성
             </a>
         </div>
-
-        <nav aria-label="Page navigation" th:if="${!bbsList.isEmpty()}">
-            <ul id="classUl" class="pagination justify-content-center align-items-center">
-                <li class="page-item btn" th:classappend="${!bbsList.pageable.hasPrevious()} ? 'disabled'">
-                    <a class="page-link" th:if="${#request.getParameter('sort') != null}"
-                       th:href="@{/post/bbs(category=${#request.getParameter('category')}, page=${bbsList.pageable.previousOrFirst().pageNumber}, sort=${#request.getParameter('sort')})}">
-                        Previous
-                    </a>
-                    <a class="page-link" th:unless="${#request.getParameter('sort') != null}"
-                       th:href="@{/post/bbs(category=${#request.getParameter('category')}, page=${bbsList.pageable.previousOrFirst().pageNumber})}">
-                        Previous
-                    </a>
-                </li>
-                <th:block th:each="page : ${#numbers.sequence(bbsList.pageable.first().pageNumber+1, bbsList.getTotalPages())}">
-                    <li class="page-item btn"
-                        th:classappend="${page == bbsList.pageable.getPageNumber()+1} ? 'active'">
-                        <a class="page-link" th:text="${page}" th:if="${#request.getParameter('sort')} != null"
-                           th:href="@{/post/bbs(category=${#request.getParameter('category')}, page=${page}-1, sort=${#request.getParameter('sort')})}"></a>
-                        <a class="page-link" th:text="${page}" th:unless="${#request.getParameter('sort')} != null"
-                           th:href="@{/post/bbs(category=${#request.getParameter('category')}, page=${page}-1)}"></a>
-                    </li>
-                </th:block>
-                <li class="page-item btn"
-                    th:classappend="${bbsList.pageable.next().pageNumber == bbsList.getTotalPages()} ? 'disabled'">
-                    <a class="page-link" th:if="${#request.getParameter('sort') != null}"
-                       th:href="@{/post/bbs(category=${#request.getParameter('category')}, page=${bbsList.pageable.next().pageNumber}, sort=${#request.getParameter('sort')})}">
-                        Next
-                    </a>
-                    <a class="page-link" th:unless="${#request.getParameter('sort') != null}"
-                       th:href="@{/post/bbs(category=${#request.getParameter('category')}, page=${bbsList.pageable.next().pageNumber})}">
-                        Next
-                    </a>
-                </li>
-            </ul>
-        </nav>
     </div>
 </div>
 <th:block layout:fragment="script">
     <!--  없으면 ajax가 동작하지 않음  -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="/tui-grid/dist/tui-grid.js"></script>
-    <script src="/js/post.js"></script>
     <script src="/js/postGrid.js"></script>
+    <script src="/js/post.js"></script>
     <script>
         window.onload = function () {
-            //<[CDATA[
-            const categoryId = [[${categoryIndex}]] + 1;
-            //]]>
-            callBbsData(categoryId);
-            // changeUrl(categoryId);
-            sortBbs(categoryId);
+            getCategoryId($('#categoryId').val());
+            callBbsData();
         }
     </script>
 </th:block>

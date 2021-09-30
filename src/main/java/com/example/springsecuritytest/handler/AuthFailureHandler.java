@@ -17,11 +17,12 @@ import java.io.IOException;
 public class AuthFailureHandler implements AuthenticationFailureHandler {
 
     private final String DEFAULT_FAILURE_URL="/login/error";
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
             throws IOException, ServletException {
 
-        String errorMsg = null;
+        String errorMsg;
 
         if (exception instanceof BadCredentialsException || exception instanceof InternalAuthenticationServiceException) {
             errorMsg = "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주십시오.";

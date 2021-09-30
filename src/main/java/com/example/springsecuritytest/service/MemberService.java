@@ -138,7 +138,7 @@ public class MemberService implements UserDetailsService {
 
             return new User(user.getUsername(), user.getPassword(), authorities);
         } else {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException("해당 이메일로 가입된 계정이 없습니다.");
         }
     }
 }

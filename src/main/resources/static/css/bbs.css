@@ -24,6 +24,10 @@
     flex: 1;
 }
 
+#tableInfo {
+    display: none;
+}
+
 table {
     margin-left: auto;
     margin-right: auto;

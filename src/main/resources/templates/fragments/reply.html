@@ -12,7 +12,7 @@
     <div id="writtenReply" class="py-4 ps-2" th:if="${replyList != null}" th:each="reply : ${replyList}">
         <div class="d-flex flex-column align-items-stretch">
             <!-- 댓글 정보 -->
-            <div id="replyInfo" class="d-flex align-items-center">
+            <div th:id="reply_ + ${reply.id}" class="d-flex align-items-center">
                 <input type="hidden" th:value="${reply.id}">
                 <b class="me-3">작성자</b><span class="me-3" th:text="${reply.writer}"></span>
                 <b class="me-2">작성일자</b><span th:text="${reply.createDate}"></span>

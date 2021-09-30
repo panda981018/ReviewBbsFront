@@ -4,18 +4,19 @@ const textEle = $('#replyTextarea');
 function createReply(bbsId) {
     replyBtn.on('click', function () {
 
-        if (textEle.val() == '') {
+        if (textEle.val().trim() == '') {
+            alert('내용을 입력해주세요 :)');
             return false;
         } else {
             $.ajax({
                 url: "/reply/ajax/add",
                 type: "post",
-                data: JSON.stringify({'bbsId': bbsId, 'contents': textEle.val()}),
+                data: JSON.stringify({'bbsId': bbsId, 'contents': textEle.val().trim()}),
                 dataType: "json",
                 contentType: "application/json;charset=utf-8;",
                 success: function (result) {
                     console.log(result.responseCode);
-                    if (result.responseCode == 'ok') {
+                    if (result.responseCode === 'ok') {
                         location.reload();
                     }
                 }
@@ -33,7 +34,6 @@ function adjustHeight() {
 }
 
 function autoResizing() { // 컨텐츠 길이에 따라 높이가 늘어나게
-
     $('textarea').each(function () {
         $(this).on('keyup', function (index, element) {
             adjustHeight();
@@ -67,7 +67,7 @@ function showReplyModal() { // 댓글의 수정버튼 눌렀을 때의 이벤트
     $(document).on('click', '#updateReplyBtn', function () {
         const replyId = $(this).parent().siblings('input').val();
         const replyContent = $(this).parents().siblings('span[id=replyContents]')[0]; // 원래 내용이 포함된 span
-        const oldText = replyContent.innerHTML;
+        const oldText = replyContent.innerHTML.trim();
 
         const modalTextarea = $('#updateReplyTextarea')[0];
         const modalReplyId = $('#hiddenReplyId');
@@ -82,7 +82,7 @@ function modalListener() { // modal 수정 클릭 리스너
     const modalSaveBtn = $('#modalUpdateBtn').eq(0);
     const modalReplyId = $('#hiddenReplyId').eq(0);
     modalSaveBtn.on('click', function () {
-        const updateReply = $('#updateReplyTextarea')[0].value;
+        const updateReply = $('#updateReplyTextarea')[0].value.trim();
         const replyId = modalReplyId.val();
         $.ajax({
             url: '/reply/ajax/update',

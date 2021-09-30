@@ -24,8 +24,10 @@ public class MemberController { // member
 
     @GetMapping("/home")
     public String memberHome(HttpSession session) {
-        if (session.getAttribute("categoryList") == null) {
+        if (session.getAttribute("categoryList") != null) {
             session.setAttribute("categoryList", categoryService.getAllCategories());
+        } else {
+            session.removeAttribute("categoryList");
         }
         return "home/memberHome";
     }

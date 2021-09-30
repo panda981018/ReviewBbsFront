@@ -74,11 +74,9 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             }
         } else { // 저장된 uri가 없으면 role에 따라 디폴트 화면으로 이동
             List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
-            System.out.println(categoryDtoList);
+
             if (categoryDtoList.size() != 0) {
                 session.setAttribute("categoryList", categoryService.getAllCategories());
-            } else {
-                session.removeAttribute("categoryList");
             }
 
             if (roles.contains(Role.ADMIN.getValue())) {

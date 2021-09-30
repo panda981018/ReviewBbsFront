@@ -1,3 +1,7 @@
+$('#cancelBtn').on('click', function () {
+    window.history.back();
+})
+
 // role 선택에 따른 양식 변화
 function changeSignUpForm() {
 
