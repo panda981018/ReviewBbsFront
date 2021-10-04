@@ -2,7 +2,6 @@ package com.example.springsecuritytest.domain.repository;
 
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
-import com.example.springsecuritytest.domain.entity.QBbsEntity;
 import com.example.springsecuritytest.util.QueryDslUtil;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
@@ -12,16 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.springsecuritytest.domain.entity.QBbsEntity.bbsEntity;
-import static com.example.springsecuritytest.domain.entity.QMemberEntity.memberEntity;
 
 @RequiredArgsConstructor
 @Repository

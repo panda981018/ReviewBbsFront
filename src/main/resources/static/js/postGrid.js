@@ -1,5 +1,7 @@
-let bbsCategoryId = 0;
-let grid;
+let bbsCategoryId = 0; // category 아이디(1번부터~)
+let grid; // grid 객체
+let pagination; // grid의 pagination 객체
+let bbsData; // bbs에 저장된 객체 집합
 
 function getCategoryId(categoryId) {
     bbsCategoryId = categoryId;
@@ -8,8 +10,8 @@ function getCategoryId(categoryId) {
 function createGrid() {
     grid = new tui.Grid({
         el: $('#grid')[0],
-        pageOptions: { perPage: 10 },
         scrollX: false,
+        pageOptions: { perPage : 10 },
         scrollY: false,
         columns: [
             {
@@ -65,6 +67,18 @@ function createGrid() {
     });
 }
 
+function createPagination() {
+    pagination = grid.getPagination();
+    pagination.setTotalItems(bbsData.length);
+    pagination.centerAlign = true;
+    // pagination = new tui.Pagination($('#pagination'), {
+    //     totalItems: bbsData.length,
+    //     itemsPerPage: 10,
+    //     visiblePages: 5,
+    //     centerAlign: true
+    // });
+}
+
 function callBbsData() {
     console.log('url: /api/bbs/get?category=' + bbsCategoryId);
     $.ajax({
@@ -72,8 +86,10 @@ function callBbsData() {
         url: '/api/bbs/get?category=' + bbsCategoryId,
         dataType: 'json',
         success: function (bbsList) {
-            if (bbsList.bbsList.length != 0) {
+            if (bbsList.bbsList.length !== 0) {
+                bbsData = bbsList.bbsList;
                 createGrid();
+                createPagination();
                 $('#tableInfo').addClass("mb-3 d-flex flex-row justify-content-start align-items-center")
                     .css('display', 'block');
                 $('#noData').css('display', 'none');

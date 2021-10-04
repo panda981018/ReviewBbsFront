@@ -1,11 +1,11 @@
 function invalidMsg(object) { // error
-    object.removeClass('valid');
-    object.addClass('error');
+    object.removeClass('valid')
+        .addClass('error');
 }
 
 function validMsg(object) { // valid
-    object.removeClass('error');
-    object.addClass('valid');
+    object.removeClass('error')
+        .addClass('valid');
 }
 
 function titleValidate() {
