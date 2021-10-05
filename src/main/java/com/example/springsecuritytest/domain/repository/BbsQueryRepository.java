@@ -28,22 +28,18 @@ public class BbsQueryRepository {
     @Transactional
     public void updateBbsViews(Long bbsId, int view) {
         jpaQueryFactory.update(bbsEntity)
-                .set(bbsEntity.bbsViews, view+1)
+                .set(bbsEntity.bbsViews, view + 1)
                 .where(bbsEntity.id.eq(bbsId))
                 .execute();
     }
 
-    public Page<BbsEntity> findAllCategoryBbs(CategoryEntity category, Pageable pageable, List<String> properties) {
+    public Page<BbsEntity> findAllCategoryBbs(CategoryEntity category, Pageable pageable, String property) {
 
         List<OrderSpecifier> orders = new ArrayList<>();
-
-        for (int i = properties.size()-1; i >= 0; i--) {
-            Order direction = pageable.getSort().getOrderFor(properties.get(i))
-                    .getDirection().isAscending() ? Order.ASC : Order.DESC;
-            OrderSpecifier order = QueryDslUtil.getSortedColumn(direction, bbsEntity, properties.get(i));
-            orders.add(order);
-        }
-
+        Order direction = pageable.getSort().getOrderFor(property)
+                .getDirection().isAscending() ? Order.ASC : Order.DESC;
+        OrderSpecifier order = QueryDslUtil.getSortedColumn(direction, bbsEntity, property);
+        orders.add(order);
 
         QueryResults<BbsEntity> rt = jpaQueryFactory.selectFrom(bbsEntity)
                 .where(bbsEntity.categoryId.eq(category))

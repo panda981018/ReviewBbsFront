@@ -68,33 +68,21 @@ public class BbsService {
         return dataMap;
     }
 
-    public List<BbsDto> findAll(Long categoryId) {
+    // BbsApiController.getAllBbsList에서 사용
+    public List<BbsDto> findAll(Long categoryId, String column) {
         CategoryEntity category = categoryRepository.findById(categoryId).get();
+        Optional<List<BbsEntity>> bbsEntities = null;
+        if (column != null) {
+            bbsEntities = bbsRepository.findByCategoryId(category, Sort.by(Sort.Direction.DESC, column));
+        } else {
+            bbsEntities = bbsRepository.findByCategoryId(category, Sort.by(Sort.Direction.DESC, "id"));
+        }
         List<BbsDto> bbsDtoList = new ArrayList<>();
-        Optional<List<BbsEntity>> bbsList = bbsRepository.findByCategoryId(category);
-        if (bbsList.isPresent()) {
-            List<BbsEntity> bbsEntities = bbsList.get();
-            for (BbsEntity bbs : bbsEntities) {
-                bbsDtoList.add(bbs.toDto());
-            }
+        List<BbsEntity> entities = bbsEntities.get();
+        for(BbsEntity bbsEntity : entities) {
+            bbsDtoList.add(bbsEntity.toDto());
         }
         return bbsDtoList;
-    }
-
-    public Page<BbsDto> findAllBbs(Pageable pageable, Long categoryId) {
-        List<String> fields = new ArrayList<>();
-        for (Sort.Order order : pageable.getSort()) {
-            fields.add(order.getProperty());
-        }
-
-        Optional<CategoryEntity> categoryEntity = categoryRepository.findById(categoryId);
-        Page<BbsDto> bbsList = null;
-        if (categoryEntity.isPresent()) {
-            Page<BbsEntity> bbsEntities = bbsQueryRepository.findAllCategoryBbs(categoryEntity.get(), pageable, fields);
-            bbsList = bbsEntities.map(BbsEntity::toDto);
-        }
-
-        return bbsList;
     }
 
     public void updateBbs(BbsDto bbsDto, MemberDto memberDto) { // 게시글 수정
