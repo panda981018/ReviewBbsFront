@@ -20,21 +20,36 @@
             <h1 class="py-2" th:text="${session.categoryList.get(categoryIndex).getName()}"></h1>
             <span class="py-1" th:text="${session.categoryList.get(categoryIndex).getDescription()}"></span>
         </div>
-        <!--   데이터가 있을때만 노출    -->
+
         <div id="tableInfo">
-            <label for="sortStandard" id="sortLabel" class="me-2"><b>정렬기준</b></label>
-            <div class="dropdown d-flex align-items-center">
-                <select id="sortStandard" class="form-select dropdown-toggle" data-toggle="dropdown">
-                    <option class="dropdown-item" id="sortId" value="id">글번호</option>
-                    <option class="dropdown-item" id="sortTitle" value="bbsTitle">제목</option>
-                    <option class="dropdown-item" id="sortWriter" value="bbsWriter">작성자</option>
-                    <option class="dropdown-item" id="sortDate" value="bbsDate">작성날짜</option>
-                    <option class="dropdown-item" id="sortViews" value="bbsViews">조회수</option>
-                </select>
+            <div id="sortInfo" class="d-flex flex-row justify-content-start align-items-center">
+                <label for="sortStandard" id="sortLabel" class="me-2"><b>정렬기준</b></label>
+                <div class="dropdown d-flex align-items-center">
+                    <select id="sortStandard" class="form-select dropdown-toggle" data-toggle="dropdown">
+                        <option class="dropdown-item" value="id">글번호</option>
+                        <option class="dropdown-item" value="bbsTitle">제목</option>
+                        <option class="dropdown-item" value="bbsWriter">작성자</option>
+                        <option class="dropdown-item" value="bbsDate">작성날짜</option>
+                        <option class="dropdown-item" value="bbsViews">조회수</option>
+                        <option class="dropdown-item" value="replyCnt">댓글수</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 검색 -->
+            <div id="search" class="d-flex flex-row justify-content-end align-items-center">
+                <div class="dropdown d-flex align-items-center">
+                    <select id="findStandard" class="form-select dropdown-toggle" data-toggle="dropdown">
+                        <option class="dropdown-item" value="bbsTitle">제목</option>
+                        <option class="dropdown-item" value="bbsWriter">작성자</option>
+                    </select>
+                </div>
+                <input id="searchInput" class="ms-1" type="text">
+                <img src="/img/search.png" class="ms-2" id="searchImg">
             </div>
         </div>
         <!--   데이터가 있을때만 노출    -->
-        <div id="grid" class="flex-column justify-content-around align-items-stretch table-responsive table-hover mb-3">
+        <div id="grid" class="flex-column justify-content-around align-items-stretch table-responsive table-hover">
         </div>
         <!--   데이터가 없을 때만 노출    -->
         <h2 id="noData">아직 글이 없습니다.</h2>
@@ -54,8 +69,9 @@
     <script>
         window.onload = function () {
             getCategoryId($('#categoryId').val());
-            getDataSource();
-            // sortBbs($('#categoryId').val());
+            callBbsData();
+            sortBbs();
+            filterData();
         }
     </script>
 </th:block>

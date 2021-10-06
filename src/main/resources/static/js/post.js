@@ -16,39 +16,9 @@ $(document).on('click', 'td[data-column-name=bbsTitle]', function () { // 해당
     location.href = '/post/bbs/view?id=' + bid;
 })
 
+
+
 let urlList = []; // 사진 src만 갖고 있는 배열
-
-function changeUrl(categoryId) { // page, sort 파라미터가 보이지 않게 처리
-    let newUrl = location.origin + location.pathname + '?category=' + categoryId;
-    console.log("location.href = " + location.href);
-    const params = new URLSearchParams(window.location.search);
-    let page = '';
-    let sort = '';
-    let sortStandard = [];
-
-    if (params.get('page') != null || undefined) {
-        page = params.get('page');
-    }
-    if (params.get('sort') != null || undefined) {
-        sort = params.get('sort');
-        sortStandard = sort.split(','); // sort=id,asc 이런 query를 [id,asc]로 나누는 작업
-    }
-
-    const state = (sort !== '')
-        ? {'category': categoryId, 'page': page, 'sort': sort} : {'category': categoryId, 'page': page}
-
-    if (sort === '') { // 주소에 sort가 없을 때는 id를 선택하게
-        $('#sortStandard').val('id');
-    } else {
-        $('#sortStandard').val(sortStandard[0]);
-    }
-
-    history.pushState(state, null, newUrl);
-
-    window.onpopstate = function (event) { // ???
-        alert(event.state);
-    }
-}
 
 function deleteBbs(bbsId, bbsCategoryId) { // 게시물 삭제
     $('#deleteBbsBtn').on('click', function () {
@@ -84,17 +54,45 @@ function deleteBbs(bbsId, bbsCategoryId) { // 게시물 삭제
     })
 }
 
-function sortBbs(categoryId) {
+function sortBbs() { // 정렬
     $('#sortStandard').on('change', function () {
-        let sort = $('#sortStandard option:selected').val();
-        $.ajax({
-            method: "GET",
-            url: '/api/bbs/get?column=' + sort + '&category=' + categoryId,
-            dataType: "json",
-            success: function (result) {
-                grid.resetData(result.data);
-            }
-        });
+        let columnsModel = grid.getColumns();
+        for(let i = 0; i < columnsModel.length; i++) { // 정렬기준 초기화
+            grid.unsort(columnsModel[i].name);
+        }
+
+        const sortStandard = $('#sortStandard option:selected').val();
+        grid.sort(sortStandard, false, true); // sort(columnName, ascending, multiple)
     });
 }
 
+function filterData() {
+    $('#searchImg').on('click', function () {
+        // 검색 초기화
+        grid.unfilter('bbsTitle');
+        grid.unfilter('bbsWriter');
+        const input = $('#searchInput');
+        const selectedValue = $('#findStandard option:selected').val();
+
+        if (input.val() === '') {
+            alert('내용을 입력해주세요.');
+        } else {
+            let state = {};
+            let arr = [];
+            switch (selectedValue) {
+                case 'bbsTitle' :
+                    state.code = 'contain';
+                    state.value = input.val();
+                    break;
+                case 'bbsWriter' :
+                    state.code = 'eq';
+                    state.value = input.val();
+                    break;
+            }
+            arr.push(state);
+            input.val('');
+            grid.filter(selectedValue, arr);
+
+        }
+    });
+}

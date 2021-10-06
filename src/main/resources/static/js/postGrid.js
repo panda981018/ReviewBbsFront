@@ -29,12 +29,22 @@ function createGrid() {
                 header: '제목',
                 name: 'bbsTitle',
                 resizable: true,
+                sortable: true,
+                sortingType: 'desc',
+                filter: {
+                    type: 'text'
+                },
                 align: "left"
             },
             {
                 header: '작성자',
                 name: 'bbsWriter',
                 width: 65,
+                sortable: true,
+                sortingType: 'desc',
+                filter: {
+                    type: 'text'
+                },
                 align: "center"
             },
             {
@@ -42,18 +52,24 @@ function createGrid() {
                 name: 'bbsDate',
                 width: 135,
                 resizable: true,
+                sortable: true,
+                sortingType: 'desc',
                 align: "center"
             },
             {
                 header: '조회수',
                 name: 'bbsViews',
                 width: "auto",
+                sortable: true,
+                sortingType: 'desc',
                 align: "center"
             },
             {
                 header: '댓글수',
                 name: 'replyCnt',
                 width: "auto",
+                sortable: true,
+                sortingType: 'desc',
                 align: "center"
             }
         ],
@@ -62,8 +78,6 @@ function createGrid() {
 }
 
 function callBbsData() {
-    console.log('url: /api/bbs/get?category=' + bbsCategoryId);
-
     $.ajax({
         method: 'GET',
         url: '/api/bbs/get?category=' + bbsCategoryId,
@@ -71,12 +85,11 @@ function callBbsData() {
         success: function (jsonMap) {
             if (jsonMap.data.length !== 0) {
                 createGrid();
-                $('#tableInfo').addClass("mb-3 d-flex flex-row justify-content-start align-items-center")
+                $('#tableInfo').addClass("mb-3 d-flex flex-row justify-content-between align-items-center")
                     .css('display', 'block');
                 $('#noData').css('display', 'none');
                 $('#grid').css('display', 'block');
                 grid.resetData(jsonMap.data);
-                // setGridData(jsonMap.data);
             } else { // 데이터가 없을 때
                 $('#tableInfo').css('display', 'none');
                 $('#noData').css('display', 'block');

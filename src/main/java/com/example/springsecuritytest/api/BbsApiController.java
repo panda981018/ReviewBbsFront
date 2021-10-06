@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,8 +19,7 @@ public class BbsApiController {
     @ResponseBody
     @GetMapping("/get")
     public HashMap<String, Object> getAllBbsList(@RequestParam(required = false) String category,
-                                                 @RequestParam(required = false) String column,
-                                                 HttpServletRequest request) {
+                                                 @RequestParam(required = false) String column) {
         List<BbsDto> dataObj = bbsService.findAll(Long.parseLong(category), column);
         HashMap<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("data", dataObj);
