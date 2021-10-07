@@ -31,7 +31,7 @@
 7. body 태그가 끝나기 전에 아래와 같이 script 적용<br/>
  ```<script src="/tui-grid/tui-grid.js"></script>```
 
-### Toast UI Grid 적용 방법
+### NAVER MAP API 적용 방법
  1. https://console.ncloud.com/mc/solution/naverService/application << 링크에 가서 appilication을 등록한다.<br/>
  2. 인증정보 -> Client ID 복사<br/>
  <image src='https://user-images.githubusercontent.com/55985137/136336313-0cac73a5-92aa-4d8b-b791-fa909cd23c2c.png' width='30%' height='30%'/><br/>
