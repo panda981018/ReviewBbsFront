@@ -86,21 +86,6 @@ public class BbsService {
 
         return dataMap;
     }
-//    public List<BbsDto> findAll(Long categoryId, String column) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
-//        CategoryEntity category = categoryRepository.findById(categoryId).get();
-//        Optional<List<BbsEntity>> bbsEntities;
-//        if (column != null) {
-//            bbsEntities = bbsRepository.findByCategoryId(category, Sort.by(Sort.Direction.DESC, column));
-//        } else {
-//            bbsEntities = bbsRepository.findByCategoryId(category, Sort.by(Sort.Direction.DESC, "id"));
-//        }
-//        List<BbsDto> bbsDtoList = new ArrayList<>();
-//        List<BbsEntity> entities = bbsEntities.get();
-//        for(BbsEntity bbsEntity : entities) {
-//            bbsDtoList.add(bbsEntity.toDto());
-//        }
-//        return bbsDtoList;
-//    }
 
     // 게시글 수정
     public void updateBbs(BbsDto bbsDto, MemberDto memberDto) {

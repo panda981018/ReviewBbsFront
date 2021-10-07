@@ -35,17 +35,28 @@ public class BbsApiController {
             pageRequest =
                     PageRequest.of(page-1, perPage, Sort.by(Sort.Direction.DESC, "id"));
         }
-        // service에서 page totalCount, page에 맞는 데이터들,
         HashMap<String, Object> dataObj = bbsService.findAll(Long.parseLong(category), pageRequest);
         List<BbsDto> contents = (List<BbsDto>) dataObj.get("bbsDtoList");
-        Long totalCount = (Long) dataObj.get("totalCount");
+        long totalCount = (long) dataObj.get("totalCount");
 
+        /* 클라이언트에게 보낼 때 지켜야할 데이터 형식
+        {
+          "result": true,
+          "data": {
+            "contents": [],
+            "pagination": {
+              "page": 1,
+              "totalCount": 100
+            }
+          }
+        }
+         */
         HashMap<String, Object> responseMap = new HashMap<>();
         HashMap<String, Object> dataMap = new HashMap<>();
         HashMap<String, Object> paginationMap = new HashMap<>();
 
         paginationMap.put("page", page);
-        paginationMap.put("totalCount", totalCount.intValue());
+        paginationMap.put("totalCount", totalCount);
         dataMap.put("contents", contents);
         dataMap.put("pagination", paginationMap);
 

@@ -14,8 +14,7 @@ import java.util.Optional;
 @Repository
 public interface BbsRepository extends JpaRepository<BbsEntity, Long> {
 
-    Optional<List<BbsEntity>> findByCategoryId(CategoryEntity categoryId, Sort sort);
-    Page<BbsEntity> findByCategoryId(CategoryEntity categoryId, Pageable pageable);
+    Page<BbsEntity> findByCategoryId(CategoryEntity category, Pageable pageable);
     Optional<BbsEntity> findById(Long id);
     void deleteById(Long id);
 }

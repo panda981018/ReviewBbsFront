@@ -2,3 +2,9 @@
 function selectCategory(categoryId) {
     $('#bbsCategory').val(categoryId);
 }
+
+function showMapModal() { // 지도 모달을 띄우게 하기 위한 함수
+    $(document).on('click', '#mapBtn', function () {
+        $('#mapDialog').modal('show');
+    })
+}

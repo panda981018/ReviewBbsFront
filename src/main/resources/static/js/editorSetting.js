@@ -40,12 +40,6 @@ const setting = { // summernote 설정
         }
     }};
 
-function showMapModal() { // 지도 모달을 띄우게 하기 위한 함수
-    $(document).on('click', '#mapBtn', function () {
-        $('#mapDialog').modal('show');
-    })
-}
-
 function uploadSummernoteImage(file) { // 서버에 이미지 업로드
     const data = new FormData();
     data.append('file', file);
