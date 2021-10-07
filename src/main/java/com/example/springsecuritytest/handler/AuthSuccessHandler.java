@@ -48,44 +48,20 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
         MemberDto memberDto = memberService.findByUsername(authentication.getName());
-        session.setAttribute("memberInfo", memberDto);
+        session.setAttribute("memberInfo", memberDto); // 회원 정보 저장
 
-        // security가 요청을 가로챈 경우, 사용자가 원래 요청했던 URI 정보를 저장한 객체.
-        RequestCache requestCache = new HttpSessionRequestCache();
-        SavedRequest savedRequest = requestCache.getRequest(request, response);
+        List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
 
-        // 저장된 uri가 있는 경우
-        if (savedRequest != null) {
-            String uri = savedRequest.getRedirectUrl(); // 저장된 uri
-            // 조건 1 : 주소에 /post가 저장되어 있으면서 일반회원인가
-            if (uri.contains("/post")) {
-                List<CategoryDto> categoryList = categoryService.getAllCategories();
+        if (categoryDtoList.size() != 0) { // 카테고리가 없을 경우
+            session.setAttribute("categoryList", categoryService.getAllCategories());
+        }
 
-                // 조건 2 : 카테고리가 있는가
-                if (!categoryList.isEmpty()) {
-                    session.setAttribute("categoryList", categoryList);
-                    String newUri = uri + "bbs?category=" + categoryList.get(0).getId();
-                    response.sendRedirect(newUri);
-                } else {
-                    response.sendRedirect(uri);
-                }
-            } else {
-                response.sendRedirect(uri);
-            }
-        } else { // 저장된 uri가 없으면 role에 따라 디폴트 화면으로 이동
-            List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
-
-            if (categoryDtoList.size() != 0) {
-                session.setAttribute("categoryList", categoryService.getAllCategories());
-            }
-
-            if (roles.contains(Role.ADMIN.getValue())) {
-                redirectStrategy.sendRedirect(request, response, "/admin" + DEFAULT_LOGIN_SUCCESS_URL);
-            } else if (roles.contains(Role.MEMBER.getValue())) {
-                redirectStrategy.sendRedirect(request, response, "/member" + DEFAULT_LOGIN_SUCCESS_URL);
-            } else {
-                redirectStrategy.sendRedirect(request, response, "/");
-            }
+        if (roles.contains(Role.ADMIN.getValue())) {
+            redirectStrategy.sendRedirect(request, response, "/admin" + DEFAULT_LOGIN_SUCCESS_URL);
+        } else if (roles.contains(Role.MEMBER.getValue())) {
+            redirectStrategy.sendRedirect(request, response, "/member" + DEFAULT_LOGIN_SUCCESS_URL);
+        } else {
+            redirectStrategy.sendRedirect(request, response, "/");
         }
     }
 }

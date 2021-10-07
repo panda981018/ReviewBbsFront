@@ -87,10 +87,14 @@ tr > td {
     word-break: break-all;
 }
 
+#mapBtn {
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+}
 
 #contentsError {
     grid-row: 3 / 4;
-    grid-column: 2 / 4;
+    grid-column: 3 / 4;
 }
 
 #btnGroup {

@@ -64,14 +64,13 @@
 <th:block layout:fragment="script">
     <!--  없으면 ajax가 동작하지 않음  -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="/js/postGrid.js"></script>
+    <script src="/js/gridSetting.js"></script>
     <script src="/js/post.js"></script>
     <script>
         window.onload = function () {
             getCategoryId($('#categoryId').val());
-            callBbsData();
+            setDatasource();
             sortBbs();
-            filterData();
         }
     </script>
 </th:block>

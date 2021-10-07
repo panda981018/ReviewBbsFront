@@ -2,15 +2,15 @@ package com.example.springsecuritytest.service;
 
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
-import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.domain.entity.ReplyEntity;
 import com.example.springsecuritytest.domain.repository.BbsQueryRepository;
 import com.example.springsecuritytest.domain.repository.BbsRepository;
 import com.example.springsecuritytest.domain.repository.CategoryRepository;
-import com.example.springsecuritytest.domain.repository.MemberRepository;
 import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,6 @@ public class BbsService {
     private final BbsRepository bbsRepository;
     private final BbsQueryRepository bbsQueryRepository;
     private final CategoryRepository categoryRepository;
-    private final MemberRepository memberRepository;
 
     // 게시물 저장
     public void saveBbs(BbsDto bbsDto, MemberDto memberDto) {
@@ -70,21 +69,38 @@ public class BbsService {
     }
 
     // BbsApiController.getAllBbsList에서 사용
-    public List<BbsDto> findAll(Long categoryId, String column) {
+    public HashMap<String, Object> findAll(Long categoryId, Pageable pageable) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
         CategoryEntity category = categoryRepository.findById(categoryId).get();
-        Optional<List<BbsEntity>> bbsEntities;
-        if (column != null) {
-            bbsEntities = bbsRepository.findByCategoryId(category, Sort.by(Sort.Direction.DESC, column));
-        } else {
-            bbsEntities = bbsRepository.findByCategoryId(category, Sort.by(Sort.Direction.DESC, "id"));
-        }
+        Page<BbsEntity> bbsEntities = bbsRepository.findByCategoryId(category, pageable);
+
         List<BbsDto> bbsDtoList = new ArrayList<>();
-        List<BbsEntity> entities = bbsEntities.get();
+        List<BbsEntity> entities = bbsEntities.getContent();
+
         for(BbsEntity bbsEntity : entities) {
             bbsDtoList.add(bbsEntity.toDto());
         }
-        return bbsDtoList;
+
+        HashMap<String, Object> dataMap = new HashMap<>();
+        dataMap.put("bbsDtoList", bbsDtoList);
+        dataMap.put("totalCount", bbsEntities.getTotalElements());
+
+        return dataMap;
     }
+//    public List<BbsDto> findAll(Long categoryId, String column) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
+//        CategoryEntity category = categoryRepository.findById(categoryId).get();
+//        Optional<List<BbsEntity>> bbsEntities;
+//        if (column != null) {
+//            bbsEntities = bbsRepository.findByCategoryId(category, Sort.by(Sort.Direction.DESC, column));
+//        } else {
+//            bbsEntities = bbsRepository.findByCategoryId(category, Sort.by(Sort.Direction.DESC, "id"));
+//        }
+//        List<BbsDto> bbsDtoList = new ArrayList<>();
+//        List<BbsEntity> entities = bbsEntities.get();
+//        for(BbsEntity bbsEntity : entities) {
+//            bbsDtoList.add(bbsEntity.toDto());
+//        }
+//        return bbsDtoList;
+//    }
 
     // 게시글 수정
     public void updateBbs(BbsDto bbsDto, MemberDto memberDto) {

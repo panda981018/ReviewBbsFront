@@ -56,12 +56,12 @@ function validateForm() { // 타이틀과 내용이 버어있는가
 
 function cancelingWrite() { // 취소버튼 클릭
     const editor = $('.note-editable');
-    const oldContents = editor.eq(0).innerHTML.trim();
+    const oldContents = editor.eq(0).innerHTML;
     const cancel = $('#cancelBtn');
 
     cancel.on('click', function () {
 
-        const newContents = editor.eq(0).innerHTML.trim();
+        const newContents = editor.eq(0).innerHTML;
         if (newContents === oldContents || newContents === '') {// 기존 내용이랑 현재 에디터의 내용 같으면 window.history.back()
             window.history.back();
         } else if (newContents !== oldContents) { // 다르면

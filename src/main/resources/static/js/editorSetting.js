@@ -1,7 +1,5 @@
 const setting = { // summernote 설정
     height: 200,                 // 에디터 높이
-    minHeight: null,             // 최소 높이
-    maxHeight: null,             // 최대 높이
     lang: "ko-KR",					// 한글 설정
     placeholder: '내용을 입력해주세요',	//placeholder 설정
     disableGrammar: true,
@@ -13,7 +11,7 @@ const setting = { // summernote 설정
         ['table', ['table']],
         ['para', ['ul', 'ol', 'paragraph']],
         ['height', ['height']],
-        ['insert',['picture','link','video']],
+        ['insert',['picture','link']],
         ['view', ['fullscreen', 'help']],
         ['lineHeights', ['lineHeights']]
     ],
@@ -42,7 +40,13 @@ const setting = { // summernote 설정
         }
     }};
 
-function uploadSummernoteImage(file) {
+function showMapModal() { // 지도 모달을 띄우게 하기 위한 함수
+    $(document).on('click', '#mapBtn', function () {
+        $('#mapDialog').modal('show');
+    })
+}
+
+function uploadSummernoteImage(file) { // 서버에 이미지 업로드
     const data = new FormData();
     data.append('file', file);
 
@@ -59,12 +63,12 @@ function uploadSummernoteImage(file) {
     })
 }
 
-function deleteImageFile(src) {
+function deleteImageFile(src) { // 이미지 삭제 함수
     let obj = [];
     obj.push(src);
     $.ajax({
         type: 'POST',
-        data: JSON.stringify({ 'src' : obj }),
+        data: JSON.stringify({'src': obj}),
         url: '/summernote/deleteImg',
         contentType: 'application/json;charset=utf-8;',
         dataType: 'text',

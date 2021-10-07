@@ -2,6 +2,8 @@ package com.example.springsecuritytest.domain.repository;
 
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,7 @@ import java.util.Optional;
 public interface BbsRepository extends JpaRepository<BbsEntity, Long> {
 
     Optional<List<BbsEntity>> findByCategoryId(CategoryEntity categoryId, Sort sort);
+    Page<BbsEntity> findByCategoryId(CategoryEntity categoryId, Pageable pageable);
     Optional<BbsEntity> findById(Long id);
     void deleteById(Long id);
 }
