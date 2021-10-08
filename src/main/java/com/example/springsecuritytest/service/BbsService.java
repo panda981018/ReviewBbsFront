@@ -2,16 +2,17 @@ package com.example.springsecuritytest.service;
 
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
+import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.domain.entity.ReplyEntity;
 import com.example.springsecuritytest.domain.repository.BbsQueryRepository;
 import com.example.springsecuritytest.domain.repository.BbsRepository;
 import com.example.springsecuritytest.domain.repository.CategoryRepository;
+import com.example.springsecuritytest.domain.repository.MemberRepository;
 import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class BbsService {
     private final BbsRepository bbsRepository;
     private final BbsQueryRepository bbsQueryRepository;
     private final CategoryRepository categoryRepository;
+    private final MemberRepository memberRepository;
 
     // 게시물 저장
     public void saveBbs(BbsDto bbsDto, MemberDto memberDto) {
@@ -69,22 +71,79 @@ public class BbsService {
     }
 
     // BbsApiController.getAllBbsList에서 사용
-    public HashMap<String, Object> findAll(Long categoryId, Pageable pageable) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
-        CategoryEntity category = categoryRepository.findById(categoryId).get();
-        Page<BbsEntity> bbsEntities = bbsRepository.findByCategoryId(category, pageable);
-
+    public HashMap<String, Object> findAll(Long categoryId, Pageable pageable, String searchType, String keyword) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
+        Page<BbsEntity> bbsEntities;
+        List<BbsEntity> entities = new ArrayList<>();
         List<BbsDto> bbsDtoList = new ArrayList<>();
-        List<BbsEntity> entities = bbsEntities.getContent();
+        long totalCount = 0L;
 
-        for(BbsEntity bbsEntity : entities) {
-            bbsDtoList.add(bbsEntity.toDto());
+        if (searchType == null) {
+            CategoryEntity category = categoryRepository.findById(categoryId).get();
+            bbsEntities = bbsRepository.findByCategoryId(category, pageable);
+        } else if (searchType.equals("bbsWriter")) { // writer
+            bbsEntities = findByWriter(categoryId, pageable, keyword);
+        } else { // title
+            bbsEntities = findByBbsTitle(categoryId, pageable, keyword);
+        }
+
+        if (bbsEntities == null) {
+            bbsDtoList.clear();
+            totalCount = 0L;
+        } else if (!bbsEntities.isEmpty()) {
+            entities = bbsEntities.getContent();
+
+            for (BbsEntity bbsEntity : entities) {
+                bbsDtoList.add(bbsEntity.toDto());
+            }
+
+            totalCount = bbsEntities.getTotalElements();
         }
 
         HashMap<String, Object> dataMap = new HashMap<>();
         dataMap.put("bbsDtoList", bbsDtoList);
-        dataMap.put("totalCount", bbsEntities.getTotalElements());
+        dataMap.put("totalCount", totalCount);
 
         return dataMap;
+    }
+
+    private Page<BbsEntity> findByBbsTitle(Long category, Pageable pageable, String keyword) {
+        Page<BbsEntity> bbsEntities = null;
+
+        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(category);
+        if (optionalCategory.isPresent()) {
+            bbsEntities = bbsRepository.findByCategoryIdAndBbsTitleContainingIgnoreCase(pageable, optionalCategory.get(), keyword);
+        }
+
+        return bbsEntities;
+    }
+
+//    public HashMap<String, Object> findAll(Long categoryId, Pageable pageable, String searchType, String keyword) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
+//        CategoryEntity category = categoryRepository.findById(categoryId).get();
+//        Page<BbsEntity> bbsEntities = bbsRepository.findByCategoryId(category, pageable);
+//
+//        List<BbsDto> bbsDtoList = new ArrayList<>();
+//        List<BbsEntity> entities = bbsEntities.getContent();
+//
+//        for(BbsEntity bbsEntity : entities) {
+//            bbsDtoList.add(bbsEntity.toDto());
+//        }
+//
+//        HashMap<String, Object> dataMap = new HashMap<>();
+//        dataMap.put("bbsDtoList", bbsDtoList);
+//        dataMap.put("totalCount", bbsEntities.getTotalElements());
+//
+//        return dataMap;
+//    }
+
+    public Page<BbsEntity> findByWriter(Long category, Pageable pageable, String writer) { // 작성자를 찾을 때
+        Optional<MemberEntity> optionalMember = memberRepository.findByNickname(writer);
+        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(category);
+        Page<BbsEntity> bbsEntities = null;
+        if (optionalMember.isPresent() && optionalCategory.isPresent()) {
+            MemberEntity member = optionalMember.get();
+            bbsEntities = bbsRepository.findByCategoryIdAndBbsWriter(pageable, member, optionalCategory.get());
+        }
+        return bbsEntities;
     }
 
     // 게시글 수정

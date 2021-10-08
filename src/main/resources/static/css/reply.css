@@ -21,3 +21,17 @@
     flex: 1;
     resize: none;
 }
+
+#emoticonDiv {
+    position: relative;
+    z-index: 2;
+    display: none;
+}
+
+.replyCnt {
+    font-size: large;
+}
+
+.emoji {
+    font-size: 1.5rem;
+}

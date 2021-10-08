@@ -21,21 +21,21 @@ public class BbsApiController {
 
     @ResponseBody
     @GetMapping("/get")
-    public HashMap<String, Object> getAllBbsList(@RequestParam(required = false) String category,
-                                                 @RequestParam(required = false) int perPage, // 한페이지당 보여줄 데이터의 개수
-                                                 @RequestParam(required = false) int page,
+    public HashMap<String, Object> getAllBbsList(@RequestParam String category, // 카테고리 번호
+                                                 @RequestParam int perPage, // 한페이지당 보여줄 데이터의 개수
+                                                 @RequestParam int page,
                                                  @RequestParam(required = false) String column,
+                                                 @RequestParam(required = false) String searchType,// 검색 유형
+                                                 @RequestParam(required = false) String keyword, // 검색어
                                                  HttpServletRequest request) {
+        // 검색을 하지 않으면 searchType = null, keyword = null
         System.out.println("post.js -> BbsApiController queryString: " + request.getQueryString());
-        PageRequest pageRequest;
-        if (column != null) {
-            pageRequest =
-                    PageRequest.of(page-1, perPage, Sort.by(Sort.Direction.DESC, column));
-        } else {
-            pageRequest =
-                    PageRequest.of(page-1, perPage, Sort.by(Sort.Direction.DESC, "id"));
-        }
-        HashMap<String, Object> dataObj = bbsService.findAll(Long.parseLong(category), pageRequest);
+        System.out.println("searchType: " + searchType + ", keyword: " + keyword);
+
+        PageRequest pageRequest =
+                PageRequest.of(page-1, perPage, Sort.by(Sort.Direction.DESC, column));
+
+        HashMap<String, Object> dataObj = bbsService.findAll(Long.parseLong(category), pageRequest, searchType, keyword);
         List<BbsDto> contents = (List<BbsDto>) dataObj.get("bbsDtoList");
         long totalCount = (long) dataObj.get("totalCount");
 

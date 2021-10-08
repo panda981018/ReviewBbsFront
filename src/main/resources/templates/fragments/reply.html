@@ -4,10 +4,22 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <div id="replyContainer" layout:fragment="replyFragment" class="d-flex flex-column mt-4">
-    <b id="replyText">댓글</b>
-    <div id="replySpace" class="d-flex flex-row align-items-center mb-3">
+    <div id="replyInfo" class="d-flex align-items-center">
+        <b id="replyText">댓글</b><span class="ms-3 replyCnt" th:text="${bbs.replyCnt}"></span>
+    </div>
+    <div id="replySpace" class="d-flex align-items-center mb-3">
         <textarea id="replyTextarea" rows="1"></textarea>
         <button type="button" id="createReply" class="btn btn-outline-secondary ms-3">등록</button>
+    </div>
+    <div id="emoticonDiv">
+        <span class="d-flex emoji">&#10084;</span><!-- heart -->
+        <span class="d-flex emoji">&#128077;</span><!-- good -->
+        <span class="d-flex emoji">&#128516;</span> <!-- smile -->
+        <span class="d-flex emoji">&#128525;</span> <!-- love -->
+        <span class="d-flex emoji">&#128545;</span> <!-- angry -->
+        <span class="d-flex emoji">&#128549;</span><!-- 난감 -->
+        <span class="d-flex emoji">&#128546;</span><!-- sad -->
+        <span class="d-flex emoji">&#128522;</span><!-- 부끄? -->
     </div>
     <div id="writtenReply" class="py-4 ps-2" th:if="${replyList != null}" th:each="reply : ${replyList}">
         <div class="d-flex flex-column align-items-stretch">

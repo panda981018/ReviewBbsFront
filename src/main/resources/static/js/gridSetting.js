@@ -2,6 +2,7 @@ let bbsCategoryId = 0; // category 아이디(1번부터~)
 let pagination; // grid의 pagination 객체
 let dataSource; // grid datasource
 let grid; // tui grid
+let sortType = $('#sortStandard option:selected').val();
 
 function getCategoryId(categoryId) {
     bbsCategoryId = categoryId;
@@ -13,9 +14,11 @@ function createGrid(dataSource) {
         minBodyHeight: 40,
         scrollX: false,
         scrollY: false,
+        data: dataSource,
         pageOptions: {
-            perPage: 5,
-            visiblePages: 5
+            perPage: 10,
+            visiblePages: 5,
+            centerAlign: true
         },
         data: dataSource,
         useClientSort: true,
@@ -59,49 +62,31 @@ function createGrid(dataSource) {
             }
         ]
     }); // grid 객체
-    grid.data = dataSource;
 }
 
 function setDatasource() {
     dataSource = {
-        api: { readData: { url: '/api/bbs/get', method: 'GET', initParams: { category : bbsCategoryId } }
+        api: {
+            readData: {
+                url: '/api/bbs/get', method: 'GET',
+                initParams: {category: bbsCategoryId, column: sortType}
+            }
         }
     }
     createGrid(dataSource);
-    grid.on('response', ev => { // readData의 결과를 받는 콜백함수
-        console.log(JSON.parse(ev.xhr.response));
-
-        const bbsData = JSON.parse(ev.xhr.response).data.contents;
-        if(bbsData.length > 0) {
-            $('#tableInfo').addClass("mb-3 d-flex flex-row justify-content-between align-items-center")
-                .css('display', 'block');
-            $('#noData').css('display', 'none');
-            $('#grid').css('display', 'block');
-            grid.resetData(bbsData);
-        } else {
-            $('#tableInfo').css('display', 'none');
-            $('#noData').css('display', 'block');
-        }
-    });
 }
 
-// function callBbsData() {
-//     $.ajax({
-//         method: 'GET',
-//         url: '/api/bbs/get?category=' + bbsCategoryId,
-//         dataType: 'json',
-//         success: function (jsonMap) {
-//             if (jsonMap.data.length !== 0) {
-//                 createGrid();
-//                 $('#tableInfo').addClass("mb-3 d-flex flex-row justify-content-between align-items-center")
-//                     .css('display', 'block');
-//                 $('#noData').css('display', 'none');
-//                 $('#grid').css('display', 'block');
-//                 grid.resetData(jsonMap.data);
-//             } else { // 데이터가 없을 때
-//                 $('#tableInfo').css('display', 'none');
-//                 $('#noData').css('display', 'block');
-//             }
-//         }
-//     })
-// }
+function responseHandler() {
+    grid.on('response', ev => { // readData의 결과를 받는 콜백함수
+        const bbsData = JSON.parse(ev.xhr.response).data.contents;
+        const resultCnt = JSON.parse(ev.xhr.response).data.pagination.totalCount;
+        if (resultCnt > 0) {
+            $('#tableInfo').addClass("mb-3 d-flex flex-row justify-content-between align-items-center")
+                .css('display', 'block');
+            $('#grid').css('display', 'block');
+            grid.resetData(bbsData);
+        } else { // 0이거나 그 이하면
+            alert('찾으시는 결과가 없습니다.');
+        }
+    });
+}ㄱ

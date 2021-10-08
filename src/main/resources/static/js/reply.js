@@ -25,6 +25,19 @@ function createReply(bbsId) {
     })
 }
 
+function showEmoji() { // 댓글창에 포커스인 되면 이모지 창이 보이게 하기(댓글들 보다 z-index 높아야함.)
+    textEle.on('focusin', function() {
+        $('#emoticonDiv').addClass('d-flex justify-content-between align-items-center');
+        $('#emoticonDiv').css('display', 'block');
+    });
+
+    textEle.on('focusout', function() {
+        $('#emoticonDiv').removeClass('d-flex justify-content-between align-items-center');
+        $('#emoticonDiv').css('display', 'none');
+    })
+}
+
+
 function adjustHeight() {
     $('textarea').each(function (index, element) {
         $(this).css('height', 'auto');

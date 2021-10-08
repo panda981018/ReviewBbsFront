@@ -39,3 +39,4 @@ function initMap() {
         infoWindow.open(map, center);
     }
 }
+

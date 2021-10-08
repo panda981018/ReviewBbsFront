@@ -55,43 +55,49 @@ function deleteBbs(bbsId, bbsCategoryId) { // 게시물 삭제
 
 function sortBbs() { // 정렬
     $('#sortStandard').on('change', function () {
-        let columnsModel = grid.getColumns();
-        for (let i = 0; i < columnsModel.length; i++) { // 정렬기준 초기화
-            grid.unsort(columnsModel[i].name);
-        }
-
-        const sortStandard = $('#sortStandard option:selected').val();
-        grid.sort(sortStandard, false, true); // sort(columnName, ascending, multiple)
+        sortType = $('#sortStandard option:selected').val();
+        grid.readData(1, { "column" : sortType });
     });
 }
 
 function filterGrid() { // 검색 이벤트 핸들러
-    grid.unfilter('bbsTitle');
-    grid.unfilter('bbsWriter');
     const input = $('#searchInput');
     const selectedValue = $('#findStandard option:selected').val();
 
     if (input.val() === '') {
         alert('내용을 입력해주세요.');
     } else {
-        let state = {};
-        let arr = [];
-        switch (selectedValue) {
-            case 'bbsTitle' :
-                state.code = 'contain';
-                state.value = input.val();
-                break;
-            case 'bbsWriter' :
-                state.code = 'eq';
-                state.value = input.val();
-                break;
-        }
-        arr.push(state);
-        input.val('');
-        grid.filter(selectedValue, arr);
-
+        grid.readData(1, {"searchType" : selectedValue, "keyword" : input.val() });
     }
 }
+
+// function filterGrid() { // 검색 이벤트 핸들러
+//     grid.unfilter('bbsTitle');
+//     grid.unfilter('bbsWriter');
+//     const input = $('#searchInput');
+//     const selectedValue = $('#findStandard option:selected').val();
+//
+//     if (input.val() === '') {
+//         alert('내용을 입력해주세요.');
+//     } else {
+//         let state = {};
+//         let arr = [];
+//         switch (selectedValue) {
+//             case 'bbsTitle' :
+//                 state.code = 'contain';
+//                 state.value = input.val();
+//                 break;
+//             case 'bbsWriter' :
+//                 state.code = 'eq';
+//                 state.value = input.val();
+//                 break;
+//         }
+//         arr.push(state);
+//         input.val('');
+//         grid.filter(selectedValue, arr);
+//
+//     }
+// }
 
 $('#searchImg').on('click', function () { filterGrid(); });
 $('#searchInput').on('keydown', function (key) {

@@ -31,7 +31,6 @@
                         <option class="dropdown-item" value="bbsWriter">작성자</option>
                         <option class="dropdown-item" value="bbsDate">작성날짜</option>
                         <option class="dropdown-item" value="bbsViews">조회수</option>
-                        <option class="dropdown-item" value="replyCnt">댓글수</option>
                     </select>
                 </div>
             </div>
@@ -51,8 +50,6 @@
         <!--   데이터가 있을때만 노출    -->
         <div id="grid" class="flex-column justify-content-around align-items-stretch table-responsive table-hover">
         </div>
-        <!--   데이터가 없을 때만 노출    -->
-        <h2 id="noData">아직 글이 없습니다.</h2>
         <!--   데이터가 있건 없건 노출    -->
         <div class="d-flex flex-row justify-content-end">
             <a th:href="@{/post/bbs/write(category=${session.categoryList.get(categoryIndex).id})}" class="btn btn-primary">
@@ -70,6 +67,7 @@
         window.onload = function () {
             getCategoryId($('#categoryId').val()); // 카테고리 아이디
             setDatasource(); // 데이터 소스 정의 및 grid 생성
+            responseHandler();
             sortBbs();
         }
     </script>
