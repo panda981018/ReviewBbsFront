@@ -26,16 +26,12 @@ public class BbsApiController {
                                                  @RequestParam int page,
                                                  @RequestParam(required = false) String column,
                                                  @RequestParam(required = false) String searchType,// 검색 유형
-                                                 @RequestParam(required = false) String keyword, // 검색어
-                                                 HttpServletRequest request) {
-        // 검색을 하지 않으면 searchType = null, keyword = null
-        System.out.println("post.js -> BbsApiController queryString: " + request.getQueryString());
-        System.out.println("searchType: " + searchType + ", keyword: " + keyword);
-
+                                                 @RequestParam(required = false) String keyword) {
         PageRequest pageRequest =
                 PageRequest.of(page-1, perPage, Sort.by(Sort.Direction.DESC, column));
 
-        HashMap<String, Object> dataObj = bbsService.findAll(Long.parseLong(category), pageRequest, searchType, keyword);
+        HashMap<String, Object> dataObj
+                = bbsService.findAll(Long.parseLong(category), pageRequest, searchType, keyword);
         List<BbsDto> contents = (List<BbsDto>) dataObj.get("bbsDtoList");
         long totalCount = (long) dataObj.get("totalCount");
 

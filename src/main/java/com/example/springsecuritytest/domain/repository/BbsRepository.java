@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface BbsRepository extends JpaRepository<BbsEntity, Long> {
 
     Page<BbsEntity> findByCategoryIdAndBbsTitleContainingIgnoreCase(Pageable pageable, CategoryEntity category, String keyword);
-    Page<BbsEntity> findByCategoryIdAndBbsWriter(Pageable pageable, MemberEntity member, CategoryEntity category);
+    Page<BbsEntity> findByCategoryIdAndBbsWriter(Pageable pageable, CategoryEntity category, MemberEntity member);
     Page<BbsEntity> findByCategoryId(CategoryEntity category, Pageable pageable);
     Optional<BbsEntity> findById(Long id);
     void deleteById(Long id);

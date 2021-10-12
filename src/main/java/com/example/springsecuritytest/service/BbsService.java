@@ -111,7 +111,8 @@ public class BbsService {
 
         Optional<CategoryEntity> optionalCategory = categoryRepository.findById(category);
         if (optionalCategory.isPresent()) {
-            bbsEntities = bbsRepository.findByCategoryIdAndBbsTitleContainingIgnoreCase(pageable, optionalCategory.get(), keyword);
+            bbsEntities
+                    = bbsRepository.findByCategoryIdAndBbsTitleContainingIgnoreCase(pageable, optionalCategory.get(), keyword);
         }
 
         return bbsEntities;
@@ -135,13 +136,14 @@ public class BbsService {
 //        return dataMap;
 //    }
 
-    public Page<BbsEntity> findByWriter(Long category, Pageable pageable, String writer) { // 작성자를 찾을 때
+    public Page<BbsEntity> findByWriter(Long categoryId, Pageable pageable, String writer) { // 작성자를 찾을 때
         Optional<MemberEntity> optionalMember = memberRepository.findByNickname(writer);
-        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(category);
+        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(categoryId);
         Page<BbsEntity> bbsEntities = null;
         if (optionalMember.isPresent() && optionalCategory.isPresent()) {
             MemberEntity member = optionalMember.get();
-            bbsEntities = bbsRepository.findByCategoryIdAndBbsWriter(pageable, member, optionalCategory.get());
+            CategoryEntity category = optionalCategory.get();
+            bbsEntities = bbsRepository.findByCategoryIdAndBbsWriter(pageable, category, member);
         }
         return bbsEntities;
     }
