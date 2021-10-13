@@ -3,23 +3,22 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
-<div id="replyContainer" layout:fragment="replyFragment" class="d-flex flex-column mt-4">
+<div id="replyContainer" layout:fragment="replyFragment" class="hiddenReply">
     <div id="replyInfo" class="d-flex align-items-center">
-        <b id="replyText">댓글</b><span class="ms-3 replyCnt" th:text="${bbs.replyCnt}"></span>
+        <b id="replyText">댓글</b>
     </div>
     <div id="replySpace" class="d-flex align-items-center mb-3">
         <textarea id="replyTextarea" rows="1"></textarea>
         <button type="button" id="createReply" class="btn btn-outline-secondary ms-3">등록</button>
     </div>
-    <div id="emoticonDiv">
-        <span class="d-flex emoji">&#10084;</span><!-- heart -->
-        <span class="d-flex emoji">&#128077;</span><!-- good -->
-        <span class="d-flex emoji">&#128516;</span> <!-- smile -->
-        <span class="d-flex emoji">&#128525;</span> <!-- love -->
-        <span class="d-flex emoji">&#128545;</span> <!-- angry -->
-        <span class="d-flex emoji">&#128549;</span><!-- 난감 -->
-        <span class="d-flex emoji">&#128546;</span><!-- sad -->
-        <span class="d-flex emoji">&#128522;</span><!-- 부끄? -->
+    <div id="emoticonDiv" class="d-flex justify-content-between align-items-center">
+        <span class="d-flex emoji" id="emoji-heart">&#10084;</span><!-- heart -->
+        <span class="d-flex emoji" id="emoji-good">&#128077;</span><!-- good -->
+        <span class="d-flex emoji" id="emoji-smile">&#128516;</span> <!-- smile -->
+        <span class="d-flex emoji" id="emoji-proud">&#128522;</span>
+        <span class="d-flex emoji" id="emoji-love">&#128525;</span> <!-- love -->
+        <span class="d-flex emoji" id="emoji-angry">&#128545;</span> <!-- angry -->
+        <span class="d-flex emoji" id="emoji-sad">&#128546;</span><!-- sad -->
     </div>
     <div id="writtenReply" class="py-4 ps-2" th:if="${replyList != null}" th:each="reply : ${replyList}">
         <div class="d-flex flex-column align-items-stretch">
@@ -28,11 +27,13 @@
                 <input type="hidden" th:value="${reply.id}">
                 <b class="me-3">작성자</b><span class="me-3" th:text="${reply.writer}"></span>
                 <b class="me-2">작성일자</b><span th:text="${reply.createDate}"></span>
-                <span class="text-muted" th:if="${reply.isUpdated == true}">(수정됨)</span>
+                <span class="ms-2 text-muted" th:if="${reply.isUpdated == true}">(수정됨)</span>
                 <div class="d-flex align-items-center flex-wrap"
                      th:if="${reply.writer == session.memberInfo.getNickname()}">
-                    <button type="button" data-toggle="modal" data-bs-target="#updateReplyDialog" id="updateReplyBtn" class="btn">수정</button>
-                    <button type="button" id="deleteReplyBtn" class="btn">삭제</button>
+                    <button type="button" data-toggle="modal" data-bs-target="#updateReplyDialog" id="updateReplyBtn" class="btn">
+                        <strong>수정</strong>
+                    </button>
+                    <button type="button" id="deleteReplyBtn" class="btn"><strong>삭제</strong></button>
                 </div>
             </div>
             <!-- 댓글 내용 -->

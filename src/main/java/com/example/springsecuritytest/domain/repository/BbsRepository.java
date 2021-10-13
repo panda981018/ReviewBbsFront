@@ -15,7 +15,9 @@ import java.util.Optional;
 @Repository
 public interface BbsRepository extends JpaRepository<BbsEntity, Long> {
 
+    // 제목 검색
     Page<BbsEntity> findByCategoryIdAndBbsTitleContainingIgnoreCase(Pageable pageable, CategoryEntity category, String keyword);
+    // 작성자 검색
     Page<BbsEntity> findByCategoryIdAndBbsWriter(Pageable pageable, CategoryEntity category, MemberEntity member);
     Page<BbsEntity> findByCategoryId(CategoryEntity category, Pageable pageable);
     Optional<BbsEntity> findById(Long id);

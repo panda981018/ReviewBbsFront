@@ -4,7 +4,7 @@
 }
 
 #tableDiv {
-    height: 70%;
+    height: auto;
     text-align: center;
     border-top: 2px solid #2c3034;
     border-bottom: 2px solid #2c3034;
@@ -40,8 +40,25 @@ td, th {
 }
 
 #bbsContents {
-    height: 80%;
+    height: auto;
     text-align: start;
     vertical-align: baseline;
     font-size: 1.1rem;
+}
+
+.likeBtnImg {
+    object-fit: scale-down;
+    width: 1.3rem;
+    height: auto;
+}
+
+#emptyHeartImg {
+    filter: opacity(0.5) drop-shadow(0 0 0 gray);
+}
+
+.commentImg {
+    filter: opacity(0.5) drop-shadow(0 0 0 gray);
+    object-fit: scale-down;
+    width: 1.3rem;
+    height: auto;
 }

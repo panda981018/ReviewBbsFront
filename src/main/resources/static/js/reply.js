@@ -25,18 +25,19 @@ function createReply(bbsId) {
     })
 }
 
-function showEmoji() { // 댓글창에 포커스인 되면 이모지 창이 보이게 하기(댓글들 보다 z-index 높아야함.)
-    textEle.on('focusin', function() {
-        $('#emoticonDiv').addClass('d-flex justify-content-between align-items-center');
-        $('#emoticonDiv').css('display', 'block');
+function emojiClickEvent() {
+    $(document).on('click', 'span.d-flex.emoji', function () {
+        let selectedEmoji = $(this);
+        const strOriginal = textEle.val();
+        const iStartPos = textEle.selectionStart;
+        let strFront = "";
+
+        strFront = strOriginal.substring(0, iStartPos);
+
+        textEle.val('');
+        textEle.val(strFront + selectedEmoji[0].innerHTML);
     });
-
-    textEle.on('focusout', function() {
-        $('#emoticonDiv').removeClass('d-flex justify-content-between align-items-center');
-        $('#emoticonDiv').css('display', 'none');
-    })
 }
-
 
 function adjustHeight() {
     $('textarea').each(function (index, element) {
@@ -55,10 +56,8 @@ function autoResizing() { // 컨텐츠 길이에 따라 높이가 늘어나게
 }
 
 function deleteReply(bbsId) { // 삭제 버튼 눌렀을 때
-    $('#writtenReply').on('click', "button[id='deleteReplyBtn']", function () {
-
+    $(document).on('click', "#deleteReplyBtn", function () {
         const replyId = $(this).parent().siblings('input').val();
-
         let result = confirm('댓글을 삭제하시겠습니까?');
         if (result) {
             $.ajax({

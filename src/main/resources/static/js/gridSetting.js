@@ -55,8 +55,8 @@ function createGrid(dataSource) {
                 align: "center"
             },
             {
-                header: '댓글수',
-                name: 'replyCnt',
+                header: '추천수',
+                name: 'likeCnt',
                 width: "auto",
                 align: "center"
             }
@@ -89,4 +89,4 @@ function responseHandler() {
             alert('찾으시는 결과가 없습니다.');
         }
     });
-}ㄱ
+}

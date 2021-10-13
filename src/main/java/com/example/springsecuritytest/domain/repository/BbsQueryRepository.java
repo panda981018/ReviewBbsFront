@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.FlushModeType;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,40 @@ public class BbsQueryRepository {
     public void updateBbsViews(Long bbsId, int view) {
         jpaQueryFactory.update(bbsEntity)
                 .set(bbsEntity.bbsViews, view + 1)
+                .where(bbsEntity.id.eq(bbsId))
+                .execute();
+    }
+
+//    @Transactional
+//    public int plusLikeCount(Long bbsId, int likeCnt) {
+//        jpaQueryFactory.update(bbsEntity)
+//                .set(bbsEntity.likeCnt, likeCnt + 1)
+//                .where(bbsEntity.id.eq(bbsId))
+//                .execute();
+//        return likeCnt + 1;
+//    }
+//
+//    @Transactional
+//    public int minusLikeCount(Long bbsId, int likeCnt) {
+//        jpaQueryFactory.update(bbsEntity)
+//                .set(bbsEntity.likeCnt, likeCnt - 1)
+//                .where(bbsEntity.id.eq(bbsId))
+//                .execute();
+//        return likeCnt - 1;
+//    }
+
+    @Transactional
+    public void plusLikeCount(Long bbsId, int likeCnt) {
+        jpaQueryFactory.update(bbsEntity)
+                .set(bbsEntity.likeCnt, likeCnt + 1)
+                .where(bbsEntity.id.eq(bbsId))
+                .execute();
+    }
+
+    @Transactional
+    public void minusLikeCount(Long bbsId, int likeCnt) {
+        jpaQueryFactory.update(bbsEntity)
+                .set(bbsEntity.likeCnt, likeCnt - 1)
                 .where(bbsEntity.id.eq(bbsId))
                 .execute();
     }

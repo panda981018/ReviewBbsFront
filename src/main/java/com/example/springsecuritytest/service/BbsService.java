@@ -42,6 +42,7 @@ public class BbsService {
 
             bbsDto.setBbsDate(time);
             bbsDto.setBbsViews(0);
+            bbsDto.setLikeCnt(0);
 
             BbsEntity bbs = bbsDto.toEntity();
             CategoryEntity categoryEntity = category.get();
@@ -70,10 +71,9 @@ public class BbsService {
         return dataMap;
     }
 
-    // BbsApiController.getAllBbsList에서 사용
     public HashMap<String, Object> findAll(Long categoryId, Pageable pageable, String searchType, String keyword) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
         Page<BbsEntity> bbsEntities;
-        List<BbsEntity> entities = new ArrayList<>();
+        List<BbsEntity> entities;
         List<BbsDto> bbsDtoList = new ArrayList<>();
         long totalCount = 0L;
 
@@ -86,7 +86,7 @@ public class BbsService {
             bbsEntities = findByBbsTitle(categoryId, pageable, keyword);
         }
 
-        if (bbsEntities == null) {
+        if (bbsEntities == null) { // 찾는 데이터가 없을 경우 null
             bbsDtoList.clear();
             totalCount = 0L;
         } else if (!bbsEntities.isEmpty()) {
@@ -118,24 +118,6 @@ public class BbsService {
         return bbsEntities;
     }
 
-//    public HashMap<String, Object> findAll(Long categoryId, Pageable pageable, String searchType, String keyword) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
-//        CategoryEntity category = categoryRepository.findById(categoryId).get();
-//        Page<BbsEntity> bbsEntities = bbsRepository.findByCategoryId(category, pageable);
-//
-//        List<BbsDto> bbsDtoList = new ArrayList<>();
-//        List<BbsEntity> entities = bbsEntities.getContent();
-//
-//        for(BbsEntity bbsEntity : entities) {
-//            bbsDtoList.add(bbsEntity.toDto());
-//        }
-//
-//        HashMap<String, Object> dataMap = new HashMap<>();
-//        dataMap.put("bbsDtoList", bbsDtoList);
-//        dataMap.put("totalCount", bbsEntities.getTotalElements());
-//
-//        return dataMap;
-//    }
-
     public Page<BbsEntity> findByWriter(Long categoryId, Pageable pageable, String writer) { // 작성자를 찾을 때
         Optional<MemberEntity> optionalMember = memberRepository.findByNickname(writer);
         Optional<CategoryEntity> optionalCategory = categoryRepository.findById(categoryId);
@@ -157,6 +139,7 @@ public class BbsService {
             BbsEntity oldBbs = bbsEntity.get(); // bbsdate, writer, bbsView 가져오기
             bbsDto.setBbsDate(oldBbs.getBbsDate()); // set date
             bbsDto.setBbsViews(oldBbs.getBbsViews()); // set bbsView
+            bbsDto.setLikeCnt(oldBbs.getLikeCnt());
 
             BbsEntity bbs = bbsDto.toEntity();
             CategoryEntity categoryEntity = category.get(); // set category
@@ -177,5 +160,61 @@ public class BbsService {
             imageService.deleteUploadedImg(urls);
         }
         bbsRepository.deleteById(id);
+    }
+
+//    [ 기존 방법 ]
+//    public int updateLikeCount(Long bid, String type) {
+//        Optional<BbsEntity> optionalBbsEntity = bbsRepository.findById(bid);
+//        if (optionalBbsEntity.isPresent()) {
+//            BbsEntity bbsEntity = optionalBbsEntity.get();
+//            if (type.equals("like")) {
+//                bbsQueryRepository.plusLikeCount(bid, bbsEntity.getLikeCnt());
+//            } else {
+//                bbsQueryRepository.minusLikeCount(bid, bbsEntity.getLikeCnt());
+//            }
+//            BbsEntity newBbsEntity = bbsRepository.findById(bid).get();
+//            return newBbsEntity.getLikeCnt();
+//        } else // 게시글이 존재하지 않는다면 -1 리턴
+//            return -1;
+//    }
+
+//  querydsl 함수에서 임의로 +1 또는 -1 하는 값을 리턴하도록 만든 함수
+//    public int updateLikeCount(Long bid, String type) {
+//        Optional<BbsEntity> optionalBbsEntity = bbsRepository.findById(bid);
+//        if (optionalBbsEntity.isPresent()) {
+//            BbsEntity bbsEntity = optionalBbsEntity.get();
+//            int likeCnt = 0;
+//            if (type.equals("like")) {
+//                likeCnt = bbsQueryRepository.plusLikeCount(bid, bbsEntity.getLikeCnt());
+//            } else {
+//                likeCnt = bbsQueryRepository.minusLikeCount(bid, bbsEntity.getLikeCnt());
+//            }
+//
+//            return likeCnt;
+//        } else return -1; // 게시글이 존재하지 않는다면 -1 리턴
+//    }
+
+    //  JPA saveAndFlush를 사용한 방법
+    public int updateLikeCount(Long bid, Long memberId, String type) {
+        Optional<BbsEntity> optionalBbsEntity = bbsRepository.findById(bid);
+
+        if (optionalBbsEntity.isPresent()) {
+            BbsEntity bbsEntity = optionalBbsEntity.get();
+            BbsDto oldBbsDto = bbsEntity.toDto();
+            CategoryEntity category = categoryRepository.findById(oldBbsDto.getCategoryId()).get();
+            MemberEntity member = memberRepository.findById(memberId).get();
+            if (type.equals("like")) {
+                oldBbsDto.setLikeCnt(bbsEntity.getLikeCnt() + 1);
+            } else {
+                oldBbsDto.setLikeCnt(bbsEntity.getLikeCnt() - 1);
+            }
+            BbsEntity newBbsEntity = oldBbsDto.toEntity();
+            newBbsEntity.setCategory(category);
+            newBbsEntity.setBbsWriter(member);
+            bbsRepository.saveAndFlush(newBbsEntity);
+
+            int likeCnt = bbsRepository.findById(bid).get().getLikeCnt();
+            return likeCnt;
+        } else return -1; // 게시글이 존재하지 않는다면 -1 리턴
     }
 }

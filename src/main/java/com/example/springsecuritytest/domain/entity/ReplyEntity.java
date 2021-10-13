@@ -34,6 +34,9 @@ public class ReplyEntity {
     @Column(length = 20)
     private LocalDateTime updateDate;
 
+    @Column
+    private String ipAddr;
+
     @ManyToOne
     @JoinColumn(name = "REPLY_WRITER")
     private MemberEntity writer;
@@ -67,10 +70,11 @@ public class ReplyEntity {
     }
 
     @Builder
-    public ReplyEntity(Long id, String contents, LocalDateTime createDate, LocalDateTime updateDate) {
+    public ReplyEntity(Long id, String contents, LocalDateTime createDate, LocalDateTime updateDate, String ipAddr) {
         this.id = id;
         this.contents = contents;
         this.createDate = createDate;
         this.updateDate = updateDate;
+        this.ipAddr = ipAddr;
     }
 }

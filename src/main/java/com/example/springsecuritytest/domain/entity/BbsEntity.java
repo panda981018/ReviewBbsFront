@@ -39,6 +39,12 @@ public class BbsEntity {
 
     private int bbsViews;
 
+    @Column
+    private int likeCnt;
+
+    @Column
+    private String ipAddr;
+
     @ManyToOne
     @JoinColumn(name = "CATEGORY_ID")
     private CategoryEntity categoryId; // 외래키
@@ -69,19 +75,24 @@ public class BbsEntity {
                 .bbsTitle(bbsTitle)
                 .bbsContents(bbsContents)
                 .bbsDate(bbsDate)
-                .bbsViews(bbsViews)
                 .categoryId(categoryId.getId())
                 .bbsWriter(bbsWriter.getNickname())
+                .bbsViews(bbsViews)
+                .likeCnt(likeCnt)
                 .replyCnt(replies.size())
+                .ipAddr(ipAddr)
                 .build();
     }
 
     @Builder
-    public BbsEntity(Long id, String bbsTitle, String bbsContents, String bbsDate, int bbsViews) {
+    public BbsEntity(Long id, String bbsTitle, String bbsContents, String bbsDate, int bbsViews,
+                     int likeCnt, String ipAddr) {
         this.id = id;
         this.bbsTitle = bbsTitle;
         this.bbsContents = bbsContents;
         this.bbsDate = bbsDate;
         this.bbsViews = bbsViews;
+        this.likeCnt = likeCnt;
+        this.ipAddr = ipAddr;
     }
 }

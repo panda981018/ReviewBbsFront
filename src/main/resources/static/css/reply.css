@@ -1,3 +1,7 @@
+.hiddenReply {
+    display: none;
+}
+
 #replyTextarea {
     flex: 1;
     resize: none;
@@ -5,7 +9,7 @@
 }
 
 #replyText {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 
 #writtenReply {
@@ -25,13 +29,9 @@
 #emoticonDiv {
     position: relative;
     z-index: 2;
-    display: none;
-}
-
-.replyCnt {
-    font-size: large;
 }
 
 .emoji {
     font-size: 1.5rem;
+    cursor: pointer;
 }

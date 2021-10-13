@@ -10,7 +10,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div id="writeContent" class="d-flex flex-column justify-content-evenly">
+    <div id="writeContent" class="d-flex flex-column justify-content-start">
         <div id="categoryInfo" class="mb-3">
             <h1>
                 <a th:href="@{'/post/bbs?category=' + ${session.categoryList.get(categoryId).getId()}}"
@@ -32,12 +32,27 @@
             </tr>
 
             <tr id="bbsContentsTr">
-                <td id="bbsContents" colspan="8" rowspan="5" class="ps-3 pt-3"
+                <td id="bbsContents" class="ps-3 pt-3"
                     th:utext="${bbs.bbsContents}"></td>
             </tr>
         </table>
-        <div id="previousBtnDiv" class="d-flex justify-content-between align-items-center my-3">
-            <button type="button" id="previousBtn" class="btn btn-outline-secondary" onclick="window.history.back();">이전</button>
+        <div id="utilBtnDiv" class="d-flex justify-content-between align-items-center my-3">
+            <div id="likeOrDislikeBtnGroup" class="d-flex justify-content-start align-items-center">
+                <button type="button" id="likeBtn" class="btn btn-outline-secondary me-3">
+                    <th:block th:if="${heartObj != null && heartObj.isLiked}">
+                        <img class="likeBtnImg me-2" id="heartImg" src="/img/heart.png">
+                    </th:block>
+                    <th:block th:unless="${heartObj != null && heartObj.isLiked}">
+                        <img class="likeBtnImg me-2" id="emptyHeartImg" src="/img/emptyHeart.png">
+                    </th:block>
+                    <strong class="me-2">LIKE</strong>
+                    <span id="likeCntText" th:text="${bbs.likeCnt}"></span>
+                </button>
+                <button type="button" id="replyBtn" class="btn btn-outline-secondary">
+                    <img class="commentImg me-2" id="commentImg" src="/img/comment.png">
+                    <span th:text="${bbs.replyCnt}"></span>
+                </button>
+            </div>
             <div id="ownerBtnGroup" class="d-flex justify-content-end align-items-center"
                  th:if="${bbs.bbsWriter == session.memberInfo.getNickname()}">
                 <button type="button" id="deleteBbsBtn" class="btn btn-outline-danger me-3">삭제</button>
@@ -57,13 +72,15 @@
             //<[CDATA[
             const bbsId = [[${bbs.id}]];
             const categoryId = [[${bbs.categoryId}]];
-            createReply(bbsId);
-            deleteBbs(bbsId, categoryId);
+            createReply(bbsId); // 댓글 생성
+            deleteBbs(bbsId, categoryId); // 게시글 삭제 리스너
             autoResizing();
-            deleteReply(bbsId);
-            showReplyModal();
-            modalListener();
-            showEmoji();
+            deleteReply(bbsId); // 댓글 삭제 리스너
+            showReplyModal(); // 댓글 수정 모달
+            modalListener(); // 댓글 수정 모달에서 수정 눌렀을 때
+            emojiClickEvent(); // 이모지 눌렀을 때
+            replyListener(); // 댓글 이미지 눌렀을 때
+            clickLikeBtn(bbsId); // 좋아요 눌렀을 때
             //]]>
 
         }

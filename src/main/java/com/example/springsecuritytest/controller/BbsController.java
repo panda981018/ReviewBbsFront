@@ -1,17 +1,11 @@
 package com.example.springsecuritytest.controller;
 
-import com.example.springsecuritytest.dto.BbsDto;
-import com.example.springsecuritytest.dto.CategoryDto;
-import com.example.springsecuritytest.dto.MemberDto;
-import com.example.springsecuritytest.dto.ReplyDto;
+import com.example.springsecuritytest.dto.*;
 import com.example.springsecuritytest.service.BbsService;
 import com.example.springsecuritytest.service.CategoryService;
+import com.example.springsecuritytest.service.HeartService;
 import com.example.springsecuritytest.service.ReplyService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.example.springsecuritytest.conf.AppConfig.getClientIp;
 
 @Controller
 @AllArgsConstructor
@@ -31,6 +28,7 @@ public class BbsController {
     private final BbsService bbsService;
     private final CategoryService categoryService;
     private final ReplyService replyService;
+    private final HeartService heartService;
 
     @GetMapping
     public String defaultCategory(HttpSession session) {
@@ -60,19 +58,23 @@ public class BbsController {
     }
 
     @PostMapping("/bbs/write")
-    public String createBbs(BbsDto bbsDto, HttpSession session) {
+    public String createBbs(BbsDto bbsDto, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        bbsDto.setIpAddr(getClientIp(request));
         bbsService.saveBbs(bbsDto, (MemberDto) session.getAttribute("memberInfo"));
 
         return "redirect:/post/bbs?category=" + bbsDto.getCategoryId();
     }
 
     @GetMapping("/bbs/view") // 게시글 보기
-    public String viewBbs(@RequestParam(required = false) String id, Model model) {
+    public String viewBbs(@RequestParam(required = false) String id, HttpSession session, Model model) {
         BbsDto bbs = null;
         Long viewCategoryId = 0L;
         List<ReplyDto> replies;
 
         HashMap<String, Object> dataMap = bbsService.getBbs(Long.parseLong(id));
+        MemberDto memberDto = (MemberDto) session.getAttribute("memberInfo");
+        HeartDto heartDto = heartService.findHeartObject(Long.parseLong(id), memberDto.getId());
 
         if (dataMap.get("bbsDto") instanceof BbsDto) {
             bbs = (BbsDto) dataMap.get("bbsDto");
@@ -87,6 +89,7 @@ public class BbsController {
         }
         model.addAttribute("bbs", bbs);
         model.addAttribute("categoryId", viewCategoryId);
+        model.addAttribute("heartObj", heartDto);
 
         return "post/viewBbs";
     }
