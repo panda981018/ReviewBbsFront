@@ -195,14 +195,14 @@ public class BbsService {
 //    }
 
     //  JPA saveAndFlush를 사용한 방법
-    public int updateLikeCount(Long bid, Long memberId, String type) {
+    public int updateLikeCount(Long bid, String type) {
         Optional<BbsEntity> optionalBbsEntity = bbsRepository.findById(bid);
 
         if (optionalBbsEntity.isPresent()) {
             BbsEntity bbsEntity = optionalBbsEntity.get();
             BbsDto oldBbsDto = bbsEntity.toDto();
+            MemberEntity member = memberRepository.findByNickname(oldBbsDto.getBbsWriter()).get();
             CategoryEntity category = categoryRepository.findById(oldBbsDto.getCategoryId()).get();
-            MemberEntity member = memberRepository.findById(memberId).get();
             if (type.equals("like")) {
                 oldBbsDto.setLikeCnt(bbsEntity.getLikeCnt() + 1);
             } else {

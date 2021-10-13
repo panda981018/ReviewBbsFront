@@ -35,7 +35,7 @@ public class HeartApiController {
         } else { // cancel일 경우
             heartService.minusHeartCount(Long.parseLong(bid), memberDto.getId());
         }
-        updatedLikeCnt = bbsService.updateLikeCount(Long.parseLong(bid), memberDto.getId(), type);
+        updatedLikeCnt = bbsService.updateLikeCount(Long.parseLong(bid), type);
 
 
         HashMap<String, Object> mapData = new HashMap<>();
