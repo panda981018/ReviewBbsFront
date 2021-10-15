@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<!-- 지도 dialog-->
+<div id="mapDialog" layout:fragment="modalFragment" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalLabel">Map</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column">
+                <div class="search">
+                    <input type="text" id="keyword" placeholder="검색어를 입력하세요.">
+                    <input type="button" id="submit" class="btn btn-light" value="검색">
+                </div>
+                <div class="current-loc">
+                    <button type="button" id="findCurrentLocation">
+                        <img id="currentImg" src="/img/current.png">
+                    </button>
+                </div>
+                <div id="map" style="width: 768px; height: 600px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" id="modalSaveBtn" class="btn btn-primary">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

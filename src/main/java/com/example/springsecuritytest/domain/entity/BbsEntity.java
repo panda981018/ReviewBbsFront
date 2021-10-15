@@ -43,7 +43,13 @@ public class BbsEntity {
     private int likeCnt;
 
     @Column
-    private String ipAddr;
+    private String ipAddr; // 작성자의 ip주소
+
+    @Column
+    private double latitude = 0.0;
+
+    @Column
+    private double longitude = 0.0;
 
     @ManyToOne
     @JoinColumn(name = "CATEGORY_ID")
@@ -81,12 +87,14 @@ public class BbsEntity {
                 .likeCnt(likeCnt)
                 .replyCnt(replies.size())
                 .ipAddr(ipAddr)
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
     }
 
     @Builder
     public BbsEntity(Long id, String bbsTitle, String bbsContents, String bbsDate, int bbsViews,
-                     int likeCnt, String ipAddr) {
+                     int likeCnt, String ipAddr, double latitude, double longitude) {
         this.id = id;
         this.bbsTitle = bbsTitle;
         this.bbsContents = bbsContents;
@@ -94,5 +102,7 @@ public class BbsEntity {
         this.bbsViews = bbsViews;
         this.likeCnt = likeCnt;
         this.ipAddr = ipAddr;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

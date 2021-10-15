@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.FlushModeType;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;

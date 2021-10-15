@@ -1,3 +1,9 @@
+$(document).on('keydown', 'input[type="text"]',function (event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+    }
+});
+
 function invalidMsg(object) { // error
     object.removeClass('valid')
         .addClass('error');
@@ -18,7 +24,7 @@ function titleValidate() {
         } else {
             validMsg(titleError);
         }
-    })
+    });
 }
 
 function contentValidate() {

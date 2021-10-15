@@ -15,7 +15,7 @@
             <!-- 로그인 시 아이디의 name attribute 값은 username이어야 함. -->
             <div class="mb-3">
                 <label th:for="username" class="form-label"><b>Email address</b></label>
-                <input type="email" class="form-control" name="username" placeholder="이메일을 입력해주세요" autocomplete="off" autofocus/>
+                <input type="email" class="form-control" name="username" placeholder="이메일을 입력해주세요" autofocus/>
                 <!-- validator에서 error.rejectValue를 통해 넘어온 값을 아래 코드에서 처리해준다. -->
                 <!--  <p th:if="${ #fields.hasErrors('username')}" th:errors="*{username}">Email Error</p>-->
             </div>

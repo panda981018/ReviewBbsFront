@@ -127,3 +127,54 @@ img[id=searchImg] {
 .valid {
     display: none;
 }
+
+.current-loc {
+    position: absolute;
+    z-index: 100;
+    top: 30px;
+    right: 30px;
+}
+
+.current-loc button {
+    padding: .3rem;
+    border: 1px solid lightgrey;
+    background-color: #ffffff;
+}
+
+#currentImg {
+    filter: opacity(0.5) drop-shadow(0 0 0 dodgerblue);
+    object-fit: scale-down;
+    width: 1.5rem;
+    height: auto;
+}
+
+.search {
+    width: 50%;
+    position: absolute;
+    z-index: 100;
+    top: 30px;
+    left: 30px;
+}
+
+.search #keyword {
+    width: 80%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 30px;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #565e64;
+    border-radius: .25rem;
+}
+
+.search #submit {
+    line-height: 30px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border: solid 1px #555;
+    border-radius: 3px;
+    cursor: pointer;
+    box-sizing: content-box;
+}

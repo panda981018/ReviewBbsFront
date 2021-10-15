@@ -19,6 +19,8 @@ public class BbsDto {
     private int replyCnt = 0; // 댓글 수
     private int likeCnt; //  좋아요 수
     private String ipAddr; // 작성자 ip주소
+    private double latitude = 0.0; // 위도
+    private double longitude = 0.0; // 경도
 
     public BbsEntity toEntity() {
         return BbsEntity.builder()
@@ -29,12 +31,15 @@ public class BbsDto {
                 .bbsViews(bbsViews)
                 .likeCnt(likeCnt)
                 .ipAddr(ipAddr)
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
     }
 
     @Builder
     public BbsDto(Long id, String bbsTitle, String bbsContents, String bbsDate,
-                  int bbsViews, int likeCnt, Long categoryId, String bbsWriter, int replyCnt, String ipAddr) {
+                  int bbsViews, int likeCnt, Long categoryId, String bbsWriter, int replyCnt, String ipAddr,
+                  double latitude, double longitude) {
         this.id = id;
         this.bbsTitle = bbsTitle;
         this.bbsContents = bbsContents;
@@ -45,5 +50,7 @@ public class BbsDto {
         this.likeCnt = likeCnt;
         this.replyCnt = replyCnt;
         this.ipAddr = ipAddr;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }
