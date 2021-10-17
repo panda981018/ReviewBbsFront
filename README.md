@@ -11,7 +11,7 @@
   * jQuery
   * WYSIWYG Editor : summernote v0.8.18
   * Toast UI Grid v4.19.1 << 프로젝트 다운로드 후 /resources/static 하위에 tui-grid 폴더 복사 붙여넣기
-  * NAVER Map API
+  * KAKAO Map API
 
 ### Toast UI Grid 적용 방법
 1. npm 다운로드<br/>
