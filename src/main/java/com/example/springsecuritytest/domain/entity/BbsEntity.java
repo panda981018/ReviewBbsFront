@@ -51,6 +51,9 @@ public class BbsEntity {
     @Column
     private double longitude = 0.0;
 
+    @Column
+    private String placeName;
+
     @ManyToOne
     @JoinColumn(name = "CATEGORY_ID")
     private CategoryEntity categoryId; // 외래키
@@ -89,12 +92,13 @@ public class BbsEntity {
                 .ipAddr(ipAddr)
                 .latitude(latitude)
                 .longitude(longitude)
+                .placeName(placeName)
                 .build();
     }
 
     @Builder
     public BbsEntity(Long id, String bbsTitle, String bbsContents, String bbsDate, int bbsViews,
-                     int likeCnt, String ipAddr, double latitude, double longitude) {
+                     int likeCnt, String ipAddr, double latitude, double longitude, String placeName) {
         this.id = id;
         this.bbsTitle = bbsTitle;
         this.bbsContents = bbsContents;
@@ -104,5 +108,6 @@ public class BbsEntity {
         this.ipAddr = ipAddr;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.placeName = placeName;
     }
 }

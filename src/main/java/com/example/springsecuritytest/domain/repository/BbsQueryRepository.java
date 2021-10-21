@@ -2,8 +2,10 @@ package com.example.springsecuritytest.domain.repository;
 
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
+import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.util.QueryDslUtil;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.example.springsecuritytest.domain.entity.QBbsEntity.bbsEntity;
@@ -83,5 +86,12 @@ public class BbsQueryRepository {
                 .fetchResults();
 
         return new PageImpl<>(rt.getResults(), pageable, rt.getTotal());
+    }
+
+    public List<Tuple> getMapElements(MemberEntity member) {
+        return jpaQueryFactory.select(bbsEntity.latitude, bbsEntity.longitude, bbsEntity.placeName)
+                .from(bbsEntity)
+                .where(bbsEntity.bbsWriter.eq(member))
+                .fetch();
     }
 }

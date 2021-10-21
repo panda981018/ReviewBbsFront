@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<head>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ab5c04d7f4a5431d03ba14907e51d79a" defer></script>
+    <!-- services 라이브러리 불러오기 -->
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ab5c04d7f4a5431d03ba14907e51d79a&libraries=services"></script>
+    <link rel="stylesheet" type="text/css" href="/css/map.css">
+    <link rel="stylesheet" type="text/css" href="/css/bbs.css">
+    <title>Map</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="map">
+        <div class="current-loc">
+            <div id="placeList"></div>
+            <button type="button" id="findCurrentLocation">
+                <img id="currentImg" src="/img/current.png">
+            </button>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script type="text/javascript" src="/js/map.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            initMap();
+        }
+    </script>
+</th:block>
+</body>
+</html>

@@ -23,6 +23,10 @@
               method="post">
             <!-- id -->
             <input type="hidden" id="hiddenId" name="bbsId">
+            <!-- lat, lng -->
+            <input type="hidden" id="hiddenLat" name="latitude">
+            <input type="hidden" id="hiddenLng" name="longitude">
+            <input type="hidden" id="hiddenPlaceName" name="placeName">
             <!-- category 선택 -->
             <label id="categoryLabel" class="form-label" for="bbsCategory"><b>Category</b></label>
             <select id="bbsCategory" class="form-select dropdown-toggle" data-bs-toggle="dropdown" name="categoryId">
@@ -74,6 +78,7 @@
             contentValidate();
             cancelingWrite();
             validateForm();
+            closeMapModal();
         }
     </script>
 </th:block>

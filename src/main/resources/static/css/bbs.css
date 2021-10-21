@@ -6,6 +6,7 @@
 .bbs-link {
     text-decoration: none;
 }
+
 .bbs-link:hover {
     text-decoration-line: underline;
 }
@@ -90,6 +91,9 @@ tr > td {
 #mapBtn {
     grid-row: 3 / 4;
     grid-column: 2 / 3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #contentsError {
@@ -117,6 +121,13 @@ img[id=searchImg] {
     width: 1.4rem;
     height: auto;
     object-fit: scale-down;
+    cursor: pointer;
+}
+
+#findStandard,
+#sortStandard,
+#searchInput {
+    cursor: pointer;
 }
 
 .error {
@@ -131,8 +142,8 @@ img[id=searchImg] {
 .current-loc {
     position: absolute;
     z-index: 100;
-    top: 30px;
-    right: 30px;
+    top: 20px;
+    right: 20px;
 }
 
 .current-loc button {
@@ -142,10 +153,108 @@ img[id=searchImg] {
 }
 
 #currentImg {
-    filter: opacity(0.5) drop-shadow(0 0 0 dodgerblue);
+    /*filter: opacity(0.5) drop-shadow(0 0 0 dodgerblue);*/
     object-fit: scale-down;
     width: 1.5rem;
     height: auto;
+}
+
+#menu_wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 320px;
+    margin: 10px 0 30px 10px;
+    padding: 5px;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 1000;
+    font-size: 12px;
+    border-radius: 10px;
+}
+
+.bg_white {
+    background: #fff;
+}
+
+#menu_wrap hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 2px solid #5F5F5F;
+    margin: 3px 0;
+}
+
+#menu_wrap .option {
+    text-align: center;
+}
+
+#menu_wrap .option p {
+    margin: 10px 0;
+}
+
+#menu_wrap .option button {
+    margin-left: 5px;
+}
+
+#placesList li {
+    list-style: none;
+}
+
+.item {
+    position: relative;
+    border-bottom: 1px solid #888;
+    overflow: hidden;
+    cursor: pointer;
+    min-height: 65px;
+}
+
+.item span {
+    display: block;
+    margin-top: 4px;
+}
+
+.item h5, #placesList .item .info {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.item .info {
+    padding: 10px 0 10px 0px;
+    border-bottom: 1px solid lightslategray;
+}
+
+.info .gray {
+    color: #8a8a8a;
+}
+
+.info .jibun {
+    padding-left: 26px;
+    background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+}
+
+.info .tel {
+    color: #009900;
+}
+
+#placePagination {
+    margin: 10px auto;
+    text-align: center;
+}
+
+#placePagination a {
+    display: inline-block;
+    text-decoration-line: none;
+    margin-right: 10px;
+    color: #777;
+}
+
+#placePagination .on {
+    font-size: 1.2rem;
+    cursor: default;
+    color: black;
 }
 
 .search {
@@ -157,7 +266,6 @@ img[id=searchImg] {
 }
 
 .search #keyword {
-    width: 80%;
     padding: .375rem .75rem;
     font-size: 1rem;
     font-weight: 400;

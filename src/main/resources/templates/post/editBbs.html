@@ -25,6 +25,10 @@
               id="formEdit" method="post">
             <!-- id -->
             <input type="hidden" id="hiddenId" th:field="*{id}">
+            <!-- lat, lng -->
+            <input type="hidden" id="hiddenLat" th:field="*{latitude}">
+            <input type="hidden" id="hiddenLng" th:field="*{longitude}">
+            <input type="hidden" id="hiddenPlaceName" th:field="*{placeName}">
             <!-- category 선택 -->
             <label id="categoryLabel" class="form-label" th:for="bbsCategory"><b>Category</b></label>
             <select id="bbsCategory" class="form-select dropdown-toggle" th:field="*{categoryId}" data-bs-toggle="dropdown"
@@ -70,11 +74,12 @@
         //]]>
         window.onload = function () {
             $('#writeSpace').summernote(setting);
-            showMapModal();
+            showMapModal(latitude, longitude);
             titleValidate();
             contentValidate();
             cancelingWrite();
             validateForm();
+            closeMapModal();
         }
     </script>
 </th:block>

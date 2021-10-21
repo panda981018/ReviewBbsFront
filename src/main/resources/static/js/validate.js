@@ -48,10 +48,15 @@ function validateForm() { // 타이틀과 내용이 버어있는가
         const writeSpace = $('#writeSpace');
         const titleError = $('#titleError');
         const contentsError = $('#contentsError');
+        const latInput = $('#hiddenLat');
+        const lngInput = $('#hiddenLng');
 
         if (titleError.hasClass('error')
             || contentsError.hasClass('error')) {
             alert('내용을 모두 채워주세요 :)');
+            return false;
+        } else if (latInput.val() === '' || lngInput.val() === '') {
+            alert('장소를 등록해주세요');
             return false;
         } else {
             writeSpace.val(editor[0].innerHTML.trim());

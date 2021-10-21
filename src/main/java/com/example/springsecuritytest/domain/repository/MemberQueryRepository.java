@@ -34,14 +34,6 @@ public class MemberQueryRepository { // CRUD
         return rtResult;
     }
 
-    public List<String> findPasswordByUsername(String username) {
-
-        return jpaQueryFactory.select(memberEntity.password)
-                .from(memberEntity)
-                .where(memberEntity.username.eq(username))
-                .fetch();
-    }
-
     public Page<MemberEntity> findAllExceptAdmin(Pageable pageable) {
         List<OrderSpecifier> order = QueryDslUtil.getAllOrderSpecifiers(pageable);
 

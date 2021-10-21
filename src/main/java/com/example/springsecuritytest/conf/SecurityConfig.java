@@ -41,8 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/static/**")
                 .antMatchers("/ckeditor/**")
                 .antMatchers("/resources/**")
-                .antMatchers("/css/**")
-                .antMatchers("/js/**")
                 .antMatchers("/fragments/**");
     }
 
@@ -67,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoringAntMatchers("/reply/ajax/**")
                 .ignoringAntMatchers("/notice/ajax/**")
                 .ignoringAntMatchers("/summernote/**")
+                .ignoringAntMatchers("/map/**")
                 .ignoringAntMatchers("/api/**")
                 .and()
                 .formLogin()

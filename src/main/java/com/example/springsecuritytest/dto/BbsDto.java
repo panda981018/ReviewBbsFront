@@ -21,6 +21,7 @@ public class BbsDto {
     private String ipAddr; // 작성자 ip주소
     private double latitude = 0.0; // 위도
     private double longitude = 0.0; // 경도
+    private String placeName;
 
     public BbsEntity toEntity() {
         return BbsEntity.builder()
@@ -33,13 +34,14 @@ public class BbsDto {
                 .ipAddr(ipAddr)
                 .latitude(latitude)
                 .longitude(longitude)
+                .placeName(placeName)
                 .build();
     }
 
     @Builder
     public BbsDto(Long id, String bbsTitle, String bbsContents, String bbsDate,
                   int bbsViews, int likeCnt, Long categoryId, String bbsWriter, int replyCnt, String ipAddr,
-                  double latitude, double longitude) {
+                  double latitude, double longitude, String placeName) {
         this.id = id;
         this.bbsTitle = bbsTitle;
         this.bbsContents = bbsContents;
@@ -52,5 +54,6 @@ public class BbsDto {
         this.ipAddr = ipAddr;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.placeName = placeName;
     }
 }
