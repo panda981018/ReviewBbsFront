@@ -1,10 +1,7 @@
 package com.example.springsecuritytest.controller;
 
 import com.example.springsecuritytest.dto.*;
-import com.example.springsecuritytest.service.BbsService;
-import com.example.springsecuritytest.service.CategoryService;
-import com.example.springsecuritytest.service.HeartService;
-import com.example.springsecuritytest.service.ReplyService;
+import com.example.springsecuritytest.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +26,7 @@ public class BbsController {
     private final CategoryService categoryService;
     private final ReplyService replyService;
     private final HeartService heartService;
+    private final FavoriteService favoriteService;
 
     @GetMapping
     public String defaultCategory(HttpSession session) {
@@ -46,7 +44,7 @@ public class BbsController {
     public String getAllBbs(@RequestParam(required = false) String category, Model model) {
         // view에서 category에 대한 정보를 표시하기 위해
         // (session.categoryList는 index 0 부터 시작. DB의 카테고리는 1부터 시작. 따라서 -1)
-        model.addAttribute("categoryIndex", Long.parseLong(category) - 1);
+        model.addAttribute("categoryId", Long.parseLong(category) - 1);
         return "post/post";
     }
 
@@ -75,6 +73,7 @@ public class BbsController {
         HashMap<String, Object> dataMap = bbsService.getBbs(Long.parseLong(id));
         MemberDto memberDto = (MemberDto) session.getAttribute("memberInfo");
         HeartDto heartDto = heartService.findHeartObject(Long.parseLong(id), memberDto.getId());
+        boolean favDto = favoriteService.findFavObject(Long.parseLong(id), memberDto.getId());
 
         if (dataMap.get("bbsDto") instanceof BbsDto) {
             bbs = (BbsDto) dataMap.get("bbsDto");
@@ -90,6 +89,7 @@ public class BbsController {
         model.addAttribute("bbs", bbs);
         model.addAttribute("categoryId", viewCategoryId);
         model.addAttribute("heartObj", heartDto);
+        model.addAttribute("favObj", favDto);
 
         return "post/viewBbs";
     }

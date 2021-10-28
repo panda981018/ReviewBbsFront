@@ -1,4 +1,4 @@
-package com.example.springsecuritytest.domain.repository;
+package com.example.springsecuritytest.domain.repository.bbs;
 
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
@@ -20,6 +20,8 @@ public interface BbsRepository extends JpaRepository<BbsEntity, Long> {
     // 작성자 검색
     Page<BbsEntity> findByCategoryIdAndBbsWriter(Pageable pageable, CategoryEntity category, MemberEntity member);
     Page<BbsEntity> findByCategoryId(CategoryEntity category, Pageable pageable);
+    // 카테고리 상관없이 모두 찾기
+    Page<BbsEntity> findAll(Pageable pageable);
     Optional<BbsEntity> findById(Long id);
     void deleteById(Long id);
 }

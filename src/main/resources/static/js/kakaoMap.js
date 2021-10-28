@@ -2,14 +2,20 @@ let center; // 중심점
 let map; // 지도
 let infoWindow; // 정보창
 let customOverlay; // 현재 위치를 표시하기 위한 overlay
-let geocoder; // 주소-좌표 변환 객체
 let saveLat; // 저장할 위도
 let saveLng; //  저장할 경도
 let savePlaceName; // 저장할 장소 이름
+let currPositionOnAndOff = true; // 현재 위치 버튼 on/off 여부
 
 let markers = []; // 마커를 담을 배열
 
 $('#findCurrentLocation').on('click', function () { // 현재 위치로 이동하게 하는 이벤트 리스너
+    if (currPositionOnAndOff) { // 현재 위치 버튼이 켜져있는걸 off 할 생각
+        currPositionOnAndOff = false;
+        $('#currentImg').css('filter', 'opacity(0.5) drop-shadow(0 0 0 lightgray)');
+    } else {
+        $('#currentImg').css('filter', 'opacity(0.5) drop-shadow(0 0 0 #0000FFFF)');
+    }
     getCurrentLocation();
 });
 
@@ -23,13 +29,18 @@ $('#submit').on('click', () => searchPlaces()); // 검색버튼
 // 여기서부터는 함수
 // 지도 초기화
 function initMap(lat, lng, type) {
+    map = null;
+    center = null;
+    infoWindow = null;
+    customOverlay = null;
+
     center = new kakao.maps.LatLng(lat, lng);
     const options = { // map 옵션
         center: center
     };
 
     map = new kakao.maps.Map($('#map')[0], options); // 지도 생성 및 객체 리턴턴
-    geocoder = new kakao.maps.services.Geocoder();
+    $('#currentImg').css('filter', 'opacity(0.5) drop-shadow(0 0 0 #0000FFFF)'); // 현재 위치를 받는 중
 
     infoWindow = new kakao.maps.InfoWindow({
         // content: msg,
@@ -50,9 +61,8 @@ function initMap(lat, lng, type) {
                 position: center,
                 zIndex: 100
             });
-
-            map.panTo(center); // 부드럽게 중심이동
             map.relayout();
+            map.panTo(center); // 부드럽게 중심이동
         }, 500); // sleep(500)
     } else {
         setTimeout(() => {
@@ -63,29 +73,11 @@ function initMap(lat, lng, type) {
     }
 }
 
-// function displayAddress(result, status) {
-//     if (status === kakao.maps.services.Status.OK) {
-//         console.log(result);
-//     }
-// }
-
-// 원하는 위치를 센터로 정하기
-// function setCenter(message, marker) {
-//     if (message !== '') {
-//         infoWindow.setContent(message); // infowindow에 표시할 content
-//         infoWindow.setPosition(center); // infowindow를 표시할 위치
-//         infoWindow.open(map, marker); // infowindow를 보이게 하기
-//     }
-//
-//     map.setLevel(4); // map 줌 레벨 설정
-//     marker.setMap(map); // 마커를 맵에 붙인다.
-//     map.panTo(marker.getPosition()); // 중심 옮길 때 부드럽게 옮기기
-// }
-
 // 현재 위치의 정보를 가져온다
 function getCurrentLocation() {
     if (navigator.geolocation) { // geolocation을 사용할 수 있다면
-        navigator.geolocation.getCurrentPosition(function (position) {
+        navigator.geolocation.getCurrentPosition(function (position) { // 현재 위치를 받는 중
+            $('#currentImg').css('filter', 'opacity(0.5) drop-shadow(0 0 0 #0000FFFF)');
             center = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
             const currHtml = '<svg style="width:40px; height: 30px;">' +
@@ -99,6 +91,14 @@ function getCurrentLocation() {
             });
 
             map.panTo(center); // 부드럽게 중심이동
+
+            kakao.maps.event.addListener(map, 'dragStart', function () {
+                if (customOverlay !== null) {
+                    customOverlay.setMap(null);
+                }
+                currPositionOnAndOff = false;
+                $('#currentImg').css('filter', 'opacity(0.5) drop-shadow(0 0 0 lightgray)');
+            });
         });
     } else {
         alert('현재 위치를 받아올 수 없음.');
@@ -110,18 +110,20 @@ function searchPlaces() {
     const searchObject = new kakao.maps.services.Places(); // 검색 객체 생성
     const keyword = $('#keyword').val(); // 검색창에 입력된 값을 가져온다.
     const location = map.getCenter();
-    searchObject.keywordSearch(keyword, searchSuccess, {
-        location: location,
-        radius: 8000,
-        sort: kakao.maps.services.SortBy.DISTANCE
+    searchObject.keywordSearch(keyword, searchSuccess, {// 검색 option
+        location: location, // 현재 맵의 center 기준
+        radius: 8000, // 검색 반경 설정
+        sort: kakao.maps.services.SortBy.DISTANCE // 거리순 정렬
     });
 }
 
 // 키워드 검색 완료 시 호출되는 콜백함수
 function searchSuccess(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
-        if (customOverlay !== null)
+        if (customOverlay !== null) {
             customOverlay.setMap(null);
+            $('#currentImg').css('filter', 'lightgray');
+        }
 
         displayPlaces(data); // 검색 목록과 마커를 표시
         displayPagination(pagination); // 페이지 번호를 표출
@@ -151,9 +153,9 @@ function displayPlaces(places) {
         let itemEle = getListItem(i, places[i]); // 검색 결과 항목 element를 생성함.
 
         bounds.extend(placePosition); // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기 위해
-        (function (marker, title) {
+        (function (marker, title, position) {
             kakao.maps.event.addListener(marker, 'mouseover', function () { // mouseover 했을 때
-                displayInfowindow(marker, title);
+                displayInfoWindow(marker, title);
             });
 
             kakao.maps.event.addListener(marker, 'mouseout', function () { // mouseout을 했을 때
@@ -163,7 +165,13 @@ function displayPlaces(places) {
             itemEle[0].onmouseout = function () {
                 infoWindow.close();
             }
-        })(marker, places[i].place_name);
+
+            itemEle[0].onclick = function () {
+                // map.setPosition(placePosition);
+                map.panTo(placePosition); // 해당 포지션으로 이동
+                displayInfoWindow(marker, title);
+            }
+        })(marker, places[i].place_name, placePosition);
 
         fragment[0].append(itemEle[0]);
     }
@@ -177,7 +185,7 @@ function displayPlaces(places) {
 // 검색결과 항목을 Element로 반환하는 함수입니다
 function getListItem(index, places) {
 
-    let el = $('<tr>', {});
+    let el = $('<li>', {});
     let itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' +
         '<div class="info">' +
         '   <h6>' + places.place_name + '</h6>';
@@ -207,12 +215,14 @@ function savedPositionMarker(position) {
         image: markerImage
     });
 
+    displayInfoWindow(marker, )
+
     marker.setMap(map);
     return marker;
 }
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
-function addMarker(position, idx, title) {
+function addMarker(position, idx) {
     // 마커 이미지 url, 스프라이트 이미지를 씁니다
     const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
     const imageSize = new kakao.maps.Size(36, 37);  // 마커 이미지의 크기
@@ -241,8 +251,6 @@ function addMarker(position, idx, title) {
 
             console.log("위도: " + saveLat + "경도: " + saveLng);
             closeMapModal();
-        } else {
-
         }
     });
     marker.setMap(map); // 지도 위에 마커를 표출합니다
@@ -251,7 +259,7 @@ function addMarker(position, idx, title) {
     return marker;
 }
 
-function displayInfowindow(marker, title) {
+function displayInfoWindow(marker, title) {
     const content = '<div style="padding:3px; z-index:100; width: 220px;">' + title + '</div>';
 
     infoWindow.setContent(content);
@@ -265,14 +273,12 @@ function displayPagination(pagination) {
     let i;
 
     // 기존에 추가된 페이지 번호를 삭제
-    while (paginationEle[0].hasChildNodes()) {
-        paginationEle[0].removeChild(paginationEle[0].lastChild);
-    }
+    removeAllChildNods(paginationEle[0]);
 
     for (i = 1; i <= pagination.last; i++) {
-        const ele = document.createElement('a');
-        ele.href = '#';
+        const ele = document.createElement('button');
         ele.innerHTML = i; // 페이지 넘버
+        ele.addClass('btn');
 
         if (i === pagination.current) {
             ele.className = 'on';
@@ -292,27 +298,23 @@ function displayPagination(pagination) {
 function closeMapModal() {
     $('#mapDialog').modal('hide');
     $('#mapDialog').on('hide.bs.modal', function () {
-        $('#hiddenLat').val(saveLat);
-        $('#hiddenLng').val(saveLng);
-        if (savePlaceName !== null) {
+        if (savePlaceName != undefined) {
             const mapBtn = $('#mapBtn')[0];
             const bEle = $('b.me-2')[0];
+            $('#hiddenLat').val(saveLat);
+            $('#hiddenLng').val(saveLng);
             $('#hiddenPlaceName').val(savePlaceName);
             bEle.innerHTML = savePlaceName;
         }
-
-        map = null;
-        center = null;
-        infoWindow = null;
-        customOverlay = null;
         $('#keyword').val('');
         const placeList = $('#placeList')[0];
-        while (placeList.hasChildNodes()) {
-            placeList.removeChild(placeList.lastChild);
-        }
-
-        while ($('#placePagination')[0].hasChildNodes()) {
-            $('#placePagination')[0].removeChild($('#placePagination')[0].lastChild);
+        if (placeList != undefined) {
+            while (placeList.hasChildNodes()) {
+                placeList.removeChild(placeList.lastChild);
+            }
+            while ($('#placePagination')[0].hasChildNodes()) {
+                $('#placePagination')[0].removeChild($('#placePagination')[0].lastChild);
+            }
         }
         removeMarker();
         removeAllChildNods($('#map')[0]);

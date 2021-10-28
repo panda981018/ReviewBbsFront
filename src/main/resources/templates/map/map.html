@@ -9,14 +9,16 @@
     <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ab5c04d7f4a5431d03ba14907e51d79a&libraries=services"></script>
     <link rel="stylesheet" type="text/css" href="/css/map.css">
-    <link rel="stylesheet" type="text/css" href="/css/bbs.css">
     <title>Map</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div id="map">
+        <div id="menu_wrap" class="bg_white">
+            <ul id="placeList"></ul>
+            <div id="placePagination"></div>
+        </div>
         <div class="current-loc">
-            <div id="placeList"></div>
             <button type="button" id="findCurrentLocation">
                 <img id="currentImg" src="/img/current.png">
             </button>

@@ -1,4 +1,4 @@
-package com.example.springsecuritytest.domain.repository;
+package com.example.springsecuritytest.domain.repository.bbs;
 
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;

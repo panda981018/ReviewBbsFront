@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class BbsApiController {
                 PageRequest.of(page-1, perPage, Sort.by(Sort.Direction.DESC, column));
 
         HashMap<String, Object> dataObj
-                = bbsService.findAll(Long.parseLong(category), pageRequest, searchType, keyword);
+                = bbsService.getBbsPagination(Long.parseLong(category), pageRequest, searchType, keyword);
         List<BbsDto> contents = (List<BbsDto>) dataObj.get("bbsDtoList");
         long totalCount = (long) dataObj.get("totalCount");
 
@@ -60,6 +59,19 @@ public class BbsApiController {
         responseMap.put("data", dataMap);
 
         return responseMap;
+    }
+
+    @ResponseBody
+    @GetMapping("/get/home")
+    public HashMap<String, List<BbsDto>> getMemberHomeData(@RequestParam String perPage) {
+        PageRequest pageRequest =
+                PageRequest.of(0, Integer.parseInt(perPage), Sort.by(Sort.Direction.DESC, "bbsDate"));
+
+        List<BbsDto> bbsDtoList = bbsService.findAll(pageRequest);
+        HashMap<String, List<BbsDto>> jsonMap = new HashMap<>();
+        jsonMap.put("data", bbsDtoList);
+
+        return jsonMap;
     }
 
     @ResponseBody

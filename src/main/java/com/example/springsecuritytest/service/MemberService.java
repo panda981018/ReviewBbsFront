@@ -1,17 +1,13 @@
 package com.example.springsecuritytest.service;
 
 import com.example.springsecuritytest.domain.entity.MemberEntity;
-import com.example.springsecuritytest.domain.repository.MemberQueryRepository;
-import com.example.springsecuritytest.domain.repository.MemberRepository;
+import com.example.springsecuritytest.domain.repository.member.MemberQueryRepository;
+import com.example.springsecuritytest.domain.repository.member.MemberRepository;
 import com.example.springsecuritytest.dto.MemberDto;
-import com.example.springsecuritytest.enumclass.Gender;
 import com.example.springsecuritytest.enumclass.Role;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

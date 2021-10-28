@@ -4,10 +4,10 @@ import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
 import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.domain.entity.ReplyEntity;
-import com.example.springsecuritytest.domain.repository.BbsQueryRepository;
-import com.example.springsecuritytest.domain.repository.BbsRepository;
+import com.example.springsecuritytest.domain.repository.bbs.BbsQueryRepository;
+import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
 import com.example.springsecuritytest.domain.repository.CategoryRepository;
-import com.example.springsecuritytest.domain.repository.MemberRepository;
+import com.example.springsecuritytest.domain.repository.member.MemberRepository;
 import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import lombok.AllArgsConstructor;
@@ -70,8 +70,18 @@ public class BbsService {
 
         return dataMap;
     }
+    // 카테고리 상관없이 찾기
+    public List<BbsDto> findAll(Pageable pageable) {
+        Page<BbsEntity> paging = bbsRepository.findAll(pageable);
+        List<BbsEntity> bbsEntities = paging.getContent();
+        List<BbsDto> bbsDtoList = new ArrayList<>();
+        for (BbsEntity bbs : bbsEntities) {
+            bbsDtoList.add(bbs.toDto());
+        }
+        return bbsDtoList;
+    }
 
-    public HashMap<String, Object> findAll(Long categoryId, Pageable pageable, String searchType, String keyword) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
+    public HashMap<String, Object> getBbsPagination(Long categoryId, Pageable pageable, String searchType, String keyword) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
         Page<BbsEntity> bbsEntities;
         List<BbsEntity> entities;
         List<BbsDto> bbsDtoList = new ArrayList<>();

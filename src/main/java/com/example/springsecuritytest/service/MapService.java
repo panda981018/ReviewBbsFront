@@ -1,39 +1,41 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.repository.BbsQueryRepository;
+import com.example.springsecuritytest.domain.entity.FavoriteEntity;
+import com.example.springsecuritytest.domain.repository.FavoriteRepository;
+import com.example.springsecuritytest.domain.repository.bbs.BbsQueryRepository;
+import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
+import com.example.springsecuritytest.dto.FavoriteDto;
 import com.example.springsecuritytest.dto.MemberDto;
-import com.querydsl.core.Tuple;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class MapService {
 
-    private final BbsQueryRepository bbsQueryRepository;
+    private final FavoriteRepository favoriteRepository;
 
-    public Set<HashMap<String, Object>> getPlaceInfo(MemberDto memberDto) {
-        List<Tuple> info = bbsQueryRepository.getMapElements(memberDto.toEntity());
-        Set<HashMap<String, Object>> rtSet = new HashSet<>();
+    public HashMap<String, Object> getPlaceInfo(MemberDto memberDto, Pageable pageable) {
+        HashMap<String, Object> pagingMap = new HashMap<>();
+        // dto 리스트, total 넘기기
+        Page<FavoriteEntity> favEntities = favoriteRepository.findByMember(memberDto.toEntity(), pageable);
+        List<FavoriteDto> favDtos = new ArrayList<>();
 
-        for (int i = 0; i < info.size(); i++) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            Tuple tuple = (Tuple) info.get(i);
-            if (tuple.get(0, Double.class) == 0.0) {
-                continue;
-            } else {
-                hashMap.put("latitude", tuple.get(0, Double.class));
-                hashMap.put("longitude", tuple.get(1, Double.class));
-                hashMap.put("placeName", tuple.get(2, String.class));
-            }
-            rtSet.add(hashMap);
+        for (FavoriteEntity fav : favEntities.getContent()) {
+            Long bid = fav.getBbs().getId();
+            FavoriteDto favDto = fav.toDto();
+            favDto.setBbsId(bid);
+            favDtos.add(favDto);
         }
+        pagingMap.put("data", favDtos);
+        pagingMap.put("totalPages", favEntities.getTotalPages());
 
-        return rtSet;
+        return pagingMap;
     }
 }

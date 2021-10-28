@@ -1,4 +1,4 @@
-package com.example.springsecuritytest.domain.repository;
+package com.example.springsecuritytest.domain.repository.member;
 
 import com.example.springsecuritytest.domain.entity.MemberEntity;
 import com.example.springsecuritytest.enumclass.Role;

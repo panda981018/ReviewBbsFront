@@ -6,83 +6,140 @@
 <head>
     <link rel="stylesheet" type="text/css" href="/css/viewbbs.css">
     <link rel="stylesheet" type="text/css" href="/css/reply.css">
+    <link rel="stylesheet" type="text/css" href="/css/map.css">
+    <link rel="stylesheet" type="text/css" href="/css/bbs.css">
+    <!-- kakao map 라이브러리 불러오기 -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ab5c04d7f4a5431d03ba14907e51d79a" defer></script>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ab5c04d7f4a5431d03ba14907e51d79a&libraries=services"></script>
     <title>Post</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <div id="writeContent" class="d-flex flex-column justify-content-start">
-        <div id="categoryInfo" class="mb-3">
-            <h1>
-                <a th:href="@{'/post/bbs?category=' + ${session.categoryList.get(categoryId).getId()}}"
-                   th:text="${session.categoryList.get(categoryId).getName()}"></a>
-            </h1>
-            <small th:text="${session.categoryList.get(categoryId).getDescription()}" class="text-muted"></small>
-        </div>
-        <table id="tableDiv" class="table table-responsive">
-            <tr id="bbsTitleTr">
-                <th>제목</th>
-                <td colspan="7" th:text="${bbs.bbsTitle}"></td>
-            </tr>
-
-            <tr id="bbsWriterTr">
-                <th>작성자</th>
-                <td th:text="${bbs.bbsWriter}"></td>
-                <th>작성 날짜</th>
-                <td th:text="${bbs.bbsDate}"></td>
-            </tr>
-
-            <tr id="bbsContentsTr">
-                <td id="bbsContents" class="ps-3 pt-3"
-                    th:utext="${bbs.bbsContents}"></td>
-            </tr>
-        </table>
-        <div id="utilBtnDiv" class="d-flex justify-content-between align-items-center my-3">
-            <div id="likeOrDislikeBtnGroup" class="d-flex justify-content-start align-items-center">
-                <button type="button" id="likeBtn" class="btn btn-outline-secondary me-3">
-                    <th:block th:if="${heartObj != null && heartObj.isLiked}">
-                        <img class="likeBtnImg me-2" id="heartImg" src="/img/heart.png">
-                    </th:block>
-                    <th:block th:unless="${heartObj != null && heartObj.isLiked}">
-                        <img class="likeBtnImg me-2" id="emptyHeartImg" src="/img/emptyHeart.png">
-                    </th:block>
-                    <strong class="me-2">LIKE</strong>
-                    <span id="likeCntText" th:text="${bbs.likeCnt}"></span>
-                </button>
-                <button type="button" id="replyBtn" class="btn btn-outline-secondary">
-                    <img class="commentImg me-2" id="commentImg" src="/img/comment.png">
-                    <span th:text="${bbs.replyCnt}"></span>
-                </button>
+    <div layout:replace="fragments/postnav :: NaviPost"></div>
+    <div id="writeContent" class="d-flex flex-column">
+        <div id="outer-div" class="d-flex flex-column justify-content-start">
+            <div id="categoryInfo" class="mb-3">
+                <h1>
+                    <a th:href="@{'/post/bbs?category=' + ${session.categoryList.get(categoryId).getId()}}"
+                       th:text="${session.categoryList.get(categoryId).getName()}"></a>
+                </h1>
+                <small th:text="${session.categoryList.get(categoryId).getDescription()}" class="text-muted"></small>
             </div>
-            <div id="ownerBtnGroup" class="d-flex justify-content-end align-items-center"
-                 th:if="${bbs.bbsWriter == session.memberInfo.getNickname()}">
-                <button type="button" id="deleteBbsBtn" class="btn btn-outline-danger me-3">삭제</button>
-                <a th:href="@{'/post/bbs/update?id=' + ${bbs.id}}" id="updateBtn" class="btn btn-primary">수정</a>
+            <table id="tableDiv" class="table table-responsive">
+                <tr id="bbsTitleTr">
+                    <th class="bbs-cell">제목</th>
+                    <td class="bbs-cell" colspan="5" th:text="${bbs.bbsTitle}"></td>
+                </tr>
+
+                <tr id="bbsWriterTr">
+                    <th class="bbs-cell">작성자</th>
+                    <td class="bbs-cell bbs-writer" colspan="2" th:text="${bbs.bbsWriter}"></td>
+                    <th class="bbs-cell">작성 날짜</th>
+                    <td class="bbs-cell bbs-date" colspan="2" th:text="${bbs.bbsDate}"></td>
+                </tr>
+
+                <tr id="bbsContentsTr" class="mb-4">
+                    <td colspan="6" id="bbsContents" class="ps-3 pt-3 bbs-cell"
+                        th:utext="${bbs.bbsContents}">
+                    </td>
+                </tr>
+            </table>
+            <!-- 장소 정보 -->
+            <div th:if="${bbs.placeName != null}" id="locationInfo"
+                 class="d-flex justify-content-between align-items-center px-3">
+                <div id="savedLocInfo">
+                    <i class="fas fa-lg fa-map-marker-alt me-3"></i>
+                    <strong class="placeName" th:text="${bbs.placeName}"></strong>
+                </div>
+                <div>
+                    <button id="addMap" class="btn btn-outline-secondary">
+                        <th:block th:if="${favObj}">
+                            <i class="fas fa-minus me-3"></i><span class="tooltip-text">Map에서 제거하기</span>
+                        </th:block>
+                        <th:block th:unless="${favObj}">
+                            <i class="fas fa-plus me-3"></i><span class="tooltip-text">Map에 추가하기</span>
+                        </th:block>
+                    </button>
+                </div>
             </div>
+
+            <!-- 지도 dialog-->
+            <div id="mapDialog" class="modal fade" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="modalLabel">Map</h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body d-flex flex-column">
+                            <div id="map" style="width: 768px; height: 600px;"></div>
+                            <div class="current-loc">
+                                <button type="button" id="findCurrentLocation">
+                                    <img id="currentImg" src="/img/current.png">
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="utilBtnDiv" class="d-flex justify-content-between align-items-center my-3">
+                <div id="likeOrDislikeBtnGroup" class="d-flex justify-content-start align-items-center">
+                    <button type="button" id="likeBtn" class="btn btn-outline-secondary me-3">
+                        <th:block th:if="${heartObj != null && heartObj.isLiked}">
+                            <img class="likeBtnImg me-2" id="heartImg" src="/img/heart.png">
+                        </th:block>
+                        <th:block th:unless="${heartObj != null && heartObj.isLiked}">
+                            <img class="likeBtnImg me-2" id="emptyHeartImg" src="/img/emptyHeart.png">
+                        </th:block>
+                        <strong class="me-2">LIKE</strong>
+                        <span id="likeCntText" th:text="${bbs.likeCnt}"></span>
+                    </button>
+                    <button type="button" id="replyBtn" class="btn btn-outline-secondary">
+                        <img class="commentImg me-2" id="commentImg" src="/img/comment.png">
+                        <span th:text="${bbs.replyCnt}"></span>
+                    </button>
+                </div>
+                <div id="ownerBtnGroup" class="d-flex justify-content-end align-items-center"
+                     th:if="${bbs.bbsWriter == session.memberInfo.getNickname()}">
+                    <button type="button" id="deleteBbsBtn" class="btn btn-outline-danger me-3">삭제</button>
+                    <a th:href="@{'/post/bbs/update?id=' + ${bbs.id}}" id="updateBtn" class="btn btn-primary">수정</a>
+                </div>
+            </div>
+            <div layout:replace="fragments/reply :: replyFragment"></div>
         </div>
-        <div layout:replace="fragments/reply :: replyFragment"></div>
     </div>
 
 </div>
 <th:block layout:fragment="script">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="/js/post.js"></script>
-    <script src="/js/reply.js"></script>
+    <script type="text/javascript" src="/js/post.js"></script>
+    <script type="text/javascript" src="/js/kakaoMap.js"></script>
+    <script type="text/javascript" src="/js/reply.js"></script>
     <script>
         window.onload = function () {
             //<[CDATA[
             const bbsId = [[${bbs.id}]];
             const categoryId = [[${bbs.categoryId}]];
+            const lat = [[${bbs.latitude}]];
+            const lng = [[${bbs.longitude}]];
+            const favObj = [[${favObj}]];
+            //]]>
             createReply(bbsId); // 댓글 생성
             deleteBbs(bbsId, categoryId); // 게시글 삭제 리스너
             autoResizing();
+            showMapModal(lat, lng); // 지도 모달 오픈
             deleteReply(bbsId); // 댓글 삭제 리스너
             showReplyModal(); // 댓글 수정 모달
             modalListener(); // 댓글 수정 모달에서 수정 눌렀을 때
             emojiClickEvent(); // 이모지 눌렀을 때
             replyListener(); // 댓글 이미지 눌렀을 때
             clickLikeBtn(bbsId); // 좋아요 눌렀을 때
-            //]]>
-
+            closeMapModal();
+            clickAddMapBtn(favObj, bbsId, lat, lng); // 내 map에 추가
         }
     </script>
 </th:block>

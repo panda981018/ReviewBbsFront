@@ -1,16 +1,49 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.w3.org/1999/xhtml"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
+    <link rel="stylesheet" type="text/css" href="/tui-grid/dist/tui-grid.css">
+    <link rel="stylesheet" type="text/css" href="/tui-pagination/dist/tui-pagination.css">
+    <script src="/tui-pagination/dist/tui-pagination.js" defer></script>
+    <script src="/tui-grid/dist/tui-grid.js" defer></script>
+    <style>
+        .new-list {
+            width: 70%;
+        }
+        #outer-div {
+            width: 100%;
+        }
+    </style>
     <title>Welcome</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="box" sec:authorize="isAuthenticated()">
+    <div id="outer-div" class="d-flex justify-content-evenly">
+        <!-- 최신글 리스트 -->
+        <div class="d-flex flex-column new-list">
+            <h2 class="mb-3">최신글 리스트</h2>
+            <div id="newGrid"></div>
+        </div>
+<!--        &lt;!&ndash; 인기글 리스트 &ndash;&gt;-->
+<!--        <div class="popular-list">-->
+
+<!--        </div>-->
     </div>
 </div>
+<th:block layout:fragment="script">
+    <!--  없으면 ajax가 동작하지 않음  -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="/js/homeGridSetting.js" defer></script>
+    <script>
+        window.onload = function () {
+            // setDatasource(); // 데이터 소스 정의 및 grid 생성
+            createGrid();
+            getBbsData();
+            // responseHandler();
+        }
+    </script>
+</th:block>
 </body>
 </html>

@@ -1,16 +1,21 @@
 package com.example.springsecuritytest.controller;
 
+import com.example.springsecuritytest.dto.FavoriteDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.MapService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,11 +32,17 @@ public class MapController { // anonymous
     // ajax
     @GetMapping("/getMarkers")
     @ResponseBody
-    public HashMap<String, Object> sendMarkerInfo(HttpSession session) {
-        Set<HashMap<String, Object>> result
-                = mapService.getPlaceInfo((MemberDto) session.getAttribute("memberInfo"));
+    public HashMap<String, Object> sendMarkerInfo(HttpServletRequest request, @RequestParam int page) {
+        HttpSession session = request.getSession();
+        PageRequest pageRequest = PageRequest.of(page-1, 5, Sort.by(Sort.Direction.ASC, "id"));
+
+        HashMap<String, Object> result
+                = mapService.getPlaceInfo((MemberDto) session.getAttribute("memberInfo"), pageRequest);
         HashMap<String, Object> hash = new HashMap<>();
-        hash.put("response", result);
+        List<FavoriteDto> dtos = (List<FavoriteDto>) result.get("data");
+        int totalPages = (int) result.get("totalPages");
+        hash.put("data", dtos);
+        hash.put("totalPages", totalPages);
         return hash;
     }
 }

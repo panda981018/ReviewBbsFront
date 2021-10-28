@@ -20,8 +20,6 @@ function createGrid(dataSource) {
             visiblePages: 5,
             centerAlign: true
         },
-        data: dataSource,
-        useClientSort: true,
         columns: [
             {
                 header: '번호',
@@ -78,6 +76,7 @@ function setDatasource() {
 
 function responseHandler() {
     grid.on('response', ev => { // readData의 결과를 받는 콜백함수
+        console.log(ev);
         const bbsData = JSON.parse(ev.xhr.response).data.contents;
         const resultCnt = JSON.parse(ev.xhr.response).data.pagination.totalCount;
         if (resultCnt > 0) {

@@ -1,3 +1,191 @@
 #map {
     width: 100vw;
 }
+
+.current-loc {
+    position: absolute;
+    z-index: 100;
+    top: 20px;
+    right: 20px;
+}
+
+/* 현재 위치 버튼 */
+.current-loc button {
+    padding: .3rem;
+    border: 1px solid lightgrey;
+    background-color: #ffffff;
+}
+
+/* 현재 위치 이미지 */
+#currentImg {
+    /*filter: opacity(0.5) drop-shadow(0 0 0 #0000ff);*/
+    object-fit: scale-down;
+    width: 1.5rem;
+    height: auto;
+}
+
+#menu_wrap {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    width: 30%;
+    margin: 10px 0 5px 10px;
+    padding: 5px 1px 0 1px;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 1000;
+    font-size: 12px;
+    border-radius: 10px;
+    max-height: 600px;
+}
+
+/* 검색 부분 div */
+.bg_white {
+    background: #fff;
+}
+
+/* 검색 결과 구분선 */
+#menu_wrap hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 2px solid #5F5F5F;
+    margin: 0;
+}
+
+#menu_wrap .option {
+    text-align: center;
+}
+
+#menu_wrap .option p {
+    margin: 10px 0;
+}
+
+#menu_wrap .option button {
+    margin-left: 5px;
+}
+
+#placeList {
+    padding: 1rem;
+}
+
+#placeList li {
+    list-style: none;
+}
+
+.item {
+    position: relative;
+    border-bottom: 1px solid #888;
+    margin-bottom: .5rem;
+    overflow: hidden;
+    cursor: pointer;
+    min-height: 65px;
+}
+
+.item span {
+    display: block;
+    margin-top: 4px;
+}
+
+.item h5,
+#placesList .item .info {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.item .info {
+    /*padding: 10px 0 10px 0px;*/
+    border-bottom: 1px solid lightslategray;
+}
+
+/* 검색 결과 도로명 */
+.info .gray {
+    color: #8a8a8a;
+}
+
+/* 검색 결과 지번주소 */
+.info .jibun {
+    padding-left: 26px;
+    background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+}
+
+.jibun-div {
+    margin-bottom: .5rem;
+}
+/* 검색 결과 전화번호 부분 */
+.info .tel {
+    color: #009900;
+}
+
+/* 페이지네이션 */
+#placePagination {
+    margin: 10px auto;
+    text-align: center;
+}
+
+/*  */
+/*#placePagination a {*/
+/*    display: inline-block;*/
+/*    text-decoration-line: none;*/
+/*    margin-right: 10px;*/
+/*    color: #777;*/
+/*}*/
+#placePagination .page-btn {
+    background-color: #ffffff;
+    border-radius: .3rem;
+    margin-right: 5px;
+}
+/* 클릭된 페이지 */
+#placePagination .on {
+    /*margin-right: 5px;*/
+    font-weight: bold;
+    /*font-size: 1.2rem;*/
+    cursor: default;
+    color: black;
+}
+
+/* 검색 div */
+.search {
+    width: 50%;
+    position: absolute;
+    z-index: 100;
+    top: 30px;
+    left: 30px;
+}
+
+/* map modal에서 검색하는 input 부분 */
+.search #keyword {
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 30px;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #565e64;
+    border-radius: .25rem;
+}
+
+/* map modal 검색버튼 */
+.search > #submit {
+    line-height: 30px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border: solid 1.2em #555;
+    border-radius: 3px;
+    cursor: pointer;
+    box-sizing: content-box;
+}
+
+.fav-info-title {
+    font-weight:bold;
+    font-size: 1.1rem;
+}
+
+.bAddr {
+    padding: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
