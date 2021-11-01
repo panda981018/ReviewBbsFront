@@ -68,7 +68,7 @@ function deleteBbs(bbsId, categoryId) { // 게시물 삭제
 function sortBbs() { // 정렬
     $('#sortStandard').on('change', function () {
         sortType = $('#sortStandard option:selected').val();
-        grid.readData(1, { "column" : sortType });
+        grid.readData(1, {"column": sortType});
     });
 }
 
@@ -79,11 +79,13 @@ function filterGrid() { // 검색 이벤트 핸들러
     if (input.val() === '') {
         alert('내용을 입력해주세요.');
     } else {
-        grid.readData(1, {"searchType" : selectedValue, "keyword" : input.val() });
+        grid.readData(1, {"searchType": selectedValue, "keyword": input.val()});
     }
 }
 
-$('#searchImg').on('click', function () { filterGrid(); });
+$('#searchImg').on('click', function () {
+    filterGrid();
+});
 $('#searchInput').on('keydown', function (key) {
     if (key.key === 'Enter') {
         filterGrid();
@@ -117,25 +119,20 @@ function clickLikeBtn(bbsId) { // Like 버튼을 눌렀을 때 동작하는 함�
         $.ajax({
             url: '/api/heart/like',
             method: 'POST',
-            data: JSON.stringify({ "bbsId" : bbsId, "type" : type }),
+            data: JSON.stringify({"bbsId": bbsId, "type": type}),
             dataType: "json",
             contentType: 'application/json;charset=utf-8',
             success: function (jsonResult) {
-                if (jsonResult.resultCode === 0) {
-                    if (type === 'cancel') {
-                        $('#likeBtn img').attr('src', '/img/emptyHeart.png');
-                        $('#likeBtn img').attr('id', 'emptyHeartImg');
-                    } else {
-                        $('#likeBtn img').attr('src', '/img/heart.png');
-                        $('#likeBtn img').attr('id', 'heartImg');
-                    }
-                    const likeText = $('span#likeCntText');
-                    console.log(likeText);
-
-                    $('span#likeCntText')[0].innerHTML = jsonResult.likeCnt;
-                } else if (jsonResult.resultCode === -1) {
-                    alert('like Count를 업데이트 하던 중 오류가 발생했습니다.');
+                if (type === 'cancel') {
+                    $('#likeBtn img').attr('src', '/img/emptyHeart.png');
+                    $('#likeBtn img').attr('id', 'emptyHeartImg');
+                } else {
+                    $('#likeBtn img').attr('src', '/img/heart.png');
+                    $('#likeBtn img').attr('id', 'heartImg');
                 }
+                const likeText = $('span#likeCntText');
+
+                likeText[0].innerHTML = jsonResult.likeCnt;
             }
         })
     });
@@ -165,10 +162,10 @@ function clickAddMapBtn(favObj, bbsId, lat, lng) {
         e.stopPropagation(); // 버블링 중단
         // bbsId, type(add/cancel), lat, lng
         const data = {
-            "bbsId" : bbsId,
-            "lat" : lat,
+            "bbsId": bbsId,
+            "lat": lat,
             "lng": lng,
-            "placeName" : placeName
+            "placeName": placeName
         }
         if (!isAdded) { // 추가 x -> o
             data.type = "add";
@@ -185,7 +182,7 @@ function clickAddMapBtn(favObj, bbsId, lat, lng) {
                 if (mapData.status === "OK") {
                     // map에 추가되었습니다. 확인창 표시
                     // + 버튼을 - 버튼으로 바꾸기
-                    while(addBtn[0].hasChildNodes()) {
+                    while (addBtn[0].hasChildNodes()) {
                         addBtn[0].removeChild(addBtn[0].lastChild);
                     }
 

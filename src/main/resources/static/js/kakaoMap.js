@@ -215,8 +215,6 @@ function savedPositionMarker(position) {
         image: markerImage
     });
 
-    displayInfoWindow(marker, )
-
     marker.setMap(map);
     return marker;
 }

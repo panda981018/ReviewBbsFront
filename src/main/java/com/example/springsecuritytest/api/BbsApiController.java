@@ -25,7 +25,7 @@ public class BbsApiController {
                                                  @RequestParam int page,
                                                  @RequestParam(required = false) String column,
                                                  @RequestParam(required = false) String searchType,// 검색 유형
-                                                 @RequestParam(required = false) String keyword) {
+                                                 @RequestParam(required = false) String keyword) throws Exception {
         PageRequest pageRequest =
                 PageRequest.of(page-1, perPage, Sort.by(Sort.Direction.DESC, column));
 
@@ -76,7 +76,7 @@ public class BbsApiController {
 
     @ResponseBody
     @PostMapping("/update/views") // 조회수 업데이트 기능
-    public void updateViews(@RequestBody HashMap<String, String> bbsIdObj) {
+    public void updateViews(@RequestBody HashMap<String, String> bbsIdObj) throws Exception {
         bbsService.updateViews(Long.parseLong(bbsIdObj.get("id")));
     }
 

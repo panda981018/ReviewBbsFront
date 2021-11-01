@@ -23,7 +23,7 @@ public class HeartApiController {
 
     @ResponseBody
     @PostMapping("/like")
-    public HashMap<String, Object> likeBbs(@RequestBody HashMap<String, String> likeObj, HttpSession session) {
+    public HashMap<String, Integer> likeBbs(@RequestBody HashMap<String, String> likeObj, HttpSession session) throws Exception {
         String bid = likeObj.get("bbsId");
         String type = likeObj.get("type");
         MemberDto memberDto = (MemberDto) session.getAttribute("memberInfo");
@@ -37,13 +37,7 @@ public class HeartApiController {
         }
         updatedLikeCnt = bbsService.updateLikeCount(Long.parseLong(bid), type);
 
-
-        HashMap<String, Object> mapData = new HashMap<>();
-        if (updatedLikeCnt == -1) { // 게시물이 존재하지 않음.
-            mapData.put("resultCode", -1); // likeCnt 업데이트 오류
-        } else { // 게시물이 존재함.
-            mapData.put("resultCode", 0); // likeCnt 업데이트 성공
-        }
+        HashMap<String, Integer> mapData = new HashMap<>();
         mapData.put("likeCnt", updatedLikeCnt);
 
         return mapData;

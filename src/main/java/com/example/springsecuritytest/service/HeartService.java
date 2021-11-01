@@ -24,27 +24,20 @@ public class HeartService {
     // 2-1. 존재한다면 기존 객체의 isLiked를 true로 변경
     // 2-2. 존재하지 않는다면 새로운 HeartEntity를 생성하여 isLiked를 true로 설정
     // 3. 마지막에 save
-    public void plusHeartCount(Long bid, Long memberId) {
-        Optional<BbsEntity> optionalBbs = bbsRepository.findById(bid);
-        Optional<MemberEntity> optionalMember = memberRepository.findById(memberId);
-
-        BbsEntity bbsEntity = null;
-        MemberEntity memberEntity = null;
-
-        HeartEntity heartEntity = null;
-
-        if (optionalBbs.isPresent() && optionalMember.isPresent()) {
-            bbsEntity = optionalBbs.get();
-            memberEntity = optionalMember.get();
-        }
+    public void plusHeartCount(Long bid, Long memberId) throws Exception {
+        BbsEntity bbsEntity = bbsRepository.findById(bid)
+                .orElse(null);
+        MemberEntity memberEntity = memberRepository.findById(memberId)
+                .orElse(null);
+        HeartEntity heartEntity;
 
         if (heartRepository.existsByBbsAndMember(bbsEntity, memberEntity)) { // 2-1의 경우
-            Optional<HeartEntity> oldHeartEntity = heartRepository.findByBbsAndMember(bbsEntity, memberEntity);
-            if (oldHeartEntity.isPresent()) {
-                HeartDto heartDto = oldHeartEntity.get().toDto();
-                heartDto.setLiked(true);
-                heartEntity = heartDto.toEntity();
-            }
+            HeartEntity oldHeartEntity = heartRepository.findByBbsAndMember(bbsEntity, memberEntity).get();
+
+            HeartDto heartDto = oldHeartEntity.toDto();
+            heartDto.setLiked(true);
+            heartEntity = heartDto.toEntity();
+
         } else { // 2-2의 경우
             heartEntity = HeartEntity.builder()
                     .isLiked(true)
@@ -56,46 +49,32 @@ public class HeartService {
         heartRepository.save(heartEntity);
     }
 
-    public void minusHeartCount(Long bid, Long memberId) {
-        Optional<BbsEntity> optionalBbs = bbsRepository.findById(bid);
-        Optional<MemberEntity> optionalMember = memberRepository.findById(memberId);
+    public void minusHeartCount(Long bid, Long memberId) throws Exception {
+        BbsEntity bbsEntity = bbsRepository.findById(bid)
+                .orElse(null);
+        MemberEntity memberEntity = memberRepository.findById(memberId)
+                .orElse(null);
 
-        BbsEntity bbsEntity = null;
-        MemberEntity memberEntity = null;
+        HeartEntity oldHeartEntity = heartRepository.findByBbsAndMember(bbsEntity, memberEntity)
+                .orElse(null);
 
-        if (optionalBbs.isPresent() && optionalMember.isPresent()) {
-            bbsEntity = optionalBbs.get();
-            memberEntity = optionalMember.get();
-        }
 
-        Optional<HeartEntity> optionalHeartEntity = heartRepository.findByBbsAndMember(bbsEntity, memberEntity);
-        if (optionalHeartEntity.isPresent()) {
-            HeartDto heartDto = optionalHeartEntity.get().toDto();
-            heartDto.setLiked(false);
-            HeartEntity heartEntity = heartDto.toEntity();
-            heartEntity.setBbs(bbsEntity);
-            heartEntity.setMember(memberEntity);
-            heartRepository.save(heartEntity);
-        }
+        HeartDto heartDto = oldHeartEntity.toDto();
+        heartDto.setLiked(false);
+        HeartEntity heartEntity = heartDto.toEntity();
+        heartEntity.setBbs(bbsEntity);
+        heartEntity.setMember(memberEntity);
+        heartRepository.save(heartEntity);
+
     }
 
-    public HeartDto findHeartObject(Long bid, Long memberId) {
-        Optional<BbsEntity> optionalBbs = bbsRepository.findById(bid);
-        Optional<MemberEntity> optionalMember = memberRepository.findById(memberId);
-
-        BbsEntity bbsEntity = null;
-        MemberEntity memberEntity = null;
-
-        if (optionalBbs.isPresent() && optionalMember.isPresent()) {
-            bbsEntity = optionalBbs.get();
-            memberEntity = optionalMember.get();
-        }
+    public HeartDto findHeartObject(Long bid, Long memberId) throws Exception {
+        BbsEntity bbsEntity = bbsRepository.findById(bid)
+                .orElse(null);
+        MemberEntity memberEntity = memberRepository.findById(memberId)
+                .orElse(null);
 
         Optional<HeartEntity> optionalHeartEntity = heartRepository.findByBbsAndMember(bbsEntity, memberEntity);
-        if (optionalHeartEntity.isPresent()) {
-            return optionalHeartEntity.get().toDto();
-        } else {
-            return null;
-        }
+        return optionalHeartEntity.map(HeartEntity::toDto).orElse(null);
     }
 }

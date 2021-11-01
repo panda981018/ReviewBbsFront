@@ -36,11 +36,13 @@
     <!--  없으면 ajax가 동작하지 않음  -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="/js/homeGridSetting.js" defer></script>
+    <script src="/js/post.js"></script>
     <script>
         window.onload = function () {
             // setDatasource(); // 데이터 소스 정의 및 grid 생성
             createGrid();
             getBbsData();
+            gridClickEvent();
             // responseHandler();
         }
     </script>

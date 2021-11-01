@@ -20,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,44 +31,42 @@ public class BbsService {
     private final MemberRepository memberRepository;
 
     // 게시물 저장
-    public void saveBbs(BbsDto bbsDto, MemberDto memberDto) {
+    public void saveBbs(BbsDto bbsDto, MemberDto memberDto) throws Exception {
 
-        Optional<CategoryEntity> category = categoryRepository.findById(bbsDto.getCategoryId());
+        CategoryEntity category = categoryRepository.findById(bbsDto.getCategoryId())
+                .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
 
-        if (category.isPresent()) {
-            LocalDateTime now = LocalDateTime.now();
-            String time = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime now = LocalDateTime.now();
+        String time = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-            bbsDto.setBbsDate(time);
-            bbsDto.setBbsViews(0);
-            bbsDto.setLikeCnt(0);
+        bbsDto.setBbsDate(time);
+        bbsDto.setBbsViews(0);
+        bbsDto.setLikeCnt(0);
 
-            BbsEntity bbs = bbsDto.toEntity();
-            CategoryEntity categoryEntity = category.get();
-            bbs.setCategory(categoryEntity);
-            bbs.setBbsWriter(memberDto.toEntity());
-            bbsRepository.save(bbs);
-        }
+        BbsEntity bbs = bbsDto.toEntity();
+        CategoryEntity categoryEntity = category;
+        bbs.setCategory(categoryEntity);
+        bbs.setBbsWriter(memberDto.toEntity());
+        bbsRepository.save(bbs);
     }
 
     // 게시물 1개
-    public HashMap<String, Object> getBbs(Long bbsId) {
+    public HashMap<String, Object> getBbs(Long bbsId) throws Exception {
 
-        Optional<BbsEntity> bbsEntity = bbsRepository.findById(bbsId);
+        BbsEntity bbsEntity = bbsRepository.findById(bbsId)
+                .orElseThrow(() -> new Exception("POST NOT EXIST"));
         BbsDto bbsDto;
         HashMap<String, Object> dataMap = new HashMap<>();
 
-        if (bbsEntity.isPresent()) {
-            BbsEntity bbs = bbsEntity.get();
-            bbsDto = bbs.toDto();
-            dataMap.put("bbsDto", bbsDto);
-            List<ReplyEntity> replies = bbs.getReplies();
-
-            dataMap.put("replies", replies);
-        }
+        BbsEntity bbs = bbsEntity;
+        bbsDto = bbs.toDto();
+        dataMap.put("bbsDto", bbsDto);
+        List<ReplyEntity> replies = bbs.getReplies();
+        dataMap.put("replies", replies);
 
         return dataMap;
     }
+
     // 카테고리 상관없이 찾기
     public List<BbsDto> findAll(Pageable pageable) {
         Page<BbsEntity> paging = bbsRepository.findAll(pageable);
@@ -81,14 +78,15 @@ public class BbsService {
         return bbsDtoList;
     }
 
-    public HashMap<String, Object> getBbsPagination(Long categoryId, Pageable pageable, String searchType, String keyword) { // 카테고리 내에서 column을 기준으로 내림차순 정렬
+    public HashMap<String, Object> getBbsPagination(Long categoryId, Pageable pageable, String searchType, String keyword)
+            throws Exception { // 카테고리 내에서 column을 기준으로 내림차순 정렬
         Page<BbsEntity> bbsEntities;
         List<BbsEntity> entities;
         List<BbsDto> bbsDtoList = new ArrayList<>();
         long totalCount = 0L;
 
         if (searchType == null) {
-            CategoryEntity category = categoryRepository.findById(categoryId).get();
+            CategoryEntity category = categoryRepository.findById(categoryId).orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
             bbsEntities = bbsRepository.findByCategoryId(category, pageable);
         } else if (searchType.equals("bbsWriter")) { // writer
             bbsEntities = findByWriter(categoryId, pageable, keyword);
@@ -116,53 +114,53 @@ public class BbsService {
         return dataMap;
     }
 
-    private Page<BbsEntity> findByBbsTitle(Long category, Pageable pageable, String keyword) {
+    private Page<BbsEntity> findByBbsTitle(Long categoryId, Pageable pageable, String keyword) throws Exception {
         Page<BbsEntity> bbsEntities = null;
 
-        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(category);
-        if (optionalCategory.isPresent()) {
-            bbsEntities
-                    = bbsRepository.findByCategoryIdAndBbsTitleContainingIgnoreCase(pageable, optionalCategory.get(), keyword);
-        }
+        CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
+        bbsEntities = bbsRepository.findByCategoryIdAndBbsTitleContainingIgnoreCase(pageable, categoryEntity, keyword);
 
         return bbsEntities;
     }
 
-    public Page<BbsEntity> findByWriter(Long categoryId, Pageable pageable, String writer) { // 작성자를 찾을 때
-        Optional<MemberEntity> optionalMember = memberRepository.findByNickname(writer);
-        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(categoryId);
+    public Page<BbsEntity> findByWriter(Long categoryId, Pageable pageable, String writer) throws Exception { // 작성자를 찾을 때
+        MemberEntity memberEntity = memberRepository.findByNickname(writer).orElseThrow(() -> new Exception("MEMBER NOT EXISTS"));
+        CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
         Page<BbsEntity> bbsEntities = null;
-        if (optionalMember.isPresent() && optionalCategory.isPresent()) {
-            MemberEntity member = optionalMember.get();
-            CategoryEntity category = optionalCategory.get();
-            bbsEntities = bbsRepository.findByCategoryIdAndBbsWriter(pageable, category, member);
-        }
+
+        MemberEntity member = memberEntity;
+        CategoryEntity category = categoryEntity;
+        bbsEntities = bbsRepository.findByCategoryIdAndBbsWriter(pageable, category, member);
+
         return bbsEntities;
     }
 
     // 게시글 수정
-    public void updateBbs(BbsDto bbsDto, MemberDto memberDto) {
-        Optional<CategoryEntity> category = categoryRepository.findById(bbsDto.getCategoryId());
-        Optional<BbsEntity> bbsEntity = bbsRepository.findById(bbsDto.getId());
+    public void updateBbs(BbsDto bbsDto, MemberDto memberDto) throws Exception {
+        CategoryEntity category = categoryRepository.findById(bbsDto.getCategoryId())
+                .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
+        BbsEntity bbsEntity = bbsRepository.findById(bbsDto.getId())
+                .orElseThrow(() -> new Exception("MEMBER IS NOT EXISTS"));
 
-        if (category.isPresent() && bbsEntity.isPresent()) {
-            BbsEntity oldBbs = bbsEntity.get(); // bbsdate, writer, bbsView 가져오기
-            bbsDto.setBbsDate(oldBbs.getBbsDate()); // set date
-            bbsDto.setBbsViews(oldBbs.getBbsViews()); // set bbsView
-            bbsDto.setLikeCnt(oldBbs.getLikeCnt());
+        BbsEntity oldBbs = bbsEntity; // bbsdate, writer, bbsView 가져오기
+        bbsDto.setBbsDate(oldBbs.getBbsDate()); // set date
+        bbsDto.setBbsViews(oldBbs.getBbsViews()); // set bbsView
+        bbsDto.setLikeCnt(oldBbs.getLikeCnt());
 
-            BbsEntity bbs = bbsDto.toEntity();
-            CategoryEntity categoryEntity = category.get(); // set category
-            bbs.setCategory(categoryEntity);
-            bbs.setBbsWriter(memberDto.toEntity()); // set writer
-            bbsRepository.save(bbs);
-        }
+        BbsEntity bbs = bbsDto.toEntity();
+        CategoryEntity categoryEntity = category; // set category
+        bbs.setCategory(categoryEntity);
+        bbs.setBbsWriter(memberDto.toEntity()); // set writer
+        bbsRepository.save(bbs);
     }
 
     // 조회수 업데이트
-    public void updateViews(Long id) {
-        BbsEntity bbsEntity = bbsRepository.findById(id).get();
-        bbsQueryRepository.updateBbsViews(id, bbsEntity.getBbsViews());
+    public void updateViews(Long bid) throws Exception {
+        BbsEntity bbsEntity = bbsRepository.findById(bid)
+                .orElseThrow(() -> new Exception("POST NOT EXIST"));
+        bbsQueryRepository.updateBbsViews(bid, bbsEntity.getBbsViews());
     }
 
     public void deleteBbs(Long id, List<String> urls) { // 게시글 삭제
@@ -172,59 +170,29 @@ public class BbsService {
         bbsRepository.deleteById(id);
     }
 
-//    [ 기존 방법 ]
-//    public int updateLikeCount(Long bid, String type) {
-//        Optional<BbsEntity> optionalBbsEntity = bbsRepository.findById(bid);
-//        if (optionalBbsEntity.isPresent()) {
-//            BbsEntity bbsEntity = optionalBbsEntity.get();
-//            if (type.equals("like")) {
-//                bbsQueryRepository.plusLikeCount(bid, bbsEntity.getLikeCnt());
-//            } else {
-//                bbsQueryRepository.minusLikeCount(bid, bbsEntity.getLikeCnt());
-//            }
-//            BbsEntity newBbsEntity = bbsRepository.findById(bid).get();
-//            return newBbsEntity.getLikeCnt();
-//        } else // 게시글이 존재하지 않는다면 -1 리턴
-//            return -1;
-//    }
-
-//  querydsl 함수에서 임의로 +1 또는 -1 하는 값을 리턴하도록 만든 함수
-//    public int updateLikeCount(Long bid, String type) {
-//        Optional<BbsEntity> optionalBbsEntity = bbsRepository.findById(bid);
-//        if (optionalBbsEntity.isPresent()) {
-//            BbsEntity bbsEntity = optionalBbsEntity.get();
-//            int likeCnt = 0;
-//            if (type.equals("like")) {
-//                likeCnt = bbsQueryRepository.plusLikeCount(bid, bbsEntity.getLikeCnt());
-//            } else {
-//                likeCnt = bbsQueryRepository.minusLikeCount(bid, bbsEntity.getLikeCnt());
-//            }
-//
-//            return likeCnt;
-//        } else return -1; // 게시글이 존재하지 않는다면 -1 리턴
-//    }
-
     //  JPA saveAndFlush를 사용한 방법
-    public int updateLikeCount(Long bid, String type) {
-        Optional<BbsEntity> optionalBbsEntity = bbsRepository.findById(bid);
+    public int updateLikeCount(Long bid, String type) throws Exception {
+        BbsEntity optionalBbsEntity = bbsRepository.findById(bid).orElseThrow(() -> new Exception("POST NOT EXIST"));
 
-        if (optionalBbsEntity.isPresent()) {
-            BbsEntity bbsEntity = optionalBbsEntity.get();
-            BbsDto oldBbsDto = bbsEntity.toDto();
-            MemberEntity member = memberRepository.findByNickname(oldBbsDto.getBbsWriter()).get();
-            CategoryEntity category = categoryRepository.findById(oldBbsDto.getCategoryId()).get();
-            if (type.equals("like")) {
-                oldBbsDto.setLikeCnt(bbsEntity.getLikeCnt() + 1);
-            } else {
-                oldBbsDto.setLikeCnt(bbsEntity.getLikeCnt() - 1);
-            }
-            BbsEntity newBbsEntity = oldBbsDto.toEntity();
-            newBbsEntity.setCategory(category);
-            newBbsEntity.setBbsWriter(member);
-            bbsRepository.saveAndFlush(newBbsEntity);
+        BbsEntity bbsEntity = optionalBbsEntity;
+        BbsDto oldBbsDto = bbsEntity.toDto();
+        MemberEntity member = memberRepository.findByNickname(oldBbsDto.getBbsWriter())
+                .orElseThrow(() -> new Exception("MEMBER NOT EXIST"));
+        CategoryEntity category = categoryRepository.findById(oldBbsDto.getCategoryId())
+                .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
 
-            int likeCnt = bbsRepository.findById(bid).get().getLikeCnt();
-            return likeCnt;
-        } else return -1; // 게시글이 존재하지 않는다면 -1 리턴
+        if (type.equals("like")) {
+            oldBbsDto.setLikeCnt(bbsEntity.getLikeCnt() + 1);
+        } else {
+            oldBbsDto.setLikeCnt(bbsEntity.getLikeCnt() - 1);
+        }
+        BbsEntity newBbsEntity = oldBbsDto.toEntity();
+        newBbsEntity.setCategory(category);
+        newBbsEntity.setBbsWriter(member);
+        bbsRepository.saveAndFlush(newBbsEntity);
+
+        BbsEntity newBbs = bbsRepository.findById(bid).orElseThrow(() -> new Exception("POST NOT EXIST"));
+        int likeCnt = newBbs.getLikeCnt();
+        return likeCnt;
     }
 }

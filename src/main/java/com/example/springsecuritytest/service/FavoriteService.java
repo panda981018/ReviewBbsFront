@@ -27,29 +27,25 @@ public class FavoriteService {
     // 2-1. 존재한다면 기존 객체의 isLiked를 true로 변경
     // 2-2. 존재하지 않는다면 새로운 HeartEntity를 생성하여 isLiked를 true로 설정
     // 3. 마지막에 save
-    public String saveLocation(Long bid, Long memberId, double latitude, double longitude, String placeName) {
-        Optional<BbsEntity> optionalBbs = bbsRepository.findById(bid);
-        Optional<MemberEntity> optionalMember = memberRepository.findById(memberId);
 
-        BbsEntity bbsEntity = null;
-        MemberEntity memberEntity = null;
+    // Optional의 .orElse()는 값이 있다면 값 리턴, 없다면 소괄호에 적은 코드 실행한 결과를 리턴.
+    public String saveLocation(Long bid, Long memberId, double latitude, double longitude, String placeName) {
+        BbsEntity bbsEntity = bbsRepository.findById(bid)
+                .orElse(null);
+        MemberEntity memberEntity = memberRepository.findById(memberId)
+                .orElse(null);
 
         FavoriteEntity favoriteEntity = null;
 
-        if (optionalBbs.isPresent() && optionalMember.isPresent()) {
-            bbsEntity = optionalBbs.get();
-            memberEntity = optionalMember.get();
-        }
-
         if (favoriteRepository.existsByBbsAndMember(bbsEntity, memberEntity)) { // 2-1의 경우
-            Optional<FavoriteEntity> oldFavEntity = favoriteRepository.findByBbsAndMember(bbsEntity, memberEntity);
-            if (oldFavEntity.isPresent()) {
-                FavoriteDto favoriteDto = oldFavEntity.get().toDto();
-                favoriteDto.setLatitude(latitude);
-                favoriteDto.setLongitude(longitude);
-                favoriteDto.setPlaceName(placeName);
-                favoriteEntity = favoriteDto.toEntity();
-            }
+            FavoriteEntity oldFavEntity = favoriteRepository.findByBbsAndMember(bbsEntity, memberEntity)
+                    .orElse(null);
+
+            FavoriteDto favoriteDto = oldFavEntity.toDto();
+            favoriteDto.setLatitude(latitude);
+            favoriteDto.setLongitude(longitude);
+            favoriteDto.setPlaceName(placeName);
+            favoriteEntity = favoriteDto.toEntity();
         } else { // 2-2의 경우
             favoriteEntity = FavoriteEntity.builder()
                     .placeName(placeName)
@@ -65,20 +61,14 @@ public class FavoriteService {
     }
 
     public String cancelLocation(Long bid, Long memberId) {
-        Optional<BbsEntity> optionalBbs = bbsRepository.findById(bid);
-        Optional<MemberEntity> optionalMember = memberRepository.findById(memberId);
+        BbsEntity bbsEntity = bbsRepository.findById(bid).orElse(null);
+        MemberEntity memberEntity = memberRepository.findById(memberId).orElse(null);
 
-        BbsEntity bbsEntity = null;
-        MemberEntity memberEntity = null;
 
-        if (optionalBbs.isPresent() && optionalMember.isPresent()) {
-            bbsEntity = optionalBbs.get();
-            memberEntity = optionalMember.get();
-        }
+        FavoriteEntity favEntity = favoriteRepository.findByBbsAndMember(bbsEntity, memberEntity).orElse(null);
 
-        Optional<FavoriteEntity> favEntity = favoriteRepository.findByBbsAndMember(bbsEntity, memberEntity);
-        if (favEntity.isPresent()) {
-            favoriteRepository.deleteById(favEntity.get().getId());
+        if (favEntity != null) {
+            favoriteRepository.deleteById(favEntity.getId());
             return "OK";
         } else {
             return "FAIL";
@@ -86,6 +76,6 @@ public class FavoriteService {
     }
 
     public boolean findFavObject(Long bid, Long memberId) {
-        return favoriteRepository.existsByBbsAndMember(bbsRepository.findById(bid).get(), memberRepository.findById(memberId).get());
+        return favoriteRepository.existsByBbsAndMember(bbsRepository.findById(bid).orElse(null), memberRepository.findById(memberId).orElse(null));
     }
 }

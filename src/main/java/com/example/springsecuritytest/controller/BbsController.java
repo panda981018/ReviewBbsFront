@@ -56,7 +56,7 @@ public class BbsController {
     }
 
     @PostMapping("/bbs/write")
-    public String createBbs(BbsDto bbsDto, HttpServletRequest request) {
+    public String createBbs(BbsDto bbsDto, HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         bbsDto.setIpAddr(getClientIp(request));
         bbsService.saveBbs(bbsDto, (MemberDto) session.getAttribute("memberInfo"));
@@ -65,7 +65,7 @@ public class BbsController {
     }
 
     @GetMapping("/bbs/view") // 게시글 보기
-    public String viewBbs(@RequestParam(required = false) String id, HttpSession session, Model model) {
+    public String viewBbs(@RequestParam(required = false) String id, HttpSession session, Model model) throws Exception {
         BbsDto bbs = null;
         Long viewCategoryId = 0L;
         List<ReplyDto> replies;
@@ -95,7 +95,7 @@ public class BbsController {
     }
 
     @GetMapping("/bbs/update") // 수정하는 페이지
-    public String showBbsList(@RequestParam(required = false) String id, Model model) {
+    public String showBbsList(@RequestParam(required = false) String id, Model model) throws Exception {
 
         BbsDto bbs = null;
 
@@ -109,7 +109,7 @@ public class BbsController {
     }
 
     @PostMapping("/bbs/update") // 수정 클릭
-    public String updateBbs(BbsDto bbsDto, HttpSession session) {
+    public String updateBbs(BbsDto bbsDto, HttpSession session) throws Exception {
         MemberDto member = (MemberDto) session.getAttribute("memberInfo");
         bbsService.updateBbs(bbsDto, member);
         return "redirect:/post/bbs?category=" + bbsDto.getCategoryId();
