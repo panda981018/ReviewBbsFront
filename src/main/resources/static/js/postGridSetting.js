@@ -36,7 +36,7 @@ function createGrid(dataSource) {
             {
                 header: '작성자',
                 name: 'bbsWriter',
-                width: 65,
+                width: 100,
                 align: "center"
             },
             {

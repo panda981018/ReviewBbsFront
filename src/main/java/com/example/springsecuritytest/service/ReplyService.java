@@ -23,19 +23,20 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final BbsRepository bbsRepository;
 
-    public void createReply(HttpSession session, ReplyDto replyDto) {
+    public void createReply(HttpSession session, ReplyDto replyDto) throws Exception {
 
         LocalDateTime createTime = LocalDateTime.now();
         String createTimeStr = createTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         replyDto.setCreateDate(createTimeStr); // 생성날짜 setting
 
         MemberDto replyWriter = (MemberDto) session.getAttribute("memberInfo");
-        Optional<BbsEntity> bbsEntity = bbsRepository.findById(replyDto.getBbs());
+        BbsEntity bbsEntity = bbsRepository.findById(replyDto.getBbs())
+                .orElseThrow(() -> new Exception("POST NOT EXIST"));
         ReplyEntity replyEntity = replyDto.toEntity();
         replyEntity.setWriter(replyWriter.toEntity());
-        replyEntity.setBbs(bbsEntity.get());
+        replyEntity.setBbs(bbsEntity);
 
-        bbsEntity.get().addReply(replyEntity);
+        bbsEntity.addReply(replyEntity);
 
         replyRepository.save(replyEntity);
     }

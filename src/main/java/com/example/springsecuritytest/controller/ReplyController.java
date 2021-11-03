@@ -22,7 +22,7 @@ public class ReplyController {
 
     @ResponseBody
     @PostMapping("/ajax/add")
-    public HashMap<String, String> createReply(HttpServletRequest request, @RequestBody HashMap<String, String> obj) {
+    public HashMap<String, String> createReply(HttpServletRequest request, @RequestBody HashMap<String, String> obj) throws Exception {
         HttpSession session = request.getSession();
         String bbsId = obj.get("bbsId");
         System.out.println(bbsId);

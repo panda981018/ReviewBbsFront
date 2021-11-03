@@ -1,7 +1,6 @@
 package com.example.springsecuritytest.domain.entity;
 
 import com.example.springsecuritytest.dto.FavoriteDto;
-import com.example.springsecuritytest.dto.HeartDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,25 +25,16 @@ public class FavoriteEntity {
             generator = "FAVORITE_SEQ_GEN")
     private Long id;
 
-    @Column
-    private double latitude;
-
-    @Column
-    private double longitude;
-
-    @Column
-    private String placeName;
-
     @ManyToOne
-    @JoinColumn(name = "bbsId")
-    private BbsEntity bbs;
+    @JoinColumn(name = "mapId")
+    private MapEntity map;
 
     @ManyToOne
     @JoinColumn(name = "memberId")
     private MemberEntity member;
 
-    public void setBbs(BbsEntity bbs) {
-        this.bbs = bbs;
+    public void setMap(MapEntity map) {
+        this.map = map;
     }
 
     public void setMember(MemberEntity member) {
@@ -54,17 +44,15 @@ public class FavoriteEntity {
     public FavoriteDto toDto() {
         return FavoriteDto.builder()
                 .id(id)
-                .placeName(placeName)
-                .latitude(latitude)
-                .longitude(longitude)
+                .latitude(map.getLatitude())
+                .longitude(map.getLongitude())
+                .placeName(map.getPlaceName())
+                .mapId(map.getId())
                 .build();
     }
 
     @Builder
-    public FavoriteEntity(Long id, double latitude, double longitude, String placeName) {
+    public FavoriteEntity(Long id) {
         this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.placeName = placeName;
     }
 }

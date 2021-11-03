@@ -88,10 +88,10 @@ public class BbsQueryRepository {
         return new PageImpl<>(rt.getResults(), pageable, rt.getTotal());
     }
 
-    public List<Tuple> getMapElements(MemberEntity member) {
-        return jpaQueryFactory.select(bbsEntity.latitude, bbsEntity.longitude, bbsEntity.placeName)
-                .from(bbsEntity)
-                .where(bbsEntity.bbsWriter.eq(member))
-                .fetch();
-    }
+//    public List<Tuple> getMapElements(MemberEntity member) {
+//        return jpaQueryFactory.select(bbsEntity.latitude, bbsEntity.longitude, bbsEntity.placeName)
+//                .from(bbsEntity)
+//                .where(bbsEntity.bbsWriter.eq(member))
+//                .fetch();
+//    }
 }

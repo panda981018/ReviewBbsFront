@@ -32,9 +32,6 @@ public class BbsDto {
                 .bbsViews(bbsViews)
                 .likeCnt(likeCnt)
                 .ipAddr(ipAddr)
-                .latitude(latitude)
-                .longitude(longitude)
-                .placeName(placeName)
                 .build();
     }
 

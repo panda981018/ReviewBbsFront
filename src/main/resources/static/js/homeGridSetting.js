@@ -61,32 +61,3 @@ function getBbsData() {
         }
     })
 }
-
-
-// function setDatasource() {
-//     dataSource = {
-//         api: {
-//             readData: {
-//                 url: '/api/bbs/get', method: 'GET',
-//                 initParams: {category: bbsCategoryId, column: sortType}
-//             }
-//         }
-//     }
-//     createGrid(dataSource);
-// }
-//
-// function responseHandler() {
-//     grid.on('response', ev => { // readData의 결과를 받는 콜백함수
-//         console.log(ev);
-//         const bbsData = JSON.parse(ev.xhr.response).data.contents;
-//         const resultCnt = JSON.parse(ev.xhr.response).data.pagination.totalCount;
-//         if (resultCnt > 0) {
-//             $('#tableInfo').addClass("mb-3 d-flex flex-row justify-content-between align-items-center")
-//                 .css('display', 'block');
-//             $('#grid').css('display', 'block');
-//             grid.resetData(bbsData);
-//         } else { // 0이거나 그 이하면
-//             alert('찾으시는 결과가 없습니다.');
-//         }
-//     });
-// }

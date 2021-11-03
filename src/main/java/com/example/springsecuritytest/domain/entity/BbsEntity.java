@@ -45,15 +45,6 @@ public class BbsEntity {
     @Column
     private String ipAddr; // 작성자의 ip주소
 
-    @Column
-    private double latitude = 0.0;
-
-    @Column
-    private double longitude = 0.0;
-
-    @Column
-    private String placeName;
-
     @ManyToOne
     @JoinColumn(name = "CATEGORY_ID")
     private CategoryEntity categoryId; // 외래키
@@ -61,6 +52,10 @@ public class BbsEntity {
     @ManyToOne
     @JoinColumn(name = "BBS_WRITER")
     private MemberEntity bbsWriter;
+
+    @ManyToOne
+    @JoinColumn(name = "LOCATION")
+    private MapEntity map; // 게시물에서 위치를 지정한 경우
 
     @OneToMany(mappedBy = "bbs", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ReplyEntity> replies = new ArrayList<>(); // DB에 들어가지는 않는다.
@@ -72,6 +67,8 @@ public class BbsEntity {
     public void setBbsWriter(MemberEntity member) {
         this.bbsWriter = member;
     }
+
+    public void setMap(MapEntity map) { this.map = map; }
 
     public void addReply(ReplyEntity replyEntity) {
         this.getReplies().add(replyEntity);
@@ -90,15 +87,15 @@ public class BbsEntity {
                 .likeCnt(likeCnt)
                 .replyCnt(replies.size())
                 .ipAddr(ipAddr)
-                .latitude(latitude)
-                .longitude(longitude)
-                .placeName(placeName)
+                .latitude(map.getLatitude())
+                .longitude(map.getLongitude())
+                .placeName(map.getPlaceName())
                 .build();
     }
 
     @Builder
     public BbsEntity(Long id, String bbsTitle, String bbsContents, String bbsDate, int bbsViews,
-                     int likeCnt, String ipAddr, double latitude, double longitude, String placeName) {
+                     int likeCnt, String ipAddr) {
         this.id = id;
         this.bbsTitle = bbsTitle;
         this.bbsContents = bbsContents;
@@ -106,8 +103,5 @@ public class BbsEntity {
         this.bbsViews = bbsViews;
         this.likeCnt = likeCnt;
         this.ipAddr = ipAddr;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.placeName = placeName;
     }
 }

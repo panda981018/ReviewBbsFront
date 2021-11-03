@@ -49,7 +49,6 @@ function getData(pageNum) {
         success: function (result) {
             if (result.data.length > 0) {
                 currPage = pageNum;
-                console.log(result);
                 displayPlaces(result.data);
                 displayPagination(result.totalPages);
             }
@@ -141,11 +140,24 @@ function searchDetailAddrFromCoords(marker, favObj, placeListEle) {
             itemListEle = addListItem(favObj.placeName);
             placeListEle.append(itemListEle[0]);
 
-            (function (marker, bbsId, placeName, detailAddr) {
-                displayInfoWindow(marker, bbsId, placeName, detailAddr);
+            (function (marker, placeName, detailAddr) {
+                displayInfoWindow(marker, placeName, detailAddr);
                 kakao.maps.event.addListener(marker, 'mouseover', function () {
-                    displayInfoWindow(marker, bbsId, placeName, detailAddr);
+                    displayInfoWindow(marker, placeName, detailAddr);
                     infoWindow.open(map, marker);
+
+                    $('#showBbsList').on('click', function () {
+                        $.ajax({
+                            method: 'GET',
+                            url: '/map/bbsList?lat=' + marker.getPosition().getLat() + '&lng=' + marker.getPosition().getLng(),
+                            dataType: 'json',
+                            success: function (response) {
+                                const rs = response.result;
+                                bbsListModalOpen(rs);
+                                console.log(rs);
+                            }
+                        });
+                    });
                 });
 
                 kakao.maps.event.addListener(map, 'click', function () {
@@ -154,23 +166,34 @@ function searchDetailAddrFromCoords(marker, favObj, placeListEle) {
 
                 itemListEle[0].onclick = function () {
                     map.panTo(marker.getPosition());
-                    displayInfoWindow(marker, bbsId, placeName, detailAddr);
+                    displayInfoWindow(marker, placeName, detailAddr);
                     infoWindow.open(map, marker);
+
+                    $('#showBbsList').on('click', function () {
+                        $.ajax({
+                            method: 'GET',
+                            url: '/map/bbsList?lat=' + marker.getPosition().getLat() + '&lng=' + marker.getPosition().getLng(),
+                            dataType: 'json',
+                            success: function (response) {
+                                const rs = response.result[0];
+                                bbsListModalOpen(rs);
+                                console.log("rs : " + rs);
+                            }
+                        });
+                    });
                 }
-            })(marker, favObj.bbsId, favObj.placeName, detailAddr);
+            })(marker, favObj.placeName, detailAddr);
         }
     });
 }
 
-function displayInfoWindow(marker, bbsId, placeName, detailAddr) {
+function displayInfoWindow(marker, placeName, detailAddr) {
     const content = '<div class="bAddr">' +
         '<div class="d-flex justify-content-between align-items-center">' +
-        '<input type="hidden" id="hiddenBbsId" value="' + bbsId + '">' +
+        // '<input type="hidden" id="hiddenBbsId" value="' + bbsId + '">' +
         '<span class="fav-info-title">' + placeName + '</span>' +
-        '<a id="moveToBbs" class="btn btn-outline-primary" href="/post/bbs/view?id=' + bbsId +
-        '">게시물로 이동</a>' +
-        '</div>' +
-        detailAddr + '</div>';
+        '<button id="showBbsList" name="showBbsList" class="btn btn-outline-primary">게시글보기</button>' +
+        '</div>' + detailAddr + '</div>';
 
     infoWindow.setContent(content);
 }
@@ -189,4 +212,44 @@ function removeAllChildNods(el) {
     while (el.hasChildNodes()) {
         el.removeChild(el.lastChild);
     }
+}
+
+function bbsListModalOpen(bbsList) {
+    const bbsListDiv = $('#bbsList');
+    const dialog = $('#bbsListDialog');
+    for (let i = 0; i < bbsList.length; i++) {
+        const contents =
+            '<li class="mx-3 mb-4 bbs-list-li" id="bbsItem_' + i +
+            '">' +
+            '<input id="bbs-item-id" type="hidden" value="' + bbsList[i].id + '">' +
+            // '<div class="bbs-item d-flex justify-content-between">' +
+            '<span class="bbs-title mb-3">' +
+            bbsList[i].bbsTitle +
+            '</span>' +
+            // '<span class="text-muted">' +
+            // sessionStorage.getItem('categoryList').get(parseInt(bbsList[i].categoryId)).getName() +
+            // '</span>' +
+            // '</div>' +
+            '<div class="bbs-content">' +
+            bbsList[i].bbsContents +
+            '</div>' +
+            '</li>';
+
+        bbsListDiv.append(contents);
+    }
+
+    $(document).on('click', 'li.mx-3.mb-4', function () {
+        const bbsId = this.firstChild.defaultValue;
+        location.href = '/post/bbs/view?id=' + bbsId;
+    });
+
+    dialog.modal('show');
+}
+
+function bbsListModalClose() {
+    $('#bbsListDialog').modal('hide');
+    $('#bbsListDialog').on('hide.bs.modal', function () {
+        const bbsListDiv = $('#bbsList')[0];
+        removeAllChildNods(bbsListDiv);
+    });
 }

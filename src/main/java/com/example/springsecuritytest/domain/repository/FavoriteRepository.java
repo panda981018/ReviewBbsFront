@@ -2,6 +2,7 @@ package com.example.springsecuritytest.domain.repository;
 
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.FavoriteEntity;
+import com.example.springsecuritytest.domain.entity.MapEntity;
 import com.example.springsecuritytest.domain.entity.MemberEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ import java.util.Optional;
 public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Long> {
 
     Optional<FavoriteEntity> findById(Long id);
-    Optional<FavoriteEntity> findByBbsAndMember(BbsEntity bbs, MemberEntity member);
+    Optional<FavoriteEntity> findByMemberAndMap(MemberEntity member, MapEntity map);
     Page<FavoriteEntity> findByMember(MemberEntity membere, Pageable pageable);
-    boolean existsByBbsAndMember(BbsEntity bbs, MemberEntity member);
+    boolean existsByMemberAndMap(MemberEntity member, MapEntity map);
 }

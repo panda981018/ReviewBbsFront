@@ -35,9 +35,9 @@ public class FavoriteApiController {
         String result = "";
 
         if (type.equals("add")) { // add 경우
-            result = favoriteService.saveLocation(Long.parseLong(bid), memberDto.getId(), lat, lng, placeName);
+            result = favoriteService.saveLocation(memberDto.getId(), lat, lng, placeName);
         } else { // cancel 경우
-            result = favoriteService.cancelLocation(Long.parseLong(bid), memberDto.getId());
+            result = favoriteService.cancelLocation(lat, lng, memberDto.getId());
         }
 
         HashMap<String, String> mapData = new HashMap<>();

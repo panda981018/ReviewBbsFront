@@ -73,12 +73,15 @@ public class BbsController {
         HashMap<String, Object> dataMap = bbsService.getBbs(Long.parseLong(id));
         MemberDto memberDto = (MemberDto) session.getAttribute("memberInfo");
         HeartDto heartDto = heartService.findHeartObject(Long.parseLong(id), memberDto.getId());
-        boolean favDto = favoriteService.findFavObject(Long.parseLong(id), memberDto.getId());
+//        boolean favDto = favoriteService.findFavObject(Long.parseLong(id), memberDto.getId());
 
         if (dataMap.get("bbsDto") instanceof BbsDto) {
             bbs = (BbsDto) dataMap.get("bbsDto");
             viewCategoryId = bbs.getCategoryId() - 1;
         }
+
+        assert bbs != null;
+        boolean favDto = favoriteService.findFavObject(bbs.getLatitude(), bbs.getLongitude(), memberDto.getId());
 
         if (dataMap.get("replies") instanceof List<?>) {
             replies = replyService.getReplies(Long.parseLong(id));

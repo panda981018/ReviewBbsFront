@@ -69,7 +69,8 @@
     padding: 1rem;
 }
 
-#placeList li {
+#placeList li,
+#bbsList li {
     list-style: none;
 }
 
@@ -88,7 +89,8 @@
 }
 
 .item h5,
-#placesList .item .info {
+#placesList .item .info,
+.bbs-content {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -178,7 +180,8 @@
     box-sizing: content-box;
 }
 
-.fav-info-title {
+.fav-info-title,
+.bbs-title {
     font-weight:bold;
     font-size: 1.1rem;
 }
@@ -188,4 +191,8 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+}
+
+.bbs-list-li {
+    cursor: pointer;
 }

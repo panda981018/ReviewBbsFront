@@ -1,9 +1,7 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.BbsEntity;
-import com.example.springsecuritytest.domain.entity.CategoryEntity;
-import com.example.springsecuritytest.domain.entity.MemberEntity;
-import com.example.springsecuritytest.domain.entity.ReplyEntity;
+import com.example.springsecuritytest.domain.entity.*;
+import com.example.springsecuritytest.domain.repository.MapRepository;
 import com.example.springsecuritytest.domain.repository.bbs.BbsQueryRepository;
 import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
 import com.example.springsecuritytest.domain.repository.CategoryRepository;
@@ -28,10 +26,13 @@ public class BbsService {
     private final BbsRepository bbsRepository;
     private final BbsQueryRepository bbsQueryRepository;
     private final CategoryRepository categoryRepository;
+    private final MapRepository mapRepository;
     private final MemberRepository memberRepository;
 
     // 게시물 저장
     public void saveBbs(BbsDto bbsDto, MemberDto memberDto) throws Exception {
+        double latitude = bbsDto.getLatitude();
+        double longitude = bbsDto.getLongitude();
 
         CategoryEntity category = categoryRepository.findById(bbsDto.getCategoryId())
                 .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
@@ -43,11 +44,30 @@ public class BbsService {
         bbsDto.setBbsViews(0);
         bbsDto.setLikeCnt(0);
 
+        MapEntity mapEntity;
+
         BbsEntity bbs = bbsDto.toEntity();
         CategoryEntity categoryEntity = category;
         bbs.setCategory(categoryEntity);
         bbs.setBbsWriter(memberDto.toEntity());
-        bbsRepository.save(bbs);
+
+        if (mapRepository.existsByLatitudeAndLongitude(latitude, longitude)) {
+            mapEntity = mapRepository.findByLatitudeAndLongitude(latitude, longitude).orElse(null);
+            bbs.setMap(mapEntity);
+            bbsRepository.save(bbs);
+            mapEntity.addBbs(bbs);
+            mapRepository.save(mapEntity);
+        } else {
+            mapEntity = MapEntity.builder()
+                    .latitude(bbsDto.getLatitude())
+                    .longitude(bbsDto.getLongitude())
+                    .placeName(bbsDto.getPlaceName())
+                    .build();
+            bbs.setMap(mapEntity);
+            mapEntity.addBbs(bbs);
+            mapRepository.save(mapEntity);
+            bbsRepository.save(bbs);
+        }
     }
 
     // 게시물 1개
@@ -166,6 +186,14 @@ public class BbsService {
     public void deleteBbs(Long id, List<String> urls) { // 게시글 삭제
         if (urls != null) {
             imageService.deleteUploadedImg(urls);
+        }
+        BbsEntity bbsEntity = bbsRepository.findById(id).orElse(null);
+        MapEntity mapEntity = bbsEntity.getMap();
+        mapEntity.getBbsEntityList().remove(bbsEntity);
+        if (mapEntity.getBbsEntityList().size() == 0) {
+            mapRepository.deleteById(mapEntity.getId());
+        } else {
+            mapRepository.save(mapEntity);
         }
         bbsRepository.deleteById(id);
     }

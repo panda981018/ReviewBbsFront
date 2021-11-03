@@ -1,5 +1,6 @@
 package com.example.springsecuritytest.controller;
 
+import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.FavoriteDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.MapService;
@@ -38,11 +39,22 @@ public class MapController { // anonymous
 
         HashMap<String, Object> result
                 = mapService.getPlaceInfo((MemberDto) session.getAttribute("memberInfo"), pageRequest);
-        HashMap<String, Object> hash = new HashMap<>();
-        List<FavoriteDto> dtos = (List<FavoriteDto>) result.get("data");
-        int totalPages = (int) result.get("totalPages");
-        hash.put("data", dtos);
-        hash.put("totalPages", totalPages);
-        return hash;
+
+//        List<FavoriteDto> dtos = (List<FavoriteDto>) result.get("data");
+//        int totalPages = (int) result.get("totalPages");
+//        hash.put("data", dtos);
+//        hash.put("totalPages", totalPages);
+        return result;
+    }
+
+    @GetMapping("/bbsList")
+    @ResponseBody
+    public HashMap<String, Object> sendBbsList(@RequestParam double lat, @RequestParam double lng) {
+        List<BbsDto> bbsList = mapService.getBbsList(lat, lng);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("result", bbsList);
+
+        return map;
     }
 }

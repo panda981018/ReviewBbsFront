@@ -1,10 +1,8 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.BbsEntity;
-import com.example.springsecuritytest.domain.entity.FavoriteEntity;
-import com.example.springsecuritytest.domain.entity.HeartEntity;
-import com.example.springsecuritytest.domain.entity.MemberEntity;
+import com.example.springsecuritytest.domain.entity.*;
 import com.example.springsecuritytest.domain.repository.FavoriteRepository;
+import com.example.springsecuritytest.domain.repository.MapRepository;
 import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
 import com.example.springsecuritytest.domain.repository.HeartRepository;
 import com.example.springsecuritytest.domain.repository.member.MemberRepository;
@@ -22,6 +20,7 @@ public class FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final BbsRepository bbsRepository;
     private final MemberRepository memberRepository;
+    private final MapRepository mapRepository;
 
     // 1. 존재여부 확인
     // 2-1. 존재한다면 기존 객체의 isLiked를 true로 변경
@@ -29,43 +28,35 @@ public class FavoriteService {
     // 3. 마지막에 save
 
     // Optional의 .orElse()는 값이 있다면 값 리턴, 없다면 소괄호에 적은 코드 실행한 결과를 리턴.
-    public String saveLocation(Long bid, Long memberId, double latitude, double longitude, String placeName) {
-        BbsEntity bbsEntity = bbsRepository.findById(bid)
+    public String saveLocation(Long memberId, double latitude, double longitude, String placeName) {
+        MapEntity mapEntity = mapRepository.findByLatitudeAndLongitude(latitude, longitude)
                 .orElse(null);
         MemberEntity memberEntity = memberRepository.findById(memberId)
                 .orElse(null);
 
-        FavoriteEntity favoriteEntity = null;
+        FavoriteDto favoriteDto = null;
 
-        if (favoriteRepository.existsByBbsAndMember(bbsEntity, memberEntity)) { // 2-1의 경우
-            FavoriteEntity oldFavEntity = favoriteRepository.findByBbsAndMember(bbsEntity, memberEntity)
-                    .orElse(null);
-
-            FavoriteDto favoriteDto = oldFavEntity.toDto();
-            favoriteDto.setLatitude(latitude);
-            favoriteDto.setLongitude(longitude);
-            favoriteDto.setPlaceName(placeName);
-            favoriteEntity = favoriteDto.toEntity();
-        } else { // 2-2의 경우
-            favoriteEntity = FavoriteEntity.builder()
-                    .placeName(placeName)
+        if (!favoriteRepository.existsByMemberAndMap(memberEntity, mapEntity)) { // 2-1의 경우
+            favoriteDto = FavoriteDto.builder()
                     .latitude(latitude)
                     .longitude(longitude)
+                    .placeName(placeName)
+                    .mapId(mapEntity.getId())
                     .build();
-        }
-        favoriteEntity.setBbs(bbsEntity);
-        favoriteEntity.setMember(memberEntity);
 
-        favoriteRepository.save(favoriteEntity);
+            FavoriteEntity favEntity = favoriteDto.toEntity();
+            favEntity.setMap(mapEntity);
+            favEntity.setMember(memberEntity);
+
+            favoriteRepository.save(favEntity);
+        }
         return "OK";
     }
 
-    public String cancelLocation(Long bid, Long memberId) {
-        BbsEntity bbsEntity = bbsRepository.findById(bid).orElse(null);
+    public String cancelLocation(double latitude, double longitude, Long memberId) {
         MemberEntity memberEntity = memberRepository.findById(memberId).orElse(null);
-
-
-        FavoriteEntity favEntity = favoriteRepository.findByBbsAndMember(bbsEntity, memberEntity).orElse(null);
+        MapEntity mapEntity = mapRepository.findByLatitudeAndLongitude(latitude, longitude).orElse(null);
+        FavoriteEntity favEntity = favoriteRepository.findByMemberAndMap(memberEntity, mapEntity).orElse(null);
 
         if (favEntity != null) {
             favoriteRepository.deleteById(favEntity.getId());
@@ -75,7 +66,10 @@ public class FavoriteService {
         }
     }
 
-    public boolean findFavObject(Long bid, Long memberId) {
-        return favoriteRepository.existsByBbsAndMember(bbsRepository.findById(bid).orElse(null), memberRepository.findById(memberId).orElse(null));
+    public boolean findFavObject(double latitude, double longitude, Long memberId) {
+        MapEntity mapEntity = mapRepository.findByLatitudeAndLongitude(latitude, longitude).orElse(null);
+        MemberEntity memberEntity = memberRepository.findById(memberId).orElse(null);
+
+        return favoriteRepository.existsByMemberAndMap(memberEntity, mapEntity);
     }
 }
