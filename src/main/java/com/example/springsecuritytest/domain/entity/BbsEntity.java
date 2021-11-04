@@ -76,21 +76,40 @@ public class BbsEntity {
     }
 
     public BbsDto toDto() {
-        return BbsDto.builder()
-                .id(id)
-                .bbsTitle(bbsTitle)
-                .bbsContents(bbsContents)
-                .bbsDate(bbsDate)
-                .categoryId(categoryId.getId())
-                .bbsWriter(bbsWriter.getNickname())
-                .bbsViews(bbsViews)
-                .likeCnt(likeCnt)
-                .replyCnt(replies.size())
-                .ipAddr(ipAddr)
-                .latitude(map.getLatitude())
-                .longitude(map.getLongitude())
-                .placeName(map.getPlaceName())
-                .build();
+        if (map != null) {
+            return BbsDto.builder()
+                    .id(id)
+                    .bbsTitle(bbsTitle)
+                    .bbsContents(bbsContents)
+                    .bbsDate(bbsDate)
+                    .categoryId(categoryId.getId())
+                    .bbsWriter(bbsWriter.getNickname())
+                    .bbsViews(bbsViews)
+                    .likeCnt(likeCnt)
+                    .replyCnt(replies.size())
+                    .ipAddr(ipAddr)
+                    .latitude(map.getLatitude())
+                    .longitude(map.getLongitude())
+                    .placeName(map.getPlaceName())
+                    .build();
+        } else {
+            return BbsDto.builder()
+                    .id(id)
+                    .bbsTitle(bbsTitle)
+                    .bbsContents(bbsContents)
+                    .bbsDate(bbsDate)
+                    .categoryId(categoryId.getId())
+                    .bbsWriter(bbsWriter.getNickname())
+                    .bbsViews(bbsViews)
+                    .likeCnt(likeCnt)
+                    .replyCnt(replies.size())
+                    .ipAddr(ipAddr)
+                    .latitude(0.0)
+                    .longitude(0.0)
+                    .placeName("")
+                    .build();
+        }
+
     }
 
     @Builder

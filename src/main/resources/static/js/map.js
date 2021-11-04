@@ -164,7 +164,7 @@ function searchDetailAddrFromCoords(marker, favObj, placeListEle) {
                     infoWindow.close();
                 });
 
-                itemListEle[0].onclick = function () {
+                itemListEle[0].onclick = function () { // 추가된 리스트 중 아이템 1개를 눌렀을 때
                     map.panTo(marker.getPosition());
                     displayInfoWindow(marker, placeName, detailAddr);
                     infoWindow.open(map, marker);
@@ -175,9 +175,9 @@ function searchDetailAddrFromCoords(marker, favObj, placeListEle) {
                             url: '/map/bbsList?lat=' + marker.getPosition().getLat() + '&lng=' + marker.getPosition().getLng(),
                             dataType: 'json',
                             success: function (response) {
-                                const rs = response.result[0];
+                                const rs = response.result;
                                 bbsListModalOpen(rs);
-                                console.log("rs : " + rs);
+                                console.log(rs);
                             }
                         });
                     });
@@ -214,31 +214,27 @@ function removeAllChildNods(el) {
     }
 }
 
+// 위치에 해당하는 게시글 리스트를 보여줄 modal 리스너
 function bbsListModalOpen(bbsList) {
     const bbsListDiv = $('#bbsList');
     const dialog = $('#bbsListDialog');
     for (let i = 0; i < bbsList.length; i++) {
+        let el = $('<li>', {});
+        el.addClass("mx-3 my-3 px-2 py-2 bbs-list-li");
+        el.attr('id', 'bbsItem_'+i);
         const contents =
-            '<li class="mx-3 mb-4 bbs-list-li" id="bbsItem_' + i +
-            '">' +
             '<input id="bbs-item-id" type="hidden" value="' + bbsList[i].id + '">' +
-            // '<div class="bbs-item d-flex justify-content-between">' +
             '<span class="bbs-title mb-3">' +
             bbsList[i].bbsTitle +
             '</span>' +
-            // '<span class="text-muted">' +
-            // sessionStorage.getItem('categoryList').get(parseInt(bbsList[i].categoryId)).getName() +
-            // '</span>' +
-            // '</div>' +
             '<div class="bbs-content">' +
             bbsList[i].bbsContents +
-            '</div>' +
-            '</li>';
-
-        bbsListDiv.append(contents);
+            '</div>';
+        el.append(contents);
+        bbsListDiv[0].append(el[0]);
     }
 
-    $(document).on('click', 'li.mx-3.mb-4', function () {
+    $(document).on('click', 'li.mx-3.my-3', function () {
         const bbsId = this.firstChild.defaultValue;
         location.href = '/post/bbs/view?id=' + bbsId;
     });

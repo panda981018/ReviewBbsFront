@@ -46,7 +46,7 @@
                 </tr>
             </table>
             <!-- 장소 정보 -->
-            <div th:if="${bbs.placeName != null}" id="locationInfo"
+            <div th:if="${bbs.latitude != 0.0}" id="locationInfo"
                  class="d-flex justify-content-between align-items-center px-3">
                 <div id="savedLocInfo">
                     <i class="fas fa-lg fa-map-marker-alt me-3"></i>

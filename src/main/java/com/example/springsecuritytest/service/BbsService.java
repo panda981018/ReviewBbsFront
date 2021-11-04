@@ -1,10 +1,10 @@
 package com.example.springsecuritytest.service;
 
 import com.example.springsecuritytest.domain.entity.*;
+import com.example.springsecuritytest.domain.repository.CategoryRepository;
 import com.example.springsecuritytest.domain.repository.MapRepository;
 import com.example.springsecuritytest.domain.repository.bbs.BbsQueryRepository;
 import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
-import com.example.springsecuritytest.domain.repository.CategoryRepository;
 import com.example.springsecuritytest.domain.repository.member.MemberRepository;
 import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.MemberDto;
@@ -63,9 +63,9 @@ public class BbsService {
                     .longitude(bbsDto.getLongitude())
                     .placeName(bbsDto.getPlaceName())
                     .build();
+            mapRepository.save(mapEntity);
             bbs.setMap(mapEntity);
             mapEntity.addBbs(bbs);
-            mapRepository.save(mapEntity);
             bbsRepository.save(bbs);
         }
     }
@@ -78,10 +78,9 @@ public class BbsService {
         BbsDto bbsDto;
         HashMap<String, Object> dataMap = new HashMap<>();
 
-        BbsEntity bbs = bbsEntity;
-        bbsDto = bbs.toDto();
+        bbsDto = bbsEntity.toDto();
         dataMap.put("bbsDto", bbsDto);
-        List<ReplyEntity> replies = bbs.getReplies();
+        List<ReplyEntity> replies = bbsEntity.getReplies();
         dataMap.put("replies", replies);
 
         return dataMap;
@@ -100,13 +99,14 @@ public class BbsService {
 
     public HashMap<String, Object> getBbsPagination(Long categoryId, Pageable pageable, String searchType, String keyword)
             throws Exception { // 카테고리 내에서 column을 기준으로 내림차순 정렬
-        Page<BbsEntity> bbsEntities;
+        Page<BbsEntity> bbsEntities = null;
         List<BbsEntity> entities;
         List<BbsDto> bbsDtoList = new ArrayList<>();
         long totalCount = 0L;
 
         if (searchType == null) {
-            CategoryEntity category = categoryRepository.findById(categoryId).orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
+            CategoryEntity category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
             bbsEntities = bbsRepository.findByCategoryId(category, pageable);
         } else if (searchType.equals("bbsWriter")) { // writer
             bbsEntities = findByWriter(categoryId, pageable, keyword);
@@ -145,15 +145,18 @@ public class BbsService {
     }
 
     public Page<BbsEntity> findByWriter(Long categoryId, Pageable pageable, String writer) throws Exception { // 작성자를 찾을 때
-        MemberEntity memberEntity = memberRepository.findByNickname(writer).orElseThrow(() -> new Exception("MEMBER NOT EXISTS"));
+        MemberEntity memberEntity = memberRepository.findByNickname(writer)
+                .orElse(null);
         CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
-        Page<BbsEntity> bbsEntities = null;
+        Page<BbsEntity> bbsEntities;
 
-        MemberEntity member = memberEntity;
         CategoryEntity category = categoryEntity;
-        bbsEntities = bbsRepository.findByCategoryIdAndBbsWriter(pageable, category, member);
-
+        if (memberEntity != null)
+            bbsEntities = bbsRepository.findByCategoryIdAndBbsWriter(pageable, category, memberEntity);
+        else { // exception
+            bbsEntities = null;
+        }
         return bbsEntities;
     }
 
@@ -188,14 +191,19 @@ public class BbsService {
             imageService.deleteUploadedImg(urls);
         }
         BbsEntity bbsEntity = bbsRepository.findById(id).orElse(null);
-        MapEntity mapEntity = bbsEntity.getMap();
-        mapEntity.getBbsEntityList().remove(bbsEntity);
-        if (mapEntity.getBbsEntityList().size() == 0) {
-            mapRepository.deleteById(mapEntity.getId());
+        if (bbsEntity.getMap() == null) {
+            bbsRepository.deleteById(id);
         } else {
-            mapRepository.save(mapEntity);
+            MapEntity mapEntity = bbsEntity.getMap();
+
+            if (mapEntity.getBbsEntityList().size() == 0) {
+                mapRepository.deleteById(mapEntity.getId());
+            } else {
+                mapEntity.getBbsEntityList().remove(bbsEntity);
+                mapRepository.save(mapEntity);
+            }
+            bbsRepository.deleteById(id);
         }
-        bbsRepository.deleteById(id);
     }
 
     //  JPA saveAndFlush를 사용한 방법
