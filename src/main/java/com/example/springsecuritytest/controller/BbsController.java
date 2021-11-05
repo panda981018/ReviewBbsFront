@@ -73,7 +73,6 @@ public class BbsController {
         HashMap<String, Object> dataMap = bbsService.getBbs(Long.parseLong(id));
         MemberDto memberDto = (MemberDto) session.getAttribute("memberInfo");
         HeartDto heartDto = heartService.findHeartObject(Long.parseLong(id), memberDto.getId());
-//        boolean favDto = favoriteService.findFavObject(Long.parseLong(id), memberDto.getId());
 
         if (dataMap.get("bbsDto") instanceof BbsDto) {
             bbs = (BbsDto) dataMap.get("bbsDto");

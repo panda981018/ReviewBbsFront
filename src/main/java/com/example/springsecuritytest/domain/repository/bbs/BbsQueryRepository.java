@@ -3,12 +3,15 @@ package com.example.springsecuritytest.domain.repository.bbs;
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
 import com.example.springsecuritytest.domain.entity.MemberEntity;
+import com.example.springsecuritytest.domain.entity.QBbsEntity;
 import com.example.springsecuritytest.util.QueryDslUtil;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import groovy.util.OrderBy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,11 +92,30 @@ public class BbsQueryRepository {
 
         return new PageImpl<>(rt.getResults(), pageable, rt.getTotal());
     }
-
-//    public List<Tuple> getMapElements(MemberEntity member) {
-//        return jpaQueryFactory.select(bbsEntity.latitude, bbsEntity.longitude, bbsEntity.placeName)
+//    try 1)
+//    public List<BbsEntity> groupByCategory() {
+//        return jpaQueryFactory.select(
+//                        Projections.bean(BbsEntity.class,
+//                                bbsEntity.categoryId,
+//                                bbsEntity.categoryId.count().as("category_count"))
+//                )
 //                .from(bbsEntity)
-//                .where(bbsEntity.bbsWriter.eq(member))
-//                .fetch();
+//                .groupBy(bbsEntity.categoryId)
+//                .fetchResults().getResults();
 //    }
+
+    // try 2) SUCCESS
+    public List<Tuple> groupByCategory() {
+        LocalDateTime startDate = LocalDateTime.parse("2021-11-05T14:10:00", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        LocalDateTime endDate = LocalDateTime.parse("2021-11-05T14:20:59", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+        return jpaQueryFactory.select(
+                        bbsEntity.categoryId.name,
+                        bbsEntity.categoryId.name.count()
+                )
+                .from(bbsEntity)
+                .where(bbsEntity.bbsDate.between(startDate, endDate))
+                .groupBy(bbsEntity.categoryId.name)
+                .fetch();
+    }
 }

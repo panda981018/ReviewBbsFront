@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.example.springsecuritytest.conf.AppConfig.localDateTimeToString;
+
 @Service
 @AllArgsConstructor
 public class MemberService implements UserDetailsService {
@@ -60,7 +62,7 @@ public class MemberService implements UserDetailsService {
             }
 
             memberDto.setRole(member.getRole() == Role.ADMIN ? Role.ADMIN.getValue() : Role.MEMBER.getValue());
-            memberDto.setRegDate(member.getRegDate());
+            memberDto.setRegDate(localDateTimeToString(member.getRegDate()));
 
             memberRepository.save(memberDto.toEntity());
 

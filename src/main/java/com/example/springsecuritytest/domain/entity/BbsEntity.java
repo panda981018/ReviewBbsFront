@@ -7,8 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.springsecuritytest.conf.AppConfig.localDateTimeToString;
 
 @SequenceGenerator(
         name = "BBS_SEQ_GEN",
@@ -34,9 +37,10 @@ public class BbsEntity {
     @Lob
     private String bbsContents;
 
-    @Column(length = 25)
-    private String bbsDate;
+    @Column
+    private LocalDateTime bbsDate;
 
+    @Column
     private int bbsViews;
 
     @Column
@@ -76,12 +80,15 @@ public class BbsEntity {
     }
 
     public BbsDto toDto() {
+
+        String writeDate = localDateTimeToString(this.bbsDate);
+
         if (map != null) {
             return BbsDto.builder()
                     .id(id)
                     .bbsTitle(bbsTitle)
                     .bbsContents(bbsContents)
-                    .bbsDate(bbsDate)
+                    .bbsDate(writeDate)
                     .categoryId(categoryId.getId())
                     .bbsWriter(bbsWriter.getNickname())
                     .bbsViews(bbsViews)
@@ -97,7 +104,7 @@ public class BbsEntity {
                     .id(id)
                     .bbsTitle(bbsTitle)
                     .bbsContents(bbsContents)
-                    .bbsDate(bbsDate)
+                    .bbsDate(writeDate)
                     .categoryId(categoryId.getId())
                     .bbsWriter(bbsWriter.getNickname())
                     .bbsViews(bbsViews)
@@ -113,7 +120,7 @@ public class BbsEntity {
     }
 
     @Builder
-    public BbsEntity(Long id, String bbsTitle, String bbsContents, String bbsDate, int bbsViews,
+    public BbsEntity(Long id, String bbsTitle, String bbsContents, LocalDateTime bbsDate, int bbsViews,
                      int likeCnt, String ipAddr) {
         this.id = id;
         this.bbsTitle = bbsTitle;

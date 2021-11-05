@@ -12,3 +12,10 @@
     text-align: center;
     font-size: 1.1rem;
 }
+
+#loginInfo {
+    pointer-events: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

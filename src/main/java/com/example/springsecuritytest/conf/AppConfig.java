@@ -8,6 +8,9 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
 @Configuration
@@ -27,31 +30,36 @@ public class AppConfig implements WebMvcConfigurer {
         return new BCryptPasswordEncoder();
     }
 
+    // DTO -> Entity
+    public static LocalDateTime stringToLocalDateTime(String date) {
+        String str = date.replace(" ", "T");
+        return LocalDateTime.parse(str, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    }
+
+    // Entity -> DTO
+    public static String localDateTimeToString(LocalDateTime dateTime) {
+        return dateTime.toString().replace("T", " ");
+    }
+
     public static String getClientIp(HttpServletRequest request) {
         Logger logger = Logger.getLogger(AppConfig.class.getName());
 
         String ip = request.getHeader("X-Forwarded-For");
-        logger.info("> X-FORWARDED-FOR : " + ip);
 
         if (ip == null) {
             ip = request.getHeader("Proxy-Client-IP");
-            logger.info("> Proxy-Client-IP : " + ip);
         }
         if (ip == null) {
             ip = request.getHeader("WL-Proxy-Client-IP");
-            logger.info(">  WL-Proxy-Client-IP : " + ip);
         }
         if (ip == null) {
             ip = request.getHeader("HTTP_CLIENT_IP");
-            logger.info("> HTTP_CLIENT_IP : " + ip);
         }
         if (ip == null) {
             ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-            logger.info("> HTTP_X_FORWARDED_FOR : " + ip);
         }
         if (ip == null) {
             ip = request.getRemoteAddr();
-            logger.info("> getRemoteAddr : "+ip);
         }
         logger.info("> Result : IP Address : "+ip);
 

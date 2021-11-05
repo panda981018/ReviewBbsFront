@@ -57,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/notice/write").hasRole("ADMIN")
                 .antMatchers("/notice/update").hasRole("ADMIN")
                 .antMatchers("/notice/delete").hasRole("ADMIN")
+                .antMatchers("/map/**").hasRole("MEMBER")
                 .antMatchers("/**").permitAll()
                 .and()
                 .csrf()

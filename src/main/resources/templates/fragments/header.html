@@ -45,7 +45,7 @@
                 My Menu
             </button>
             <div class="dropdown-menu" aria-labelledby="myMenu">
-                <a class="dropdown-item btn" th:text="${session.memberInfo.getRole()} + ' ' + ${session.memberInfo.getNickname()}"></a>
+                <a class="dropdown-item btn" id="loginInfo" th:text="${session.memberInfo.getRole()} + ' ' + ${session.memberInfo.getNickname()}"></a>
                 <hr class="dropdown-divider">
                 <a class="dropdown-item btn" href="/member/info"
                    sec:authorize="hasRole('ROLE_MEMBER')">My Info</a>

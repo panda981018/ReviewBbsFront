@@ -3,6 +3,11 @@ package com.example.springsecuritytest.dto;
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static com.example.springsecuritytest.conf.AppConfig.stringToLocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -28,7 +33,7 @@ public class BbsDto {
                 .id(id)
                 .bbsTitle(bbsTitle)
                 .bbsContents(bbsContents)
-                .bbsDate(bbsDate)
+                .bbsDate(stringToLocalDateTime(this.bbsDate))
                 .bbsViews(bbsViews)
                 .likeCnt(likeCnt)
                 .ipAddr(ipAddr)

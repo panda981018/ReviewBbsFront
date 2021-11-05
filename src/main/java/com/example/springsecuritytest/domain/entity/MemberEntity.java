@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -59,9 +60,10 @@ public class MemberEntity {
     private Calendar birth;
 
     @Column(length = 25)
-    private String regDate;
+    private LocalDateTime regDate;
 
     public MemberDto toDto() {
+        String regDateStr = regDate.toString().replace("T", " ");
         if (role == Role.MEMBER) { // member
             return MemberDto.builder()
                     .id(id)
@@ -73,7 +75,7 @@ public class MemberEntity {
                     .year(Integer.toString(birth.get(Calendar.YEAR)))
                     .month(String.format("%02d", birth.get(Calendar.MONTH)+1))
                     .day(String.format("%02d", birth.get(Calendar.DAY_OF_MONTH)))
-                    .regDate(regDate)
+                    .regDate(regDateStr)
                     .build();
         } else { // admin
             return MemberDto.builder()
@@ -82,7 +84,7 @@ public class MemberEntity {
                     .nickname(nickname)
                     .gender(gender == Gender.MALE ? Gender.MALE.getValue() : Gender.FEMALE.getValue())
                     .role(Role.ADMIN.getTitle())
-                    .regDate(regDate)
+                    .regDate(regDateStr)
                     .build();
         }
     }
@@ -90,7 +92,7 @@ public class MemberEntity {
 
     @Builder
     public MemberEntity(Long id, String username, String password, Role role,
-                        String nickname, Gender gender, int age, Calendar birth, String regDate) {
+                        String nickname, Gender gender, int age, Calendar birth, LocalDateTime regDate) {
         this.id = id;
         this.username = username;
         this.password = password;

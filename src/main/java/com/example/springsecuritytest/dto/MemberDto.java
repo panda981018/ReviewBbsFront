@@ -7,6 +7,8 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 @Getter
@@ -29,6 +31,9 @@ public class MemberDto implements Serializable {
     private String regDate;
 
     public MemberEntity toEntity() {
+        LocalDateTime dateFormat = LocalDateTime.parse(this.regDate.replace(" ", "T"),
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
         if (role.equals(Role.ADMIN.getValue())) { // admin
             return MemberEntity.builder()
                     .id(id)
@@ -39,7 +44,7 @@ public class MemberDto implements Serializable {
                     .gender(null)
                     .age(0)
                     .birth(null)
-                    .regDate(regDate)
+                    .regDate(dateFormat)
                     .build();
         } else { // member
             Calendar birth = Calendar.getInstance();
@@ -56,7 +61,7 @@ public class MemberDto implements Serializable {
                     .gender(gender.equals(Gender.MALE.getValue()) ? Gender.MALE : Gender.FEMALE)
                     .age(calcAge(year))
                     .birth(birth)
-                    .regDate(regDate)
+                    .regDate(dateFormat)
                     .build();
         }
     }

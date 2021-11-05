@@ -8,6 +8,7 @@ import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
 import com.example.springsecuritytest.domain.repository.member.MemberRepository;
 import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.MemberDto;
+import com.querydsl.core.Tuple;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
+
+import static com.example.springsecuritytest.conf.AppConfig.localDateTimeToString;
 
 @Service
 @AllArgsConstructor
@@ -28,6 +32,8 @@ public class BbsService {
     private final CategoryRepository categoryRepository;
     private final MapRepository mapRepository;
     private final MemberRepository memberRepository;
+
+    private final Logger logger = Logger.getLogger(BbsService.class.getName());
 
     // 게시물 저장
     public void saveBbs(BbsDto bbsDto, MemberDto memberDto) throws Exception {
@@ -88,6 +94,18 @@ public class BbsService {
 
     // 카테고리 상관없이 찾기
     public List<BbsDto> findAll(Pageable pageable) {
+
+        List<Tuple> countCategory = bbsQueryRepository.groupByCategory();
+        for (int i = 0; i < countCategory.size(); i++) {
+            logger.info("CategoryName: " + countCategory.get(i).get(0, String.class));
+            logger.info(countCategory.get(i).get(0, String.class) + "-count : " + countCategory.get(i).get(1, Integer.class));
+        }
+//        List<Tuple> countCategory = bbsQueryRepository.groupByCategory();
+//        for (int i = 0; i < countCategory.size(); i++) {
+//            logger.info("CategoryName: " + countCategory.get(i).get(0, String.class));
+//            logger.info(countCategory.get(i).get(0, String.class) + "-count : " + countCategory.get(i).get(1, Integer.class));
+//        }
+
         Page<BbsEntity> paging = bbsRepository.findAll(pageable);
         List<BbsEntity> bbsEntities = paging.getContent();
         List<BbsDto> bbsDtoList = new ArrayList<>();
@@ -164,11 +182,10 @@ public class BbsService {
     public void updateBbs(BbsDto bbsDto, MemberDto memberDto) throws Exception {
         CategoryEntity category = categoryRepository.findById(bbsDto.getCategoryId())
                 .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
-        BbsEntity bbsEntity = bbsRepository.findById(bbsDto.getId())
+        BbsEntity oldBbs = bbsRepository.findById(bbsDto.getId())
                 .orElseThrow(() -> new Exception("MEMBER IS NOT EXISTS"));
 
-        BbsEntity oldBbs = bbsEntity; // bbsdate, writer, bbsView 가져오기
-        bbsDto.setBbsDate(oldBbs.getBbsDate()); // set date
+        bbsDto.setBbsDate(localDateTimeToString(oldBbs.getBbsDate())); // set date
         bbsDto.setBbsViews(oldBbs.getBbsViews()); // set bbsView
         bbsDto.setLikeCnt(oldBbs.getLikeCnt());
 

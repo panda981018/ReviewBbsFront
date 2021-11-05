@@ -48,9 +48,13 @@ function getData(pageNum) {
         dataType: "json",
         success: function (result) {
             if (result.data.length > 0) {
+                $('#menu_wrap').show();
                 currPage = pageNum;
                 displayPlaces(result.data);
                 displayPagination(result.totalPages);
+            } else {
+                $('#menu_wrap').hide();
+                alert("아직 추가한 장소가 없습니다.");
             }
         }
     });
@@ -153,6 +157,9 @@ function searchDetailAddrFromCoords(marker, favObj, placeListEle) {
                             dataType: 'json',
                             success: function (response) {
                                 const rs = response.result;
+                                if (rs.size() === 0) {
+                                    alert("해당 위치에 작성된 게시글이 없습니다.");
+                                }
                                 bbsListModalOpen(rs);
                                 console.log(rs);
                             }
