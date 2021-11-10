@@ -9,17 +9,18 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@SequenceGenerator(
-        name = "REPLY_SEQ_GEN",
-        sequenceName = "REPLY_SEQ",
-        allocationSize = 1
-)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
 @Table(name = "REPLY")
 public class ReplyEntity {
     @Id
+    @SequenceGenerator(
+            name = "REPLY_SEQ_GEN",
+            sequenceName = "REPLY_SEQ",
+            allocationSize = 1,
+            initialValue = 1
+    )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "REPLY_SEQ_GEN")

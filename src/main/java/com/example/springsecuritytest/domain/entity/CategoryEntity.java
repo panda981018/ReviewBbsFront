@@ -10,11 +10,6 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@SequenceGenerator(
-        name = "CATEGORY_SEQ_GEN",
-        sequenceName = "CATEGORY_SEQ",
-        allocationSize = 1
-)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -22,6 +17,12 @@ import java.util.Set;
 public class CategoryEntity {
 
     @Id
+    @SequenceGenerator(
+            name = "CATEGORY_SEQ_GEN",
+            sequenceName = "CATEGORY_SEQ",
+            allocationSize = 1,
+            initialValue = 1
+    )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "CATEGORY_SEQ_GEN")

@@ -276,7 +276,7 @@ function displayPagination(pagination) {
     for (i = 1; i <= pagination.last; i++) {
         const ele = document.createElement('button');
         ele.innerHTML = i; // 페이지 넘버
-        ele.addClass('btn');
+        ele.classList.add('btn');
 
         if (i === pagination.current) {
             ele.className = 'on';

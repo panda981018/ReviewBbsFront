@@ -8,11 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@SequenceGenerator(
-        name = "FAVORITE_SEQ_GEN",
-        sequenceName = "FAVORITE_SEQ",
-        allocationSize = 1
-)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -20,6 +15,12 @@ import javax.persistence.*;
 public class FavoriteEntity {
 
     @Id
+    @SequenceGenerator(
+            name = "FAVORITE_SEQ_GEN",
+            sequenceName = "FAVORITE_SEQ",
+            allocationSize = 1,
+            initialValue = 1
+    )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "FAVORITE_SEQ_GEN")

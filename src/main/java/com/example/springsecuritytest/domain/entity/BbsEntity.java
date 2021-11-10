@@ -13,11 +13,6 @@ import java.util.List;
 
 import static com.example.springsecuritytest.conf.AppConfig.localDateTimeToString;
 
-@SequenceGenerator(
-        name = "BBS_SEQ_GEN",
-        sequenceName = "BBS_SEQ",
-        allocationSize = 1
-)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -25,6 +20,12 @@ import static com.example.springsecuritytest.conf.AppConfig.localDateTimeToStrin
 public class BbsEntity {
 
     @Id
+    @SequenceGenerator(
+            name = "BBS_SEQ_GEN",
+            sequenceName = "BBS_SEQ",
+            allocationSize = 1,
+            initialValue = 1
+    )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "BBS_SEQ_GEN")

@@ -17,11 +17,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@SequenceGenerator(
-        name = "USER_SEQ_GEN",
-        sequenceName = "USER_SEQ",
-        allocationSize = 1
-)
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 무분별한 Entity 생성을 막기 위해 protected
 @Getter
 @Setter
@@ -29,6 +24,12 @@ import java.util.Set;
 @Table(name = "MEMBER")
 public class MemberEntity {
     @Id
+    @SequenceGenerator(
+            name = "USER_SEQ_GEN",
+            sequenceName = "USER_SEQ",
+            allocationSize = 1,
+            initialValue = 1
+    )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "USER_SEQ_GEN")

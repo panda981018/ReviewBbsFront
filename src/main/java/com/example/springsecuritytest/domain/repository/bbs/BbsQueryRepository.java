@@ -2,16 +2,12 @@ package com.example.springsecuritytest.domain.repository.bbs;
 
 import com.example.springsecuritytest.domain.entity.BbsEntity;
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
-import com.example.springsecuritytest.domain.entity.MemberEntity;
-import com.example.springsecuritytest.domain.entity.QBbsEntity;
 import com.example.springsecuritytest.util.QueryDslUtil;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import groovy.util.OrderBy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,7 +18,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.example.springsecuritytest.domain.entity.QBbsEntity.bbsEntity;
@@ -105,16 +100,13 @@ public class BbsQueryRepository {
 //    }
 
     // try 2) SUCCESS
-    public List<Tuple> groupByCategory() {
-        LocalDateTime startDate = LocalDateTime.parse("2021-11-05T14:10:00", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        LocalDateTime endDate = LocalDateTime.parse("2021-11-05T14:20:59", DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-
+    public List<Tuple> groupByCategory(LocalDateTime from, LocalDateTime to) {
         return jpaQueryFactory.select(
                         bbsEntity.categoryId.name,
                         bbsEntity.categoryId.name.count()
                 )
                 .from(bbsEntity)
-                .where(bbsEntity.bbsDate.between(startDate, endDate))
+                .where(bbsEntity.bbsDate.between(from, to))
                 .groupBy(bbsEntity.categoryId.name)
                 .fetch();
     }

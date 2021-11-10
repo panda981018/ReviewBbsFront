@@ -10,11 +10,6 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@SequenceGenerator(
-        name = "NOTICE_SEQ_GEN",
-        sequenceName = "NOTICE_SEQ",
-        allocationSize = 1
-)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -22,6 +17,12 @@ import java.time.LocalDateTime;
 public class NoticeEntity {
 
     @Id
+    @SequenceGenerator(
+            name = "NOTICE_SEQ_GEN",
+            sequenceName = "NOTICE_SEQ",
+            allocationSize = 1,
+            initialValue = 1
+    )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "NOTICE_SEQ_GEN")

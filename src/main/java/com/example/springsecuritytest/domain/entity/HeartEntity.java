@@ -8,11 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@SequenceGenerator(
-        name = "HEART_SEQ_GEN",
-        sequenceName = "HEART_SEQ",
-        allocationSize = 1
-)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -20,6 +15,12 @@ import javax.persistence.*;
 public class HeartEntity {
 
     @Id
+    @SequenceGenerator(
+            name = "HEART_SEQ_GEN",
+            sequenceName = "HEART_SEQ",
+            allocationSize = 1,
+            initialValue = 1
+    )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "HEART_SEQ_GEN")

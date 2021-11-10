@@ -10,19 +10,21 @@ import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.querydsl.core.Tuple;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static com.example.springsecuritytest.conf.AppConfig.localDateTimeToString;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class BbsService {
@@ -33,9 +35,8 @@ public class BbsService {
     private final MapRepository mapRepository;
     private final MemberRepository memberRepository;
 
-    private final Logger logger = Logger.getLogger(BbsService.class.getName());
-
     // 게시물 저장
+    @Transactional
     public void saveBbs(BbsDto bbsDto, MemberDto memberDto) throws Exception {
         double latitude = bbsDto.getLatitude();
         double longitude = bbsDto.getLongitude();
@@ -92,20 +93,16 @@ public class BbsService {
         return dataMap;
     }
 
+    public void batchTest(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Tuple> countCategory = bbsQueryRepository.groupByCategory(startDate, endDate);
+        for (int i = 0; i < countCategory.size(); i++) {
+            log.info("CategoryName: " + countCategory.get(i).get(0, String.class));
+            log.info(countCategory.get(i).get(0, String.class) + " count : " + countCategory.get(i).get(1, Integer.class));
+        }
+    }
+
     // 카테고리 상관없이 찾기
     public List<BbsDto> findAll(Pageable pageable) {
-
-        List<Tuple> countCategory = bbsQueryRepository.groupByCategory();
-        for (int i = 0; i < countCategory.size(); i++) {
-            logger.info("CategoryName: " + countCategory.get(i).get(0, String.class));
-            logger.info(countCategory.get(i).get(0, String.class) + "-count : " + countCategory.get(i).get(1, Integer.class));
-        }
-//        List<Tuple> countCategory = bbsQueryRepository.groupByCategory();
-//        for (int i = 0; i < countCategory.size(); i++) {
-//            logger.info("CategoryName: " + countCategory.get(i).get(0, String.class));
-//            logger.info(countCategory.get(i).get(0, String.class) + "-count : " + countCategory.get(i).get(1, Integer.class));
-//        }
-
         Page<BbsEntity> paging = bbsRepository.findAll(pageable);
         List<BbsEntity> bbsEntities = paging.getContent();
         List<BbsDto> bbsDtoList = new ArrayList<>();
@@ -179,6 +176,7 @@ public class BbsService {
     }
 
     // 게시글 수정
+    @Transactional
     public void updateBbs(BbsDto bbsDto, MemberDto memberDto) throws Exception {
         CategoryEntity category = categoryRepository.findById(bbsDto.getCategoryId())
                 .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
@@ -197,12 +195,14 @@ public class BbsService {
     }
 
     // 조회수 업데이트
+    @Transactional
     public void updateViews(Long bid) throws Exception {
         BbsEntity bbsEntity = bbsRepository.findById(bid)
                 .orElseThrow(() -> new Exception("POST NOT EXIST"));
         bbsQueryRepository.updateBbsViews(bid, bbsEntity.getBbsViews());
     }
 
+    @Transactional
     public void deleteBbs(Long id, List<String> urls) { // 게시글 삭제
         if (urls != null) {
             imageService.deleteUploadedImg(urls);
@@ -224,6 +224,7 @@ public class BbsService {
     }
 
     //  JPA saveAndFlush를 사용한 방법
+    @Transactional
     public int updateLikeCount(Long bid, String type) throws Exception {
         BbsEntity optionalBbsEntity = bbsRepository.findById(bid).orElseThrow(() -> new Exception("POST NOT EXIST"));
 

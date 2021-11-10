@@ -6,11 +6,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@SequenceGenerator(
-        name = "MAP_SEQ_GEN",
-        sequenceName = "MAP_SEQ",
-        allocationSize = 1
-)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -18,6 +13,12 @@ import java.util.List;
 public class MapEntity {
 
     @Id
+    @SequenceGenerator(
+            name = "MAP_SEQ_GEN",
+            sequenceName = "MAP_SEQ",
+            allocationSize = 1,
+            initialValue = 1
+    )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "MAP_SEQ_GEN")
