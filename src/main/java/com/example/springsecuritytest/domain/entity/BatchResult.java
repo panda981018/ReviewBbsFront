@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -25,13 +26,15 @@ public class BatchResult {
     )
     private Long id;
     private String name;
-    private int bbsCount;
+    private LocalDate staticsDate;
+    private Long bbsCount;
 
     @Builder
-    public BatchResult(Long id, String name, int bbsCount) {
+    public BatchResult(Long id, String name, Long bbsCount, LocalDate staticsDate) {
         this.id = id;
         this.name = name;
         this.bbsCount = bbsCount;
+        this.staticsDate = staticsDate;
     }
 
 

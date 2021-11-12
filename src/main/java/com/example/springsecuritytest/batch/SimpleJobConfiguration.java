@@ -2,26 +2,33 @@ package com.example.springsecuritytest.batch;
 
 import com.example.springsecuritytest.domain.entity.BatchResult;
 import com.example.springsecuritytest.domain.entity.BbsEntity;
+import com.example.springsecuritytest.dto.BatchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.*;
+import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.database.JpaItemWriter;
-import org.springframework.batch.item.database.JpaPagingItemReader;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.*;
+import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import com.example.springsecuritytest.conf.AppConfig.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,7 +37,8 @@ public class SimpleJobConfiguration {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final EntityManagerFactory entityManagerFactory;
+    private final EntityManager entityManager;
+    private final EntityManagerFactory entityManagerFactory; // 영속성 관리를 위해 선언
 
     private static final int CHUNK_SIZE = 10;
 
@@ -45,7 +53,6 @@ public class SimpleJobConfiguration {
     // taskelt
 //    @Bean
 //    @JobScope // Step 선언문에서 사용가능함.
-//    // @StepScope는 tasklet이나 ItemReader, ItemWriter, ItemProcessor에서 사용 가능.
 //    public Step simpleStep1(@Value("#{jobParameters[startDay]}") String startDay) { // tasklet 방식
 //        startDay = LocalDate.now().minusDays(1).toString();
 //        LocalDate startLocalDay = LocalDate.parse(startDay, DateTimeFormatter.ISO_LOCAL_DATE);
@@ -78,6 +85,15 @@ public class SimpleJobConfiguration {
 //                .build();
 //    }
 
+//    @BeforeStep
+//    public void beforeStep(final StepExecution stepExecution) {
+//        JobParameters jobParameters = new JobParametersBuilder()
+//                .addString("beforeDay", LocalDate.now().minusDays(2).toString())
+//                .toJobParameters();
+//
+//        JobParameters parameters = stepExecution.getJobExecution().getJobParameters();
+//    }
+
     @Bean
     @JobScope
     public Step chunkStep() throws Exception {
@@ -103,21 +119,32 @@ public class SimpleJobConfiguration {
 
         return new JpaPagingItemReaderBuilder<BbsEntity>()
                 .name("jpaPagingItemReader")
-                .entityManagerFactory(entityManagerFactory).pageSize(CHUNK_SIZE)
+                .entityManagerFactory(entityManagerFactory)
+                .pageSize(CHUNK_SIZE)
                 .parameterValues(params)
-                .queryString("SELECT categoryId.name FROM BbsEntity WHERE bbs_date between :searchFrom AND :searchTo")
+                .queryString("SELECT categoryId.name, COUNT(categoryId.name) FROM BbsEntity WHERE bbsDate between :searchFrom AND :searchTo GROUP BY categoryId.name")
                 .build();
     }
 
     @Bean
     @StepScope
-    public ItemProcessor<BbsEntity, BatchResult> jpaItemProcessor() {
+//    @Value("#{jobParameters['searchFrom']}")
+    public ItemProcessor<Object, BatchResult> jpaItemProcessor() {
         log.info(">>>>>>> Processor");
-        return bbsEntity -> {
-            log.info(String.valueOf(bbsEntity));
+        return result -> {
+            Object[] objList = (Object[]) result;
+            Iterator<Object> ite = Arrays.stream(objList).iterator();
+            List<String> objToString = new ArrayList<>();
+
+            while (ite.hasNext()) {
+                String str = ite.next().toString();
+                objToString.add(str);
+            } // 리스트로 변경하는 작업
+
+            // batchresult로 만드는 작업
             return BatchResult.builder()
-                    .name(bbsEntity.getCategoryId().getName())
-                    .bbsCount(0)
+                    .name(objToString.get(0))
+                    .bbsCount(Long.parseLong(objToString.get(1)))
                     .build();
         };
     }
@@ -125,24 +152,21 @@ public class SimpleJobConfiguration {
     @Bean
     @StepScope
     public JpaItemWriter<BatchResult> writer() {
-        JpaItemWriter<BatchResult> jpaItemWriter = new JpaItemWriter<BatchResult>();
-        jpaItemWriter.setEntityManagerFactory(entityManagerFactory);
-        return jpaItemWriter;
+        return new JpaItemWriterBuilder<BatchResult>()
+                .entityManagerFactory(entityManagerFactory)
+                .build();
     }
+
 //    @Bean
 //    @StepScope
 //    public JdbcPagingItemReader<BbsEntity> reader() throws Exception {
-//        LocalDate beforeDate = LocalDate.now().minusDays(1);
+//        LocalDate beforeDate = LocalDate.now().minusDays(2);
 //        LocalDateTime dayFrom = LocalDateTime.of(beforeDate.getYear(), beforeDate.getMonthValue(), beforeDate.getDayOfMonth(), 0, 0, 0);
 //        LocalDateTime dayTo = LocalDateTime.of(beforeDate.getYear(), beforeDate.getMonthValue(), beforeDate.getDayOfMonth(), 23, 59, 59);
 //        HashMap<String, Object> params = new HashMap<>();
 //
 //        params.put("searchFrom", dayFrom);
 //        params.put("searchTo", dayTo);
-////        JdbcPagingItemReader<BbsEntity> jdbcPagingItemReader = new JdbcPagingItemReader<>();
-////        jdbcPagingItemReader.setName("bbsEntity_Reader");
-////        jdbcPagingItemReader.setPageSize(CHUNK_SIZE);
-////        jdbcPagingItemReader.setParameterValues(params);
 //
 //        return new JdbcPagingItemReaderBuilder<BbsEntity>()
 //                .pageSize(CHUNK_SIZE)
@@ -154,17 +178,17 @@ public class SimpleJobConfiguration {
 //                .name("jdbcPagingItemReader")
 //                .build();
 //    }
-
+//
 //    @Bean
 //    public PagingQueryProvider createQueryProvider() throws Exception {
 //        SqlPagingQueryProviderFactoryBean queryProviderFactoryBean
 //                = new SqlPagingQueryProviderFactoryBean();
 //
 //        queryProviderFactoryBean.setDatabaseType(String.valueOf(dataSource));
-//        queryProviderFactoryBean.setSelectClause("select category_id.name, count(category_id.name)");
-//        queryProviderFactoryBean.setFromClause("from bbs");
-//        queryProviderFactoryBean.setWhereClause("where bbs_date between :searchFrom and :searchTo");
-//        queryProviderFactoryBean.setGroupClause("group by category_id.name");
+//        queryProviderFactoryBean.setSelectClause("SELECT category_id.name, count(category_id.name)");
+//        queryProviderFactoryBean.setFromClause("FROM bbs");
+//        queryProviderFactoryBean.setWhereClause("WHERE bbs_date BETWEEN :searchFrom AND :searchTo");
+//        queryProviderFactoryBean.setGroupClause("GROUP BY category_id.name");
 //
 //        HashMap<String, Order> sortKeys = new HashMap<>();
 //        sortKeys.put("category_id.name", Order.ASCENDING);
