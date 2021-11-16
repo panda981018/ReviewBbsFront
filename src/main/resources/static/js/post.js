@@ -67,7 +67,7 @@ function deleteBbs(bbsId, categoryId) { // 게시물 삭제
 
 function sortBbs() { // 정렬
     $('#sortStandard').on('change', function () {
-        sortType = $('#sortStandard option:selected').val();
+        const sortType = $('#sortStandard option:selected').val();
         grid.readData(1, {"column": sortType});
     });
 }

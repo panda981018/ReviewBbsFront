@@ -81,4 +81,9 @@ public class AdminController { // admin
         return "admin/admin_category";
     }
 
+    @GetMapping("/chart")
+    public String showCategoryChart() {
+        return "admin/admin_statics";
+    }
+
 }

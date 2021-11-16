@@ -43,7 +43,7 @@ function contentValidate() {
 let urlList = []; // 사진 src만 갖고 있는 배열
 
 function validateForm() { // 타이틀과 내용이 버어있는가
-    $('#submitBtn').on('click', function () {
+    $('#submitBtn').on('click', function (e) {
         const editor = $('.note-editable');
         const writeSpace = $('#writeSpace');
         const titleError = $('#titleError');
@@ -62,7 +62,7 @@ function validateForm() { // 타이틀과 내용이 버어있는가
             writeSpace.val(editor[0].innerHTML.trim());
             $('form').eq(0).submit();
         }
-    })
+    });
 }
 
 function cancelingWrite() { // 취소버튼 클릭

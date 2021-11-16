@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{layouts/layout}">
+<head>
+<!--    <link rel="stylesheet" type="text/css" href="/css/form.css">-->
+    <link rel="stylesheet" type="text/css" href="/css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <title>Admin Page</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div layout:replace="fragments/adminnav :: NaviAdmin"></div>
+    <div id="adminContent" class="d-flex flex-column flex-md-shrink-1 justify-content-start mt-3">
+        <div id="pageInfo" class="align-self-center">
+            <h1 class="py-2">Statics</h1>
+            <span class="py-1">카테고리 별 신규 게시글 통계를 보는 페이지입니다.</span>
+        </div>
+        <div id="chartInfo" class="my-3 d-flex flex-row justify-content-between align-items-center">
+            <div class="dropdown d-flex justify-content-start align-items-center">
+                <label for="categorySelect" id="categoryLabel" class="me-2"><b>카테고리명</b></label>
+                <select id="categorySelect" class="dropdown-toggle form-select" data-toggle="dropdown">
+                    <th:block th:each="category : ${session.categoryList}">
+                        <option class="dropdown-item" th:value="${category.getName()}" th:text="${category.getName()}"></option>
+                    </th:block>
+                </select>
+            </div>
+        </div>
+        <canvas id="chart"></canvas>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script src="/js/adminpage.js"></script>
+    <script type="text/javascript" src="/js/adminChart.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            //<[CDATA[
+            const pageTitle = $('#pageInfo h1').text();
+            //]]>
+            selectMenu(pageTitle);
+            initChart();
+        }
+    </script>
+</th:block>
+</body>
+</html>

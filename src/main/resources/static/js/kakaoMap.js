@@ -258,7 +258,7 @@ function addMarker(position, idx) {
 }
 
 function displayInfoWindow(marker, title) {
-    const content = '<div style="padding:3px; z-index:100; width: 220px;">' + title + '</div>';
+    const content = '<div style="padding:3px; z-index:100;">' + title + '</div>';
 
     infoWindow.setContent(content);
     infoWindow.open(map, marker);
@@ -276,15 +276,15 @@ function displayPagination(pagination) {
     for (i = 1; i <= pagination.last; i++) {
         const ele = document.createElement('button');
         ele.innerHTML = i; // 페이지 넘버
-        ele.classList.add('btn');
+        ele.classList.add('page-btn');
 
         if (i === pagination.current) {
             ele.className = 'on';
         } else {
             ele.onclick = (function (i) {
                 return function () {
-                    pagination.gotoPage(i)
-                };
+                    pagination.gotoPage(i);
+                }
             })(i);
         }
         fragment[0].append(ele);

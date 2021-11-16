@@ -109,7 +109,7 @@ public class SimpleJobConfiguration {
     @Bean
     @StepScope
     public JpaPagingItemReader<BbsEntity> jpaPagingItemReader() {
-        LocalDate beforeDate = LocalDate.now().minusDays(1);
+        LocalDate beforeDate = LocalDate.now();
         LocalDateTime dayFrom = LocalDateTime.of(beforeDate.getYear(), beforeDate.getMonthValue(), beforeDate.getDayOfMonth(), 0, 0, 0);
         LocalDateTime dayTo = LocalDateTime.of(beforeDate.getYear(), beforeDate.getMonthValue(), beforeDate.getDayOfMonth(), 23, 59, 59);
         HashMap<String, Object> params = new HashMap<>();
@@ -132,6 +132,7 @@ public class SimpleJobConfiguration {
     public ItemProcessor<Object, BatchResult> jpaItemProcessor() {
         log.info(">>>>>>> Processor");
         return result -> {
+            LocalDate beforeDate = LocalDate.now();
             Object[] objList = (Object[]) result;
             Iterator<Object> ite = Arrays.stream(objList).iterator();
             List<String> objToString = new ArrayList<>();
@@ -145,6 +146,7 @@ public class SimpleJobConfiguration {
             return BatchResult.builder()
                     .name(objToString.get(0))
                     .bbsCount(Long.parseLong(objToString.get(1)))
+                    .staticsDate(beforeDate)
                     .build();
         };
     }
