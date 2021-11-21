@@ -97,7 +97,7 @@ public class BbsController {
     }
 
     @GetMapping("/bbs/update") // 수정하는 페이지
-    public String showBbsList(@RequestParam(required = false) String id, Model model) throws Exception {
+    public String editBbs(@RequestParam(required = false) String id, Model model) throws Exception {
 
         BbsDto bbs = null;
 
@@ -111,8 +111,11 @@ public class BbsController {
     }
 
     @PostMapping("/bbs/update") // 수정 클릭
-    public String updateBbs(BbsDto bbsDto, HttpSession session) throws Exception {
+    public String updateBbs(BbsDto bbsDto, HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
         MemberDto member = (MemberDto) session.getAttribute("memberInfo");
+        bbsDto.setIpAddr(getClientIp(request));
+
         bbsService.updateBbs(bbsDto, member);
         return "redirect:/post/bbs?category=" + bbsDto.getCategoryId();
     }

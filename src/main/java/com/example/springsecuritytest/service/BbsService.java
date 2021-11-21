@@ -2,6 +2,7 @@ package com.example.springsecuritytest.service;
 
 import com.example.springsecuritytest.domain.entity.*;
 import com.example.springsecuritytest.domain.repository.CategoryRepository;
+import com.example.springsecuritytest.domain.repository.HeartRepository;
 import com.example.springsecuritytest.domain.repository.MapRepository;
 import com.example.springsecuritytest.domain.repository.bbs.BbsQueryRepository;
 import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
@@ -34,6 +35,7 @@ public class BbsService {
     private final CategoryRepository categoryRepository;
     private final MapRepository mapRepository;
     private final MemberRepository memberRepository;
+    private final HeartRepository heartRepository;
 
     // 게시물 저장
     @Transactional
@@ -178,6 +180,10 @@ public class BbsService {
     // 게시글 수정
     @Transactional
     public void updateBbs(BbsDto bbsDto, MemberDto memberDto) throws Exception {
+        double latitude = bbsDto.getLatitude();
+        double longitude = bbsDto.getLongitude();
+
+
         CategoryEntity category = categoryRepository.findById(bbsDto.getCategoryId())
                 .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
         BbsEntity oldBbs = bbsRepository.findById(bbsDto.getId())
@@ -189,9 +195,36 @@ public class BbsService {
 
         BbsEntity bbs = bbsDto.toEntity();
         CategoryEntity categoryEntity = category; // set category
+
         bbs.setCategory(categoryEntity);
         bbs.setBbsWriter(memberDto.toEntity()); // set writer
-        bbsRepository.save(bbs);
+
+        if (oldBbs.getMap() != null) {
+            if (oldBbs.getMap().getLatitude() == latitude && oldBbs.getMap().getLongitude() == longitude) {
+                bbs.setMap(oldBbs.getMap());
+            }
+        } else {
+            MapEntity map;
+            if (mapRepository.existsByLatitudeAndLongitude(latitude, longitude)) {
+                map = mapRepository.findByLatitudeAndLongitude(latitude, longitude).orElseThrow(null);
+                bbs.setMap(map);
+                bbsRepository.save(bbs);
+                map.getBbsEntityList().add(bbs);
+                mapRepository.save(map);
+            } else {
+                map = MapEntity.builder()
+                        .latitude(latitude)
+                        .longitude(longitude)
+                        .placeName(bbsDto.getPlaceName())
+                        .build();
+                bbs.setMap(map);
+                bbsRepository.save(bbs);
+                map.getBbsEntityList().add(bbs);
+                mapRepository.save(map);
+            }
+//            mapRepository.save(map);
+//            map.getBbsEntityList().add(bbs);
+        }
     }
 
     // 조회수 업데이트
@@ -204,13 +237,22 @@ public class BbsService {
 
     @Transactional
     public void deleteBbs(Long id, List<String> urls) { // 게시글 삭제
-        if (urls != null) {
+        BbsEntity bbsEntity = bbsRepository.findById(id).orElse(null);
+        List<HeartEntity> heartEntitiesAboutBbs = heartRepository.findByBbs(bbsEntity);
+
+        if (heartEntitiesAboutBbs.size() != 0) { // bbs와 관련된 객체가 있는지 찾아서 있으면 삭제
+            for (HeartEntity heart : heartEntitiesAboutBbs) {
+                heartRepository.deleteById(heart.getId());
+            }
+        }
+
+        if (urls != null) { // 이미지가 있다면 사진 저장소에서 이미지 삭제
             imageService.deleteUploadedImg(urls);
         }
-        BbsEntity bbsEntity = bbsRepository.findById(id).orElse(null);
-        if (bbsEntity.getMap() == null) {
+
+        if (bbsEntity.getMap() == null) { // 게시물에서 저장한 위치가 null이라면 bbs 그냥 삭제
             bbsRepository.deleteById(id);
-        } else {
+        } else { // 게시물에서 저장한 위치가 null이 아니라면 map객체에서 게시글 삭제하고 게시물 삭제
             MapEntity mapEntity = bbsEntity.getMap();
 
             if (mapEntity.getBbsEntityList().size() == 0) {

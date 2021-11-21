@@ -6,7 +6,7 @@
 <head>
 <!--    <link rel="stylesheet" type="text/css" href="/css/form.css">-->
     <link rel="stylesheet" type="text/css" href="/css/admin.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="/css/chart.css">
     <title>Admin Page</title>
 </head>
 <body>
@@ -17,12 +17,16 @@
             <h1 class="py-2">Statics</h1>
             <span class="py-1">카테고리 별 신규 게시글 통계를 보는 페이지입니다.</span>
         </div>
-        <div id="chartInfo" class="my-3 d-flex flex-row justify-content-between align-items-center">
-            <div class="dropdown d-flex justify-content-start align-items-center">
-                <label for="categorySelect" id="categoryLabel" class="me-2"><b>카테고리명</b></label>
-                <select id="categorySelect" class="dropdown-toggle form-select" data-toggle="dropdown">
-                    <th:block th:each="category : ${session.categoryList}">
-                        <option class="dropdown-item" th:value="${category.getName()}" th:text="${category.getName()}"></option>
+        <div id="chartInfo" class="my-3 d-flex flex-row justify-content-start align-items-center">
+            <div id="categoryDiv" class="dropdown d-flex justify-content-start align-items-center">
+                <select id="yearSelect" class="dropdown-toggle form-select me-2" data-toggle="dropdown">
+                    <th:block th:each="year : ${#numbers.sequence(#dates.year(#dates.createNow()), 2015)}">
+                        <option class="dropdown-item" th:value="${year}" th:text="${year}+년"></option>
+                    </th:block>
+                </select>
+                <select id="monthSelect" class="dropdown-toggle form-select" data-toggle="dropdown">
+                    <th:block th:each="month : ${#numbers.listFormatInteger(#numbers.sequence(1, 12), 2)}">
+                        <option class="dropdown-item" th:value="${month}" th:text="${month}+월"></option>
                     </th:block>
                 </select>
             </div>
@@ -31,15 +35,14 @@
     </div>
 </div>
 <th:block layout:fragment="script">
-    <script src="/js/adminpage.js"></script>
+    <script src="/js/chart/dist/chart.js" defer></script>
+    <script type="text/javascript" src="/js/adminpage.js"></script>
     <script type="text/javascript" src="/js/adminChart.js"></script>
     <script type="text/javascript">
         window.onload = function () {
-            //<[CDATA[
             const pageTitle = $('#pageInfo h1').text();
-            //]]>
             selectMenu(pageTitle);
-            initChart();
+            setDate(); // 현재에 해당하는 년도와 월이 선택되게 하는 함수
         }
     </script>
 </th:block>

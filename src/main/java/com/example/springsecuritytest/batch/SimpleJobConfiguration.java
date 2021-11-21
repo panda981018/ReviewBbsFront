@@ -21,8 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.*;
 import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -109,7 +108,7 @@ public class SimpleJobConfiguration {
     @Bean
     @StepScope
     public JpaPagingItemReader<BbsEntity> jpaPagingItemReader() {
-        LocalDate beforeDate = LocalDate.now();
+        LocalDate beforeDate = LocalDate.now().minusDays(1);
         LocalDateTime dayFrom = LocalDateTime.of(beforeDate.getYear(), beforeDate.getMonthValue(), beforeDate.getDayOfMonth(), 0, 0, 0);
         LocalDateTime dayTo = LocalDateTime.of(beforeDate.getYear(), beforeDate.getMonthValue(), beforeDate.getDayOfMonth(), 23, 59, 59);
         HashMap<String, Object> params = new HashMap<>();
@@ -117,22 +116,39 @@ public class SimpleJobConfiguration {
         params.put("searchFrom", dayFrom);
         params.put("searchTo", dayTo);
 
+//        String queryStr = "SELECT b.categoryId.name, nvl(TEMP.COUNT, 0)" +
+//                "FROM BbsEntity b" +
+//                "LEFT JOIN" +
+//                "(SELECT B2.categoryId.name, COUNT(B2.categoryId.name) as COUNT" +
+//                "FROM BbsEntity B2" +
+//                "WHERE B2.bbsDate between :searchFrom AND :searchTo GROUP BY B2.categoryId.name) TEMP ON b.id = TEMP.id";
+
+        String queryStr = "SELECT categoryId.name, COUNT(categoryId.name) " +
+                "FROM BbsEntity " +
+                "WHERE bbsDate BETWEEN :searchFrom AND :searchTo " +
+                "GROUP BY categoryId.name";
+
+//        String queryStr = "SELECT categoryId.name, COUNT(categoryId.name) " +
+//                "FROM BbsEntity " +
+//                "WHERE bbsDate BETWEEN :searchFrom AND :searchTo " +
+//                "GROUP BY categoryId.name";
+
         return new JpaPagingItemReaderBuilder<BbsEntity>()
                 .name("jpaPagingItemReader")
                 .entityManagerFactory(entityManagerFactory)
                 .pageSize(CHUNK_SIZE)
                 .parameterValues(params)
-                .queryString("SELECT categoryId.name, COUNT(categoryId.name) FROM BbsEntity WHERE bbsDate between :searchFrom AND :searchTo GROUP BY categoryId.name")
+                .queryString(queryStr)
                 .build();
     }
 
     @Bean
     @StepScope
-//    @Value("#{jobParameters['searchFrom']}")
     public ItemProcessor<Object, BatchResult> jpaItemProcessor() {
         log.info(">>>>>>> Processor");
         return result -> {
-            LocalDate beforeDate = LocalDate.now();
+            log.info("processor result = {}", result);
+            LocalDate beforeDate = LocalDate.now().minusDays(1);
             Object[] objList = (Object[]) result;
             Iterator<Object> ite = Arrays.stream(objList).iterator();
             List<String> objToString = new ArrayList<>();

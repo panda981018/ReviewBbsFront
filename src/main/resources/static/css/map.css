@@ -197,4 +197,7 @@
     cursor: pointer;
     border-radius: 10px;
     border: 1px solid #565e64;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

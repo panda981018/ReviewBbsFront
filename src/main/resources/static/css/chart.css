@@ -1,3 +1,9 @@
 #chart {
     width:100%;
 }
+
+#chartInfo,
+#chartInfo label,
+#chartInfo select {
+    width: 100%;
+}

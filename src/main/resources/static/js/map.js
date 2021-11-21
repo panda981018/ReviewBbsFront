@@ -157,7 +157,7 @@ function searchDetailAddrFromCoords(marker, favObj, placeListEle) {
                             dataType: 'json',
                             success: function (response) {
                                 const rs = response.result;
-                                if (rs.size() === 0) {
+                                if (rs.length === 0) {
                                     alert("해당 위치에 작성된 게시글이 없습니다.");
                                 }
                                 bbsListModalOpen(rs);

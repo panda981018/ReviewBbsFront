@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
@@ -41,7 +42,7 @@
                 <div class="dropdown d-flex align-items-center">
                     <select id="findStandard" class="form-select dropdown-toggle" data-toggle="dropdown">
                         <option class="dropdown-item" value="bbsTitle">제목</option>
-                        <option class="dropdown-item" value="bbsWriter">작성자</option>
+                        <option class="dropdown-item" value="bbsWriter" >작성자</option>
                     </select>
                 </div>
                 <input id="searchInput" class="ms-1" type="text">
@@ -53,7 +54,8 @@
         </div>
         <!--   데이터가 있건 없건 노출    -->
         <div class="d-flex flex-row justify-content-end">
-            <a th:href="@{/post/bbs/write(category=${session.categoryList.get(categoryId).id})}" class="btn btn-primary">
+            <a th:href="@{/post/bbs/write(category=${session.categoryList.get(categoryId).id})}" class="btn btn-primary"
+                sec:authorize="hasRole('ROLE_MEMBER')">
                 작성
             </a>
         </div>

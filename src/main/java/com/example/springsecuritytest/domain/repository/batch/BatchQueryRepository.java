@@ -1,6 +1,5 @@
 package com.example.springsecuritytest.domain.repository.batch;
 
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -15,17 +14,21 @@ public class BatchQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-//    public List<Tuple> getBatchDate() {
-//        return jpaQueryFactory.select(batchResult.staticsDate, batchResult.name)
-//                .from(batchResult)
-//                .groupBy(batchResult.staticsDate, batchResult.name)
-//                .fetch();
-//    }
-
     public List<Tuple> findByName(String category) {
         return jpaQueryFactory.select(batchResult.staticsDate, batchResult.bbsCount)
                 .from(batchResult)
                 .where(batchResult.name.eq(category))
+                .fetchResults()
+                .getResults();
+    }
+
+    public List<Tuple> findByYearAndMonth(String categoryName, int year, int month) {
+        return jpaQueryFactory.select(batchResult.staticsDate, batchResult.bbsCount)
+                .from(batchResult)
+                .where(batchResult.staticsDate.year().eq(year)
+                        .and(batchResult.staticsDate.month().eq(month))
+                        .and(batchResult.name.eq(categoryName.toUpperCase())))
+                .orderBy(batchResult.staticsDate.asc())
                 .fetchResults()
                 .getResults();
     }

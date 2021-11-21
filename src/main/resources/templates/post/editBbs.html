@@ -46,8 +46,8 @@
             <label id="contentsLabel" for="writeSpace" class="form-label"><b>Contents</b></label>
             <!-- 지도 modal 띄울 버튼 -->
             <button type="button" class="btn btn-outline-secondary" id="mapBtn">
-                <b class="me-2" th:if="${bbs.placeName == null}">위치 저장하기</b>
-                <b class="me-2" th:unless="${bbs.placeName == null}" th:text="${bbs.placeName}">위치 저장하기</b>
+                <b class="me-2" th:if="${bbs.placeName == ''}">위치 저장하기</b>
+                <b class="me-2" th:unless="${bbs.placeName == ''}" th:text="${bbs.placeName}">위치 저장하기</b>
                 <i class="fas fa-lg fa-map-marker-alt"></i>
             </button>
             <br>
