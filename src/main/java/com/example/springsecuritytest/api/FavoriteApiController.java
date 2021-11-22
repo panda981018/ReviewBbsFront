@@ -3,18 +3,16 @@ package com.example.springsecuritytest.api;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.service.BbsService;
 import com.example.springsecuritytest.service.FavoriteService;
-import com.example.springsecuritytest.service.HeartService;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 
-@Controller
+@RestController
 @AllArgsConstructor
 @RequestMapping("/api/fav")
 public class FavoriteApiController {
@@ -22,7 +20,6 @@ public class FavoriteApiController {
     private final FavoriteService favoriteService;
     private final BbsService bbsService;
 
-    @ResponseBody
     @PostMapping("/map")
     public HashMap<String, String> addOrCancelFav(@RequestBody HashMap<String, String> favObj, HttpSession session) {
         String bid = favObj.get("bbsId"); // 게시물 id

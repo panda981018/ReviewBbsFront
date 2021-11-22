@@ -7,10 +7,6 @@ function createGrid() {
         minBodyHeight: 40,
         scrollX: false,
         scrollY: false,
-        pageOptions: {
-            useClient: true,
-            perPage: 15
-        },
         columns: [
             {
                 header: '번호',
@@ -48,9 +44,10 @@ function createGrid() {
 }
 
 function getBbsData() {
+    const page = 15;
     $.ajax({
         method: 'GET',
-        url: '/api/bbs/get/home?perPage=15',
+        url: '/api/bbs/get/home?perPage=' + page,
         dataType: 'json',
         success: function (jsonMap) {
             if (jsonMap.data.length !== 0) {

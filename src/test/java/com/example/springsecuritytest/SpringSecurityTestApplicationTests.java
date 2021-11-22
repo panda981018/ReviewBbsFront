@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
-@Transactional
 @Ignore
 class SpringSecurityTestApplicationTests {
 

@@ -5,20 +5,18 @@ import com.example.springsecuritytest.service.BbsService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 
-@Controller
+@RestController
 @AllArgsConstructor
 @RequestMapping("/api/bbs")
 public class BbsApiController {
 
     private final BbsService bbsService;
 
-    @ResponseBody
     @GetMapping("/get")
     public HashMap<String, Object> getAllBbsList(@RequestParam String category, // 카테고리 번호
                                                  @RequestParam int perPage, // 한페이지당 보여줄 데이터의 개수
@@ -61,7 +59,6 @@ public class BbsApiController {
         return responseMap;
     }
 
-    @ResponseBody
     @GetMapping("/get/home")
     public HashMap<String, List<BbsDto>> getMemberHomeData(@RequestParam String perPage) {
         PageRequest pageRequest =
@@ -74,13 +71,11 @@ public class BbsApiController {
         return jsonMap;
     }
 
-    @ResponseBody
     @PostMapping("/update/views") // 조회수 업데이트 기능
     public void updateViews(@RequestBody HashMap<String, String> bbsIdObj) throws Exception {
         bbsService.updateViews(Long.parseLong(bbsIdObj.get("id")));
     }
 
-    @ResponseBody
     @DeleteMapping("/delete")
     public void deleteBbs(@RequestBody HashMap<String, Object> data) {
 

@@ -5,15 +5,12 @@ import com.example.springsecuritytest.service.BbsService;
 import com.example.springsecuritytest.service.HeartService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 
-@Controller
+@RestController
 @AllArgsConstructor
 @RequestMapping("/api/heart")
 public class HeartApiController {
@@ -21,7 +18,6 @@ public class HeartApiController {
     private final HeartService heartService;
     private final BbsService bbsService;
 
-    @ResponseBody
     @PostMapping("/like")
     public HashMap<String, Integer> likeBbs(@RequestBody HashMap<String, String> likeObj, HttpSession session) throws Exception {
         String bid = likeObj.get("bbsId");
