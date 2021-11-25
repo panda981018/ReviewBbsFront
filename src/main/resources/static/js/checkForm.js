@@ -1,6 +1,11 @@
 $('#cancelBtn').on('click', function () {
     window.history.back();
-})
+});
+$('input').on('keydown', function (e) {
+    if (e.keyCode == 13) {
+        e.preventDefault();
+    }
+});
 
 // role 선택에 따른 양식 변화
 function changeSignUpForm() {

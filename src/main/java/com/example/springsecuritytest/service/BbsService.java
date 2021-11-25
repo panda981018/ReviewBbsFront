@@ -1,7 +1,7 @@
 package com.example.springsecuritytest.service;
 
 import com.example.springsecuritytest.domain.entity.*;
-import com.example.springsecuritytest.domain.repository.CategoryRepository;
+import com.example.springsecuritytest.domain.repository.category.CategoryRepository;
 import com.example.springsecuritytest.domain.repository.HeartRepository;
 import com.example.springsecuritytest.domain.repository.MapRepository;
 import com.example.springsecuritytest.domain.repository.bbs.BbsQueryRepository;
@@ -183,27 +183,36 @@ public class BbsService {
         double latitude = bbsDto.getLatitude();
         double longitude = bbsDto.getLongitude();
 
-
-        CategoryEntity category = categoryRepository.findById(bbsDto.getCategoryId())
-                .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
         BbsEntity oldBbs = bbsRepository.findById(bbsDto.getId())
                 .orElseThrow(() -> new Exception("MEMBER IS NOT EXISTS"));
+        CategoryEntity category = categoryRepository.findById(bbsDto.getCategoryId())
+                .orElseThrow(() -> new Exception("CATEGORY NOT EXIST"));
 
         bbsDto.setBbsDate(localDateTimeToString(oldBbs.getBbsDate())); // set date
         bbsDto.setBbsViews(oldBbs.getBbsViews()); // set bbsView
         bbsDto.setLikeCnt(oldBbs.getLikeCnt());
 
         BbsEntity bbs = bbsDto.toEntity();
-        CategoryEntity categoryEntity = category; // set category
 
-        bbs.setCategory(categoryEntity);
+        bbs.setCategory(category);
         bbs.setBbsWriter(memberDto.toEntity()); // set writer
 
         if (oldBbs.getMap() != null) {
             if (oldBbs.getMap().getLatitude() == latitude && oldBbs.getMap().getLongitude() == longitude) {
                 bbs.setMap(oldBbs.getMap());
+                bbsRepository.save(bbs);
+            } else {
+                MapEntity map = MapEntity.builder()
+                        .latitude(latitude)
+                        .longitude(longitude)
+                        .placeName(bbsDto.getPlaceName())
+                        .build();
+                mapRepository.save(map);
+                bbs.setMap(map);
+                bbsRepository.save(bbs);
+                map.getBbsEntityList().add(bbs);
             }
-        } else {
+        } else { // bbs에 map이 없으면
             MapEntity map;
             if (mapRepository.existsByLatitudeAndLongitude(latitude, longitude)) {
                 map = mapRepository.findByLatitudeAndLongitude(latitude, longitude).orElseThrow(null);
@@ -222,8 +231,6 @@ public class BbsService {
                 map.getBbsEntityList().add(bbs);
                 mapRepository.save(map);
             }
-//            mapRepository.save(map);
-//            map.getBbsEntityList().add(bbs);
         }
     }
 

@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.example.springsecuritytest.domain.entity.QBatchResult.batchResult;
@@ -13,14 +14,6 @@ import static com.example.springsecuritytest.domain.entity.QBatchResult.batchRes
 public class BatchQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
-
-    public List<Tuple> findByName(String category) {
-        return jpaQueryFactory.select(batchResult.staticsDate, batchResult.bbsCount)
-                .from(batchResult)
-                .where(batchResult.name.eq(category))
-                .fetchResults()
-                .getResults();
-    }
 
     public List<Tuple> findByYearAndMonth(String categoryName, int year, int month) {
         return jpaQueryFactory.select(batchResult.staticsDate, batchResult.bbsCount)

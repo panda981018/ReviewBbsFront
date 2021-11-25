@@ -1,4 +1,4 @@
-package com.example.springsecuritytest.domain.repository;
+package com.example.springsecuritytest.domain.repository.category;
 
 import com.example.springsecuritytest.domain.entity.CategoryEntity;
 import org.springframework.data.domain.Sort;
