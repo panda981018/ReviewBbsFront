@@ -11,12 +11,13 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
+@Table(name = "JW_BATCH_RESULT")
 public class BatchResult {
 
     @Id
     @SequenceGenerator(
             name = "BATCH_RESULT_SEQ",
-            sequenceName = "BATCH_RESULT_SEQ",
+            sequenceName = "JW_BATCH_RESULT_SEQ",
             allocationSize = 1,
             initialValue = 1
     )

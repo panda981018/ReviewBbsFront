@@ -11,13 +11,13 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "HEART")
+@Table(name = "JW_HEART")
 public class HeartEntity {
 
     @Id
     @SequenceGenerator(
             name = "HEART_SEQ_GEN",
-            sequenceName = "HEART_SEQ",
+            sequenceName = "JW_HEART_SEQ",
             allocationSize = 1,
             initialValue = 1
     )

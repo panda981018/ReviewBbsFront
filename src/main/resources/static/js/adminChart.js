@@ -1,18 +1,26 @@
 let myChart; // chart 객체를 가리킬 변수
+let todayDate = 0; // 오늘 일자
 let days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 let labels = []; // x축이 될 배열
 let backgroundColors = [];
 
 const CTX = document.getElementById('chart').getContext('2d');
 
+function leapYear(year) { // 윤년 계산 함수
+    if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) { // 윤년이면 2월은 29일까지
+        days[1] = 29;
+    } else {
+        days[1] = 28;
+    }
+}
+
 function setDate() { // 현재 기준 연도와 월
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
+    todayDate = now.getDate() - 1; // 오늘 일자의 배치 결과는 없으니 -1
 
-    if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) { // 윤년이면 2월은 29일까지
-        days[1] = 29;
-    }
+    leapYear(year);
 
     $('#yearSelect').val(year).prop('selected', true);
     $('#monthSelect').val(month).prop('selected', true);
@@ -24,7 +32,7 @@ $('#monthSelect').on('change', function () {
     const year = $('#yearSelect option:selected').val();
     const month = $('#monthSelect option:selected').val();
 
-    console.log("parseInt[month]=" + parseInt(month));
+    leapYear(year);
 
     if (parseInt(month) < 10) {
         makeChart(year, parseInt(month));
@@ -35,10 +43,11 @@ $('#monthSelect').on('change', function () {
 
 // 차트를 그려주는 함수
 function makeChart(year, month) {
-    labels = []; // 초기화
-    for (let i = 1; i <= days[month - 1]; i++) {
+    labels = []; // x축 초기화
+
+    for (let i = 1; i <= todayDate; i++) {
         labels.push(`${year}-${month >= 10 ? month : '0' + month}-${i >= 10 ? i : '0' + i}`);
-    } // month = 11일때, labels = ['2021-11-01', '2021-11-02', ...., '2021-11-30'];
+    }
 
     if (myChart !== undefined) {
         myChart.destroy();
@@ -51,7 +60,8 @@ function makeChart(year, month) {
         success: function (result) {
             let dataSets = []; // 항목들에 대한 배열
 
-            const batchResults = new Map(Object.entries(result));
+            // Object.entries : [key, value] 쌍의 배열을 반환.
+            const batchResults = new Map(Object.entries(result)); // json을 map형태로 만듦
             const categoryList = Object.keys(result); // 카테고리명
 
             /**
@@ -72,7 +82,7 @@ function makeChart(year, month) {
                 let counts = []; // 카운트에 대한 배열
                 let mapValue = batchResults.get(categoryList[i]); // [날짜, 카운트]의 배열
 
-                for (let j = 0; j < labels.length; j++) {
+                for (let j = 0; j < todayDate; j++) {
                     counts.push(0);
                 }
 
@@ -81,12 +91,10 @@ function makeChart(year, month) {
                     break;
                 } else {
                     for (let j = 0; j < mapValue.length; j++) {
-                        const arr = mapValue[j]; // [ String type 날짜, int type bbsCount ]
-                        if (labels.indexOf(arr[0]) !== -1) {
-                            counts[labels.indexOf(arr[0])] = arr[1];
+                        if (labels.indexOf(mapValue[j][0]) !== -1) {
+                            counts[labels.indexOf(mapValue[j][0])] = mapValue[j][1];
                         }
                     }
-
                     backgroundColors.push('#' + Math.round(Math.random() * 0xffffff).toString(16));
 
                     data.label = categoryList[i]; // 라인의 이름(항목)
@@ -96,8 +104,6 @@ function makeChart(year, month) {
                     dataSets.push(data);
                 }
             }
-
-            console.log(backgroundColors);
 
             const data = {
                 /**

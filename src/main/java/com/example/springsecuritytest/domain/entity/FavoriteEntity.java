@@ -11,13 +11,13 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "FAVORITE")
+@Table(name = "JW_FAVORITE")
 public class FavoriteEntity {
 
     @Id
     @SequenceGenerator(
             name = "FAVORITE_SEQ_GEN",
-            sequenceName = "FAVORITE_SEQ",
+            sequenceName = "JW_FAVORITE_SEQ",
             allocationSize = 1,
             initialValue = 1
     )

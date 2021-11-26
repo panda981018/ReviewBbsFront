@@ -13,13 +13,13 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "CATEGORY")
+@Table(name = "JW_CATEGORY")
 public class CategoryEntity {
 
     @Id
     @SequenceGenerator(
             name = "CATEGORY_SEQ_GEN",
-            sequenceName = "CATEGORY_SEQ",
+            sequenceName = "JW_CATEGORY_SEQ",
             allocationSize = 1,
             initialValue = 1
     )

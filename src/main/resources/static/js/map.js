@@ -13,8 +13,17 @@ $('#findCurrentLocation').on('click', function () { // 현재 위치로 이동�
 });
 
 function initMap() {
+    // const container = document.getElementById('map');
+    // const options = {
+    //     center: new kakao.maps.LatLng(33.450701, 126.570667),
+    //     level: 3
+    // };
+    //
+    // const map = new kakao.maps.Map(container, options);
+
     getCurrentLocation(); // 현재 위치를 받아서 표시한 후 db에 저장된 좌표들을 지도에 표시
-    geocoder = new kakao.maps.services.Geocoder();
+    if (geocoder == null)
+        geocoder = new kakao.maps.services.Geocoder();
 }
 
 // 현재 위치의 정보를 가져온다
@@ -22,12 +31,14 @@ function getCurrentLocation() {
     if (navigator.geolocation) { // geolocation을 사용할 수 있다면
         navigator.geolocation.getCurrentPosition(function (position) {
             center = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
             if (map == null)
                 map = new kakao.maps.Map($('#map')[0], { center : center });
 
             const currHtml = '<svg style="width:40px; height: 30px;">' +
                 '<circle r="10" fill="#0000FF" stroke="#ffffff" stroke-width="3" cx="20" cy="15"' +
                 ' style="filter: drop-shadow(0 0 .3rem dimgray)"></circle></svg>';
+
             customOverlay = new kakao.maps.CustomOverlay({
                 map: map,
                 content: currHtml,
@@ -35,10 +46,25 @@ function getCurrentLocation() {
                 zIndex: 100
             });
             getData(1);
-        });
+        }, geolocationFailCallBack);
     } else {
         alert('현재 위치를 받아올 수 없음.');
     }
+}
+
+function geolocationFailCallBack(error) {
+    // switch (error.code) {
+    //     case 1 :
+    //         alert("geolocation failed. PERMISSION DENIED");
+    //         break;
+    //     case 2 :
+    //         alert("geolocation failed. POSITION_UNAVAILABLE");
+    //         break;
+    //     case 3 :
+    //         alert("geolocation failed. TIMEOUT");
+    //         break;
+    // }
+    alert("geolocation failed. error code :" + error.code);
 }
 
 function getData(pageNum) {

@@ -37,8 +37,8 @@ public class ReplyService {
         replyEntity.setBbs(bbsEntity);
 
         bbsEntity.addReply(replyEntity);
-
-        replyRepository.save(replyEntity);
+        replyRepository.saveAndFlush(replyEntity);
+        bbsRepository.save(bbsEntity);
     }
 
     public List<ReplyDto> getReplies(Long bbsId) {
@@ -78,10 +78,23 @@ public class ReplyService {
     }
 
     public void removeReply(Long replyId, Long bbsId) {
-        Optional<ReplyEntity> reply = replyRepository.findById(replyId);
-        Optional<BbsEntity> bbs = bbsRepository.findById(bbsId);
-        BbsEntity bbsEntity = bbs.get();
-        bbsEntity.getReplies().remove(reply);
+        ReplyEntity reply = replyRepository.findById(replyId).orElse(null);
+        BbsEntity bbs = bbsRepository.findById(bbsId).orElse(null);
+        bbs.getReplies().remove(reply);
         replyRepository.deleteById(replyId);
     }
+
+//    public List<ReplyDto> removeReply(Long replyId, Long bbsId) {
+//        ReplyEntity reply = replyRepository.findById(replyId).orElse(null);
+//        BbsEntity bbs = bbsRepository.findById(bbsId).orElse(null);
+//        bbs.getReplies().remove(reply);
+//        replyRepository.deleteById(replyId);
+//        List<ReplyDto> replies = new ArrayList<>();
+//
+//        for (ReplyEntity entity : bbs.getReplies()) {
+//            replies.add(entity.toDto());
+//        }
+//
+//        return replies;
+//    }
 }

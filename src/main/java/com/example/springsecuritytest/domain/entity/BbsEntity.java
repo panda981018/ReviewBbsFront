@@ -16,13 +16,13 @@ import static com.example.springsecuritytest.conf.AppConfig.localDateTimeToStrin
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@Table(name = "BBS")
+@Table(name = "JW_BBS")
 public class BbsEntity {
 
     @Id
     @SequenceGenerator(
             name = "BBS_SEQ_GEN",
-            sequenceName = "BBS_SEQ",
+            sequenceName = "JW_BBS_SEQ",
             allocationSize = 1,
             initialValue = 1
     )

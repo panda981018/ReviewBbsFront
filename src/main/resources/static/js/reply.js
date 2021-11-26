@@ -101,9 +101,13 @@ function modalListener() { // modal 수정 클릭 리스너
             type: "post",
             data: JSON.stringify({ "id" : replyId, "contents" : updateReply }),
             contentType: "application/json;charset=utf-8;",
-            success: function () {
-                location.reload();
+            dataType: "json",
+            success: function (response) {
+                if (response != null) {
+                    location.reload();
+                    alert("댓글이 삭제 되었습니다.");
+                }
             }
-        })
+        });
     })
 }

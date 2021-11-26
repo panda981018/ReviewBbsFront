@@ -21,18 +21,18 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "MEMBER")
+@Table(name = "JW_MEMBER")
 public class MemberEntity {
     @Id
     @SequenceGenerator(
-            name = "USER_SEQ_GEN",
-            sequenceName = "USER_SEQ",
+            name = "MEMBER_SEQ_GEN",
+            sequenceName = "JW_MEMBER_SEQ",
             allocationSize = 1,
             initialValue = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "USER_SEQ_GEN")
+            generator = "MEMBER_SEQ_GEN")
     private Long id;
 
     @Column(length = 30, nullable = false)

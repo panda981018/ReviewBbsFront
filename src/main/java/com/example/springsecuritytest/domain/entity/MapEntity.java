@@ -9,13 +9,13 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@Table(name = "MAP")
+@Table(name = "JW_MAP")
 public class MapEntity {
 
     @Id
     @SequenceGenerator(
             name = "MAP_SEQ_GEN",
-            sequenceName = "MAP_SEQ",
+            sequenceName = "JW_MAP_SEQ",
             allocationSize = 1,
             initialValue = 1
     )

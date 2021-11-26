@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@Table(name = "REPLY")
+@Table(name = "JW_REPLY")
 public class ReplyEntity {
     @Id
     @SequenceGenerator(
             name = "REPLY_SEQ_GEN",
-            sequenceName = "REPLY_SEQ",
+            sequenceName = "JW_REPLY_SEQ",
             allocationSize = 1,
             initialValue = 1
     )

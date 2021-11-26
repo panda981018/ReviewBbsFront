@@ -40,11 +40,13 @@ public class ReplyController {
 
     @ResponseBody
     @DeleteMapping("/ajax/delete")
-    public void deleteReply(@RequestBody HashMap<String, String> deleteData) {
+    public String deleteReply(@RequestBody HashMap<String, String> deleteData) {
 
         String bbsId = deleteData.get("bbsId");
         String replyId = deleteData.get("replyId");
         replyService.removeReply(Long.parseLong(replyId), Long.parseLong(bbsId));
+
+        return "ok";
     }
 
     @ResponseBody

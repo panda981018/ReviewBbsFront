@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@Table(name = "NOTICE")
+@Table(name = "JW_NOTICE")
 public class NoticeEntity {
 
     @Id
     @SequenceGenerator(
             name = "NOTICE_SEQ_GEN",
-            sequenceName = "NOTICE_SEQ",
+            sequenceName = "JW_NOTICE_SEQ",
             allocationSize = 1,
             initialValue = 1
     )
