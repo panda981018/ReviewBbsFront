@@ -30,13 +30,17 @@
     left: 20px;
     width: 30%;
     margin: 10px 0 5px 10px;
-    padding: 5px 1px 0 1px;
+    padding: 5px 1px;
     overflow-y: auto;
     background: rgba(255, 255, 255, 0.9);
     z-index: 1000;
     font-size: 12px;
     border-radius: 10px;
     max-height: 600px;
+}
+
+#searchResult {
+    display: none;
 }
 
 /* 검색 부분 div */
@@ -67,6 +71,7 @@
 
 #placeList {
     padding: 1rem;
+    margin : 0;
 }
 
 #placeList li,
@@ -115,6 +120,7 @@
 .jibun-div {
     margin-bottom: .5rem;
 }
+
 /* 검색 결과 전화번호 부분 */
 .info .tel {
     color: #009900;
@@ -122,27 +128,19 @@
 
 /* 페이지네이션 */
 #placePagination {
-    margin: 10px auto;
+    margin-bottom: 10px;
     text-align: center;
 }
 
-/*  */
-/*#placePagination a {*/
-/*    display: inline-block;*/
-/*    text-decoration-line: none;*/
-/*    margin-right: 10px;*/
-/*    color: #777;*/
-/*}*/
 #placePagination .page-btn {
     background-color: #ffffff;
-    border-radius: .3rem;
+    border: 0px;
     margin-right: 5px;
 }
 /* 클릭된 페이지 */
 #placePagination .on {
-    /*margin-right: 5px;*/
     font-weight: bold;
-    /*font-size: 1.2rem;*/
+    font-size: 1.2rem;
     cursor: default;
     color: black;
 }

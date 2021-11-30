@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,8 +27,11 @@ public class MapController { // anonymous
     private final MapService mapService;
 
     @GetMapping("/")
-    public String index() {
-        return "map/map";
+    public String index(Principal authentication) {
+        if (authentication == null) {
+            return "redirect:/login";
+        } else
+            return "map/map";
     }
 
     // ajax
@@ -39,11 +43,6 @@ public class MapController { // anonymous
 
         HashMap<String, Object> result
                 = mapService.getPlaceInfo((MemberDto) session.getAttribute("memberInfo"), pageRequest);
-
-//        List<FavoriteDto> dtos = (List<FavoriteDto>) result.get("data");
-//        int totalPages = (int) result.get("totalPages");
-//        hash.put("data", dtos);
-//        hash.put("totalPages", totalPages);
         return result;
     }
 

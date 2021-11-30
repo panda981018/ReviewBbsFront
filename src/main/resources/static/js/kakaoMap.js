@@ -124,7 +124,7 @@ function searchSuccess(data, status, pagination) {
             customOverlay.setMap(null);
             $('#currentImg').css('filter', 'lightgray');
         }
-
+        $('#searchResult').css('display', 'block');
         displayPlaces(data); // 검색 목록과 마커를 표시
         displayPagination(pagination); // 페이지 번호를 표출
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
@@ -150,11 +150,12 @@ function displayPlaces(places) {
         // 마커를 생성하고 지도에 표시
         let placePosition = new kakao.maps.LatLng(places[i].y, places[i].x);
         let marker = addMarker(placePosition, i);
-        let itemEle = getListItem(i, places[i]); // 검색 결과 항목 element를 생성함.
+        let itemEle = getListItem(i, places[i]); // 검색 결과 항목 element 를 생성함.
 
         bounds.extend(placePosition); // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기 위해
         (function (marker, title, position) {
             kakao.maps.event.addListener(marker, 'mouseover', function () { // mouseover 했을 때
+                map.panTo(placePosition); // 해당 포지션으로 이동
                 displayInfoWindow(marker, title);
             });
 
@@ -162,14 +163,18 @@ function displayPlaces(places) {
                 infoWindow.close();
             });
 
+            itemEle[0].onmouseover = function () {
+                map.panTo(placePosition);
+                displayInfoWindow(marker, title);
+            }
+
             itemEle[0].onmouseout = function () {
                 infoWindow.close();
             }
 
             itemEle[0].onclick = function () {
-                // map.setPosition(placePosition);
-                map.panTo(placePosition); // 해당 포지션으로 이동
                 displayInfoWindow(marker, title);
+                savePosition(marker);
             }
         })(marker, places[i].place_name, placePosition);
 
@@ -180,6 +185,24 @@ function displayPlaces(places) {
     menuEle.scrollTop();
     // 검색된 장소 위치를 기준으로 지도 범위를 재설정.
     map.setBounds(bounds);
+}
+
+// 해당 위치를 저장
+function savePosition(marker) {
+    if (confirm('이 위치를 저장하시겠습니까?')) {
+        const position = marker.getPosition();
+        const parser = new DOMParser();
+        saveLat = position.getLat();
+        saveLng = position.getLng();
+        if (infoWindow.getContent() !== undefined) {
+            const placeName = parser.parseFromString(infoWindow.getContent(), 'text/html');
+            savePlaceName = placeName.body.children[0].innerHTML;
+            console.log("infowindow contents: " + placeName.body.children[0].innerHTML);
+        }
+
+        console.log("위도: " + saveLat + "경도: " + saveLng);
+        closeMapModal();
+    }
 }
 
 // 검색결과 항목을 Element로 반환하는 함수입니다
@@ -236,20 +259,7 @@ function addMarker(position, idx) {
     });
 
     kakao.maps.event.addListener(marker, 'click', function () {
-        if (confirm('이 위치를 저장하시겠습니까?')) {
-            const position = marker.getPosition();
-            const parser = new DOMParser();
-            saveLat = position.getLat();
-            saveLng = position.getLng();
-            if (infoWindow.getContent() !== undefined) {
-                const placeName = parser.parseFromString(infoWindow.getContent(), 'text/html');
-                savePlaceName = placeName.body.children[0].innerHTML;
-                console.log("infowindow contents: " + placeName.body.children[0].innerHTML);
-            }
-
-            console.log("위도: " + saveLat + "경도: " + saveLng);
-            closeMapModal();
-        }
+        savePosition(marker);
     });
     marker.setMap(map); // 지도 위에 마커를 표출합니다
     markers.push(marker);  // 배열에 생성된 마커를 추가합니다
@@ -275,15 +285,17 @@ function displayPagination(pagination) {
 
     for (i = 1; i <= pagination.last; i++) {
         const ele = document.createElement('button');
+        ele.type = 'button';
         ele.innerHTML = i; // 페이지 넘버
         ele.classList.add('page-btn');
 
         if (i === pagination.current) {
-            ele.className = 'on';
+            ele.classList.add('on');
         } else {
             ele.onclick = (function (i) {
                 return function () {
                     pagination.gotoPage(i);
+
                 }
             })(i);
         }

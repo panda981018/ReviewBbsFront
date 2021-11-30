@@ -120,6 +120,10 @@ function makeChart(year, month) {
                 type: 'line',
                 data: data,
                 options: {
+                    interaction: {
+                        intersect: false,
+                        mode: 'nearest'
+                    },
                     scales: {
                         x: { // 레이블
                             display: true,

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,11 +30,15 @@ public class NoticeController {
 
     @GetMapping("/")
     public String showNoticePage(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-                                 Model model) {
-        Page<NoticeEntity> noticeEntities = noticeService.getAllNotices(pageable);
-        Page<NoticeDto> noticeList = noticeEntities.map(NoticeEntity::toDto);
-        model.addAttribute("noticeList", noticeList);
-        return "notice/notice";
+                                 Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/login";
+        } else {
+            Page<NoticeEntity> noticeEntities = noticeService.getAllNotices(pageable);
+            Page<NoticeDto> noticeList = noticeEntities.map(NoticeEntity::toDto);
+            model.addAttribute("noticeList", noticeList);
+            return "notice/notice";
+        }
     }
 
     @GetMapping("/view")

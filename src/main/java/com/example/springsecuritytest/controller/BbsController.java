@@ -3,6 +3,7 @@ package com.example.springsecuritytest.controller;
 import com.example.springsecuritytest.dto.*;
 import com.example.springsecuritytest.service.*;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,11 +43,15 @@ public class BbsController {
     }
 
     @GetMapping("/bbs")
-    public String getAllBbs(@RequestParam(required = false) String category, Model model) {
-        // view에서 category에 대한 정보를 표시하기 위해
-        // (session.categoryList는 index 0 부터 시작. DB의 카테고리는 1부터 시작. 따라서 -1)
-        model.addAttribute("categoryId", Long.parseLong(category) - 1);
-        return "post/post";
+    public String getAllBbs(@RequestParam(required = false) String category, Principal authentication, Model model) {
+        if (authentication == null) {
+            return "redirect:/login";
+        } else {
+            // view에서 category에 대한 정보를 표시하기 위해
+            // (session.categoryList는 index 0 부터 시작. DB의 카테고리는 1부터 시작. 따라서 -1)
+            model.addAttribute("categoryId", Long.parseLong(category) - 1);
+            return "post/post";
+        }
     }
 
     @GetMapping("/bbs/write") // /post/bbs/write
