@@ -1,5 +1,6 @@
 let myChart; // chart 객체를 가리킬 변수
 let todayDate = 0; // 오늘 일자
+let currMonth = 0; // 현재 월
 let days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 let labels = []; // x축이 될 배열
 let backgroundColors = [];
@@ -18,6 +19,8 @@ function setDate() { // 현재 기준 연도와 월
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
+
+    currMonth = month;
     todayDate = now.getDate() - 1; // 오늘 일자의 배치 결과는 없으니 -1
 
     leapYear(year);
@@ -31,6 +34,10 @@ function setDate() { // 현재 기준 연도와 월
 $('#monthSelect').on('change', function () {
     const year = $('#yearSelect option:selected').val();
     const month = $('#monthSelect option:selected').val();
+
+    if (currMonth !== month) {
+        todayDate = days[month-1];
+    }
 
     leapYear(year);
 

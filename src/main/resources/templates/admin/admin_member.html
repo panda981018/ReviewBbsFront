@@ -55,6 +55,7 @@
             </tr>
             </tbody>
         </table>
+        <!-- 페이징 -->
         <nav aria-label="Page navigation" th:if="${!memberList.isEmpty()}">
             <ul id="classUl" class="pagination justify-content-center align-items-center">
                 <li class="page-item btn" th:classappend="${!memberList.pageable.hasPrevious()} ? 'disabled'">
@@ -86,9 +87,7 @@
     <script src="/js/adminpage.js"></script>
     <script>
         window.onload = function () {
-            //<[CDATA[
             const pageTitle = $('#pageInfo h1').text();
-            //]]>
             selectMenu(pageTitle);
             selectOrder();
             clickMember();

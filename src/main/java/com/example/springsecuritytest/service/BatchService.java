@@ -1,23 +1,20 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.repository.category.CategoryQueryRepository;
-import com.example.springsecuritytest.domain.repository.category.CategoryRepository;
 import com.example.springsecuritytest.domain.repository.batch.BatchQueryRepository;
-import com.example.springsecuritytest.domain.repository.batch.BatchRepository;
+import com.example.springsecuritytest.domain.repository.category.CategoryQueryRepository;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class BatchService {
 
-    private final CategoryQueryRepository categoryQueryRepository;
     private final BatchQueryRepository batchQueryRepository;
 
     public List<Object> getBatchDate(String category, int year, int month) {
