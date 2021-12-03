@@ -96,6 +96,21 @@ public class MemberService implements UserDetailsService {
         return memberQueryRepository.findAllExceptAdmin(pageable);
     }
 
+    public HashMap<String, Object> getMemberPagination(Pageable pageable) throws Exception {
+        Page<MemberEntity> memberEntities = memberQueryRepository.findAllExceptAdmin(pageable);
+        List<MemberDto> memberDtoList = new ArrayList<>();
+
+        for(MemberEntity member : memberEntities.getContent()) {
+            memberDtoList.add(member.toDto());
+        }
+
+        HashMap<String, Object> dataMap = new HashMap<>();
+        dataMap.put("memberDtoList", memberDtoList);
+        dataMap.put("totalCount", memberEntities.getTotalElements());
+
+        return dataMap;
+    }
+
     // 이메일 중복 체크 함수
     public HashMap<String, Boolean> checkEmail(String username) {
         boolean result = memberRepository.existsByUsername(username);

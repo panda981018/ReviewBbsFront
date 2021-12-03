@@ -36,14 +36,30 @@ public class AdminController { // admin
     }
 
     @GetMapping("/manage")
-    public String adminPage(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable, Model model) {
+    @ResponseBody
+    public HashMap<String, Object> adminPage(@RequestParam int perPage,
+                            @RequestParam int page,
+                            @RequestParam(required = false) String sort) throws Exception {
 
-        Page<MemberEntity> members = memberService.findAllMembers(pageable);
-        Page<MemberDto> memberList = members.map(MemberEntity::toDto);
-        model.addAttribute("memberList", memberList);
+        PageRequest pageRequest
+                = PageRequest.of(page - 1, perPage, Sort.by(Sort.Direction.ASC, sort));
+
+        HashMap<String, Object> dataObj = memberService.getMemberPagination(pageRequest);
+
+        List<MemberDto> contents = (List<MemberDto>) dataObj.get("memebrDtoList");
 
         return "admin/admin_member";
     }
+
+//    @GetMapping("/manage")
+//    public String adminPage(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable, Model model) {
+//
+//        Page<MemberEntity> members = memberService.findAllMembers(pageable);
+//        Page<MemberDto> memberList = members.map(MemberEntity::toDto);
+//        model.addAttribute("memberList", memberList);
+//
+//        return "admin/admin_member";
+//    }
 
     @ResponseBody
     @GetMapping("/manage/sort")
