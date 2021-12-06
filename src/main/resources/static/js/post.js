@@ -1,15 +1,5 @@
 let isAdded = false;
 
-function gridClickEvent() {
-    // 클릭된 rowkey를 가져오고 해당 row의 id column 값을 가져와서 이동시키기
-    grid.on('click', ev => {
-        if (ev.rowKey > -1) {
-            const id = grid.getFormattedValue(ev.rowKey, 'id'); // (rowKey, columnName)
-            location.href = '/post/bbs/view?id=' + id;
-        }
-    });
-}
-
 // 게시글 1개를 눌렀을 때 동작하는 함수
 $(document).on('click', 'td[data-column-name=bbsTitle]', function () {
     const td = $(this).siblings()[0];

@@ -4,11 +4,13 @@ let grid; // tui grid
 
 // 선택된 row의 멤버 정보 수정 페이지로 이동하는 리스너
 function clickMember() {
-    $('tbody').children().on('click', function () {
-        const tr = $(this).children();
-        const id = tr.first().text();
-        location.href = '/admin/info?id=' + id;
-    })
+    // 클릭된 rowkey를 가져오고 해당 row의 id column 값을 가져와서 이동시키기
+    grid.on('click', ev => {
+        if (ev.rowKey > -1) {
+            const id = grid.getFormattedValue(ev.rowKey, 'id'); // (rowKey, columnName)
+            location.href = '/admin/info?id=' + id;
+        }
+    });
 }
 
 function selectOrder() {
@@ -26,16 +28,17 @@ function selectOrder() {
 function sortBy() {
     $('#sortSelect').on('change', function () {
         let sort = $('#sortSelect option:selected').val().toLowerCase();
-        $.ajax({
-            method: "GET",
-            url: "/admin/manage/sort?sort=" + sort,
-            dataType: "json",
-            success: function (result) {
-                console.log(result.rs);
-                const address = '/admin/manage?page=' + result.rs.number + '&sort=' + sort;
-                location.href = address;
-            }
-        });
+        grid.readData(1, {"sort": sort});
+        // $.ajax({
+        //     method: "GET",
+        //     url: "/admin/manage?" + sort,
+        //     dataType: "json",
+        //     success: function (result) {
+        //         console.log(result.rs);
+        //         const address = '/admin/manage?page=' + result.rs.number + '&sort=' + sort;
+        //         location.href = address;
+        //     }
+        // });
     });
 }
 
@@ -69,6 +72,7 @@ function createMemberInfoGrid(dataSource) {
                 header: 'No.',
                 name: 'id',
                 width: "auto",
+                resizable: true,
                 align: "center"
             },
             {
@@ -80,6 +84,7 @@ function createMemberInfoGrid(dataSource) {
             {
                 header: '닉네임',
                 name: 'nickname',
+                resizable: true,
                 align: "center"
             },
             {
@@ -92,11 +97,13 @@ function createMemberInfoGrid(dataSource) {
                 header: '성별',
                 name: 'gender',
                 width: "auto",
+                resizable: true,
                 align: "center"
             },
             {
                 header: '가입일자',
                 name: 'regDate',
+                resizable: true,
                 width: "auto",
                 align: "center"
             }
@@ -108,21 +115,21 @@ function getDatasource() {
     dataSource = {
         api: {
             readData: {
-                url: '/api/manage', method: 'GET'
+                url: '/admin/manage', method: 'GET'
             }
         }
     }
     createMemberInfoGrid(dataSource);
 }
 
-function responseHandler() {
-    grid.on('response', ev => {
+function memberResponseHandler() {
+    grid.on('response',ev => {
         console.log(ev);
-        JSON.parse(ev.xhr.response).data.contents;
+        console.log(JSON.parse(ev.xhr.response).data.contents);
         const resultCnt = JSON.parse(ev.xhr.response).data.pagination.totalCount;
 
         if (resultCnt > 0) {
-            grid.resetData();
+            grid.resetData(JSON.parse(ev.xhr.response).data.contents);
         } else { // count가 0이라면
             alert('회원이 없습니다.');
         }

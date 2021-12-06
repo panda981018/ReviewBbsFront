@@ -74,7 +74,17 @@ function setDatasource() {
     createGrid(dataSource);
 }
 
-function responseHandler() {
+function gridClickEvent() {
+    // 클릭된 rowkey를 가져오고 해당 row의 id column 값을 가져와서 이동시키기
+    grid.on('click', ev => {
+        if (ev.rowKey > -1) {
+            const id = grid.getFormattedValue(ev.rowKey, 'id'); // (rowKey, columnName)
+            location.href = '/post/bbs/view?id=' + id;
+        }
+    });
+}
+
+function postResponseHandler() {
     grid.on('response', ev => { // readData의 결과를 받는 콜백함수
         console.log(ev);
         const bbsData = JSON.parse(ev.xhr.response).data.contents;

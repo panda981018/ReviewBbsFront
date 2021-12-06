@@ -49,7 +49,7 @@
                 <hr class="dropdown-divider">
                 <a class="dropdown-item btn" href="/member/info"
                    sec:authorize="hasRole('ROLE_MEMBER')">My Info</a>
-                <a class="dropdown-item btn" th:href="@{/admin/manage(page=0, sort='id')}"
+                <a class="dropdown-item btn" th:href="@{/admin/manage/member}"
                    sec:authorize="hasRole('ROLE_ADMIN')">Admin Page</a>
                 <a id="logoutBtn" class="dropdown-item btn" th:href="@{/logout}"><b>Logout</b></a>
             </div>

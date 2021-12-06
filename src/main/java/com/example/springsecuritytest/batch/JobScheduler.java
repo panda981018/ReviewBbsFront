@@ -21,7 +21,7 @@ public class JobScheduler {
     private final JobLauncher jobLauncher;
     private final SimpleJobConfiguration simpleJobConfiguration;
     // 초 분 시 요일 일 월 (년도는 생략)
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 00 0 * * *")
     public void runJob() {
         HashMap<String, JobParameter> confMap = new HashMap<>();
         confMap.put("currentTime", new JobParameter(System.currentTimeMillis()));

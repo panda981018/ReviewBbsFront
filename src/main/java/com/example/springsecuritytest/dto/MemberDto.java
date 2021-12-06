@@ -27,6 +27,7 @@ public class MemberDto implements Serializable {
     private String year;
     private String month;
     private String day;
+    private String birth; // year + '-' + month + '-' + day
 
     private String regDate;
 
@@ -78,6 +79,7 @@ public class MemberDto implements Serializable {
         this.month = month;
         this.year = year;
         this.day = day;
+        this.birth = year + '-' + month + '-' + day;
         this.regDate = regDate;
     }
 

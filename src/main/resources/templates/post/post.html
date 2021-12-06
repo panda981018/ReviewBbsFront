@@ -70,7 +70,7 @@
         window.onload = function () {
             getCategoryId($('#categoryId').val()); // 카테고리 아이디
             setDatasource(); // 데이터 소스 정의 및 grid 생성
-            responseHandler();
+            postResponseHandler();
             sortBbs();
             gridClickEvent();
         }

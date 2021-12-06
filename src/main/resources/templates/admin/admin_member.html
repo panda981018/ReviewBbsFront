@@ -4,14 +4,18 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="~{layouts/layout}">
 <head>
+    <link rel="stylesheet" type="text/css" href="/tui-grid/dist/tui-grid.css">
+    <link rel="stylesheet" type="text/css" href="/tui-pagination/dist/tui-pagination.css">
     <link rel="stylesheet" type="text/css" href="/css/form.css">
     <link rel="stylesheet" type="text/css" href="/css/admin.css">
+    <script src="/tui-pagination/dist/tui-pagination.js" defer></script>
+    <script src="/tui-grid/dist/tui-grid.js" defer></script>
     <title>Admin Page</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div layout:replace="fragments/adminnav :: NaviAdmin"></div>
-    <div id="adminContent" class="d-flex flex-column flex-md-shrink-1 justify-content-start mt-3">
+    <div id="adminContent" class="d-flex flex-column justify-content-start mt-3">
         <div id="pageInfo" class="align-self-center">
             <h1 class="py-2">Members</h1>
             <span class="py-1">전체 회원을 관리하는 페이지입니다.</span>
@@ -28,66 +32,20 @@
                     <option class="dropdown-item" id="sortReg" value="regdate">가입일자</option>
                 </select>
             </div>
-            <span class="d-flex" th:text="'총 회원 수 : ' + ${memberList.getTotalElements()}"></span>
+<!--            <span class="d-flex" th:text="'총 회원 수 : ' + ${memberList.getTotalElements()}"></span>-->
         </div>
-        <table id="table" class="flex-column justify-content-around align-items-stretch
-        table table-striped table-responsive table-hover">
-            <thead>
-            <tr>
-                <th style="width: 5%;">No.</th>
-                <th style="width: 20%;">아이디</th>
-                <th style="width: 10%;">닉네임</th>
-                <th style="width: 10%;">생년월일</th>
-                <th style="width: 5%;">성별</th>
-                <th style="width: 20%;">가입일자</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="member : ${memberList.getContent()}">
-                <td th:text="${member.id}"></td>
-                <td th:text="${member.username}"></td>
-                <td th:text="${member.nickname}"></td>
-                <td th:if="${member.role == '일반회원'}"
-                    th:text="${member.year} + '-' + ${member.month} + '-' + ${member.day}"></td>
-                <td th:unless="${member.role == '일반회원'}"></td>
-                <td th:text="${member.gender}"></td>
-                <td th:text="${member.regDate}"></td>
-            </tr>
-            </tbody>
-        </table>
-        <!-- 페이징 -->
-        <nav aria-label="Page navigation" th:if="${!memberList.isEmpty()}">
-            <ul id="classUl" class="pagination justify-content-center align-items-center">
-                <li class="page-item btn" th:classappend="${!memberList.pageable.hasPrevious()} ? 'disabled'">
-                    <a class="page-link"
-                       th:href="@{/admin/manage(page=${memberList.pageable.previousOrFirst().pageNumber}, sort=${#request.getParameter('sort')})}">
-                        Previous
-                    </a>
-                </li>
-                <th:block
-                        th:each="page : ${#numbers.sequence(memberList.pageable.first().pageNumber+1, memberList.getTotalPages())}">
-                    <li class="page-item btn"
-                        th:classappend="${page == memberList.pageable.getPageNumber()+1} ? 'active'">
-                        <a class="page-link" th:text="${page}"
-                           th:href="@{/admin/manage(page=${page}-1, sort=${#request.getParameter('sort')})}"></a>
-                    </li>
-                </th:block>
-                <li class="page-item btn"
-                    th:classappend="${memberList.pageable.next().pageNumber == memberList.getTotalPages()} ? 'disabled'">
-                    <a class="page-link"
-                       th:href="@{/admin/manage(page=${memberList.pageable.next().pageNumber}, sort=${#request.getParameter('sort')})}">
-                        Next
-                    </a>
-                </li>
-            </ul>
-        </nav>
+
+        <div id="grid" class="d-flex flex-column justify-content-around align-items-stretch table-responsive table-hover">
+        </div>
     </div>
 </div>
 <th:block layout:fragment="script">
-    <script src="/js/adminMember.js"></script>
+    <script src="/js/adminpage.js"></script>
     <script>
         window.onload = function () {
             const pageTitle = $('#pageInfo h1').text();
+            getDatasource();
+            memberResponseHandler();
             selectMenu(pageTitle);
             selectOrder();
             clickMember();

@@ -36,7 +36,7 @@ $('#monthSelect').on('change', function () {
     const month = $('#monthSelect option:selected').val();
 
     if (currMonth !== month) {
-        todayDate = days[month-1];
+        todayDate = days[month - 1];
     }
 
     leapYear(year);
@@ -83,20 +83,17 @@ function makeChart(year, month) {
              * labels에 해당 달에 맞는 날짜들을 삽입해둔다.
              *
              */
+            if (batchResults.size == 0) {
+                alert('해당 기간에 대한 통계 자료가 없습니다.');
+            } else {
+                for (let i = 0; i < categoryList.length; i++) {
+                    let data = {};
+                    let counts = []; // 카운트에 대한 배열
+                    let mapValue = batchResults.get(categoryList[i]); // [날짜, 카운트]의 배열
 
-            for (let i = 0; i < categoryList.length; i++) {
-                let data = {};
-                let counts = []; // 카운트에 대한 배열
-                let mapValue = batchResults.get(categoryList[i]); // [날짜, 카운트]의 배열
-
-                for (let j = 0; j < todayDate; j++) {
-                    counts.push(0);
-                }
-
-                if (mapValue.length === 0) {
-                    alert('해당 기간에 대한 통계 자료가 없습니다.');
-                    break;
-                } else {
+                    for (let j = 0; j < todayDate; j++) {
+                        counts.push(0);
+                    }
                     for (let j = 0; j < mapValue.length; j++) {
                         if (labels.indexOf(mapValue[j][0]) !== -1) {
                             counts[labels.indexOf(mapValue[j][0])] = mapValue[j][1];
