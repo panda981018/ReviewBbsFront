@@ -100,7 +100,7 @@ public class SimpleJobConfiguration {
             // batchresult로 만드는 작업
             return BatchResult.builder()
                     .name(objToString.get(0))
-                    .bbsCount(Long.parseLong(objToString.get(1)))
+                    .bbsCount(Integer.parseInt(objToString.get(1)))
                     .staticsDate(beforeDate)
                     .build();
         };

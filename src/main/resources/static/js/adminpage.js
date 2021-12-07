@@ -29,16 +29,6 @@ function sortBy() {
     $('#sortSelect').on('change', function () {
         let sort = $('#sortSelect option:selected').val().toLowerCase();
         grid.readData(1, {"sort": sort});
-        // $.ajax({
-        //     method: "GET",
-        //     url: "/admin/manage?" + sort,
-        //     dataType: "json",
-        //     success: function (result) {
-        //         console.log(result.rs);
-        //         const address = '/admin/manage?page=' + result.rs.number + '&sort=' + sort;
-        //         location.href = address;
-        //     }
-        // });
     });
 }
 
@@ -57,7 +47,7 @@ function selectMenu(menu) {
 
 function createMemberInfoGrid(dataSource) {
     grid = new tui.Grid({
-        el: $('#grid')[0],
+        el: $('#memberGrid')[0],
         minBodyHeight: 40,
         scrollX: false,
         scrollY: false,
@@ -84,6 +74,7 @@ function createMemberInfoGrid(dataSource) {
             {
                 header: '닉네임',
                 name: 'nickname',
+                width: 100,
                 resizable: true,
                 align: "center"
             },
@@ -104,7 +95,7 @@ function createMemberInfoGrid(dataSource) {
                 header: '가입일자',
                 name: 'regDate',
                 resizable: true,
-                width: "auto",
+                width: 180,
                 align: "center"
             }
         ]
@@ -115,7 +106,7 @@ function getDatasource() {
     dataSource = {
         api: {
             readData: {
-                url: '/admin/manage', method: 'GET'
+                url: '/api/manage', method: 'GET'
             }
         }
     }
@@ -125,7 +116,6 @@ function getDatasource() {
 function memberResponseHandler() {
     grid.on('response',ev => {
         console.log(ev);
-        console.log(JSON.parse(ev.xhr.response).data.contents);
         const resultCnt = JSON.parse(ev.xhr.response).data.pagination.totalCount;
 
         if (resultCnt > 0) {

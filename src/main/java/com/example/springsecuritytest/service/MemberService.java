@@ -92,10 +92,7 @@ public class MemberService implements UserDetailsService {
         }
     }
 
-    public Page<MemberEntity> findAllMembers(Pageable pageable) { // 모든 멤버들 리스트 출력
-        return memberQueryRepository.findAllExceptAdmin(pageable);
-    }
-
+    // 모든 ROLE_MEMBER 정보 가져오기
     public HashMap<String, Object> getMemberPagination(Pageable pageable) throws Exception {
         Page<MemberEntity> memberEntities = memberQueryRepository.findAllExceptAdmin(pageable);
         List<MemberDto> memberDtoList = new ArrayList<>();

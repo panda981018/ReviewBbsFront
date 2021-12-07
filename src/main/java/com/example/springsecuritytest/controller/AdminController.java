@@ -35,66 +35,7 @@ public class AdminController { // admin
         return "home/adminHome";
     }
 
-    @GetMapping("/manage")
-    @ResponseBody
-    public HashMap<String, Object> adminPage(@RequestParam(required = false) int perPage,
-                                             @RequestParam(required = false) int page,
-                                             @RequestParam(required = false) String sort) throws Exception {
-        PageRequest pageRequest;
-        if (sort == null) {
-            pageRequest = PageRequest.of(page - 1, perPage, Sort.by(Sort.Direction.ASC, "id"));
-        } else {
-            pageRequest
-                    = PageRequest.of(page - 1, perPage, Sort.by(Sort.Direction.ASC, sort));
-        }
-
-        HashMap<String, Object> dataObj = memberService.getMemberPagination(pageRequest);
-
-        List<MemberDto> contents = (List<MemberDto>) dataObj.get("memberDtoList");
-        long memberCount = (long) dataObj.get("totalCount");
-
-        /* 클라이언트에게 보낼 때 지켜야할 데이터 형식
-        {
-          "result": true,
-          "data": {
-            "contents": [],
-            "pagination": {
-              "page": 1,
-              "totalCount": 100
-            }
-          }
-        }
-         */
-        HashMap<String, Object> responseMap = new HashMap<>();
-        HashMap<String, Object> dataMap = new HashMap<>();
-        HashMap<String, Object> paginationMap = new HashMap<>();
-
-        paginationMap.put("page", page);
-        paginationMap.put("totalCount", memberCount);
-        dataMap.put("contents", contents);
-        dataMap.put("pagination", paginationMap);
-
-        if (contents.size() == 0) {
-            responseMap.put("result", false);
-        } else {
-            responseMap.put("result", true);
-        }
-
-        responseMap.put("data", dataMap);
-
-        return responseMap;
-    }
-
-//    @GetMapping("/manage")
-//    public String adminPage(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable, Model model) {
-//
-//        Page<MemberEntity> members = memberService.findAllMembers(pageable);
-//        Page<MemberDto> memberList = members.map(MemberEntity::toDto);
-//        model.addAttribute("memberList", memberList);
-//
-//        return "admin/admin_member";
-//    }
-
+    // member 페이지 보여주는 함수
     @GetMapping("/manage/member")
     public String showMemberPage() {
         return "admin/admin_member";

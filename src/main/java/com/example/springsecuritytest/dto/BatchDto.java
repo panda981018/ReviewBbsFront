@@ -12,5 +12,5 @@ import lombok.ToString;
 public class BatchDto {
 
     private String category;
-    private Long count;
+    private int count;
 }

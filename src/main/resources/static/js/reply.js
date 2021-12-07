@@ -9,7 +9,7 @@ function createReply(bbsId) {
             return false;
         } else {
             $.ajax({
-                url: "/reply/ajax/add",
+                url: "/api/reply/add",
                 type: "post",
                 data: JSON.stringify({'bbsId': bbsId, 'contents': textEle.val().trim()}),
                 dataType: "json",
@@ -61,7 +61,7 @@ function deleteReply(bbsId) { // 삭제 버튼 눌렀을 때
         let result = confirm('댓글을 삭제하시겠습니까?');
         if (result) {
             $.ajax({
-                url: '/reply/ajax/delete',
+                url: '/api/reply/delete',
                 type: 'DELETE',
                 data: JSON.stringify({'bbsId': bbsId, 'replyId': replyId}),
                 contentType: 'application/json;charset=utf-8;',
@@ -97,7 +97,7 @@ function modalListener() { // modal 수정 클릭 리스너
         const updateReply = $('#updateReplyTextarea')[0].value.trim();
         const replyId = modalReplyId.val();
         $.ajax({
-            url: '/reply/ajax/update',
+            url: '/api/reply/update',
             type: "post",
             data: JSON.stringify({ "id" : replyId, "contents" : updateReply }),
             contentType: "application/json;charset=utf-8;",

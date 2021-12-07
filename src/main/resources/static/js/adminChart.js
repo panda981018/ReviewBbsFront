@@ -35,15 +35,17 @@ $('#monthSelect').on('change', function () {
     const year = $('#yearSelect option:selected').val();
     const month = $('#monthSelect option:selected').val();
 
-    if (currMonth !== month) {
+    if (currMonth !== parseInt(month)) {
         todayDate = days[month - 1];
+    } else {
+        todayDate = new Date().getDate() - 1;
     }
 
     leapYear(year);
 
-    if (parseInt(month) < 10) {
+    if (parseInt(month) < 10) { // 01, 02, 03, ... 같이 두자리 아래의 달
         makeChart(year, parseInt(month));
-    } else {
+    } else { // 10, 11, 12
         makeChart(year, month);
     }
 });
@@ -65,11 +67,17 @@ function makeChart(year, month) {
         url: '/api/getData?year=' + year + '&month=' + month,
         dataType: "json",
         success: function (result) {
-            let dataSets = []; // 항목들에 대한 배열
+            const isZero = (currentValue) => currentValue === 0; // 현재 값이 0이라면 true 리턴
+            let categoryValueArray = []; // 카테고리별 데이터 수를 담을 배열
 
-            // Object.entries : [key, value] 쌍의 배열을 반환.
+            let dataSets = []; // 항목들에 대한 배열
             const batchResults = new Map(Object.entries(result)); // json을 map형태로 만듦
             const categoryList = Object.keys(result); // 카테고리명
+
+            for (let i = 0; i < categoryList.length; i++) {
+                const mapValue = batchResults.get(categoryList[i]);
+                categoryValueArray.push(mapValue.length);
+            }
 
             /**
              * data 형식 { // dataSets에 들어갈 항목
@@ -83,7 +91,8 @@ function makeChart(year, month) {
              * labels에 해당 달에 맞는 날짜들을 삽입해둔다.
              *
              */
-            if (batchResults.size == 0) {
+            // 각 카테고리에 해당하는 자료가 없다면 = (카테고리 이름별 value의 length == 0)
+            if (categoryValueArray.every(isZero)) {
                 alert('해당 기간에 대한 통계 자료가 없습니다.');
             } else {
                 for (let i = 0; i < categoryList.length; i++) {

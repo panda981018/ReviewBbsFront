@@ -41,18 +41,6 @@ public class HomeController { // anonymous
         return "login";
     }
 
-    @PostMapping("/check/email")
-    @ResponseBody
-    public HashMap<String, Boolean> checkEmail(@RequestBody HashMap<String, String> usernameObj) {
-        return memberService.checkEmail(usernameObj.get("username"));
-    }
-
-    @PostMapping("/check/nickname")
-    @ResponseBody
-    public HashMap<String, Boolean> checkNickname(@RequestBody HashMap<String, String> nicknameObj) throws SQLException {
-        return memberService.checkNickname(nicknameObj.get("id"), nicknameObj.get("nickname"), nicknameObj.get("view"));
-    }
-
     // 회원가입 페이지
     @GetMapping("/signup")
     public String showSignUpPage(Model model) {

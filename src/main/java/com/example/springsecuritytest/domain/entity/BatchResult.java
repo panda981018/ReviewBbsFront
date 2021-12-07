@@ -28,10 +28,10 @@ public class BatchResult {
     private Long id;
     private String name;
     private LocalDate staticsDate;
-    private Long bbsCount;
+    private int bbsCount;
 
     @Builder
-    public BatchResult(Long id, String name, Long bbsCount, LocalDate staticsDate) {
+    public BatchResult(Long id, String name, int bbsCount, LocalDate staticsDate) {
         this.id = id;
         this.name = name;
         this.bbsCount = bbsCount;

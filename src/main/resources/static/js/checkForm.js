@@ -47,7 +47,7 @@ function emailValidate() {
         } else { // 비어있지도 않고 이메일 형식일 경우
             $.ajax({
                 type: "POST",
-                url: "/check/email",
+                url: "/api/check/email",
                 data: JSON.stringify({"username": username}),
                 contentType: 'application/json;charset=utf-8;',
                 dataType: "json",
@@ -149,7 +149,7 @@ function nicknameValidate(view) {
         } else {
             $.ajax({
                 type: 'POST',
-                url: '/check/nickname',
+                url: '/api/check/nickname',
                 data: JSON.stringify({ "id" : id, "nickname" : nickname, "view" : view }),
                 contentType: "application/json; charset=utf-8;",
                 dataType: 'json',

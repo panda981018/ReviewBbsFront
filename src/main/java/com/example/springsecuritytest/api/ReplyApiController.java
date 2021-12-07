@@ -1,4 +1,4 @@
-package com.example.springsecuritytest.controller;
+package com.example.springsecuritytest.api;
 
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.dto.ReplyDto;
@@ -13,15 +13,14 @@ import java.util.HashMap;
 
 import static com.example.springsecuritytest.conf.AppConfig.getClientIp;
 
-@Controller
+@RestController
 @AllArgsConstructor
-@RequestMapping("/reply")
-public class ReplyController {
+@RequestMapping("/api/reply")
+public class ReplyApiController {
 
     private final ReplyService replyService;
 
-    @ResponseBody
-    @PostMapping("/ajax/add")
+    @PostMapping("/add")
     public HashMap<String, String> createReply(HttpServletRequest request, @RequestBody HashMap<String, String> obj) throws Exception {
         HttpSession session = request.getSession();
         String bbsId = obj.get("bbsId");
@@ -38,8 +37,7 @@ public class ReplyController {
         return map;
     }
 
-    @ResponseBody
-    @DeleteMapping("/ajax/delete")
+    @DeleteMapping("/delete")
     public String deleteReply(@RequestBody HashMap<String, String> deleteData) {
 
         String bbsId = deleteData.get("bbsId");
@@ -49,8 +47,7 @@ public class ReplyController {
         return "ok";
     }
 
-    @ResponseBody
-    @PostMapping("/ajax/update")
+    @PostMapping("/update")
     public void updateReply(@RequestBody HashMap<String, String> updateObj, HttpSession session) {
         MemberDto member = (MemberDto) session.getAttribute("memberInfo");
         replyService.updateReply(updateObj.get("contents"), Long.parseLong(updateObj.get("id")), member);

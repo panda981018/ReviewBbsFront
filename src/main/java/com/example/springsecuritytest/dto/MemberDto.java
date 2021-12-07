@@ -67,7 +67,7 @@ public class MemberDto implements Serializable {
         }
     }
 
-    @Builder
+    @Builder // constructor
     public MemberDto(Long id, String username, String password, String role,
                      String nickname, String gender, String year, String month, String day, String regDate) {
         this.id = id;
