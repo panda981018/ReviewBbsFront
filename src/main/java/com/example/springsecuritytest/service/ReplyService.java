@@ -1,9 +1,9 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.BbsEntity;
-import com.example.springsecuritytest.domain.entity.ReplyEntity;
-import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
-import com.example.springsecuritytest.domain.repository.ReplyRepository;
+import com.example.springsecuritytest.domain.bbs.BbsEntity;
+import com.example.springsecuritytest.domain.reply.ReplyEntity;
+import com.example.springsecuritytest.domain.bbs.BbsRepository;
+import com.example.springsecuritytest.domain.reply.ReplyRepository;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.dto.ReplyDto;
 import lombok.AllArgsConstructor;

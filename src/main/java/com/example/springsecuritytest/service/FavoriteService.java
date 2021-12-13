@@ -1,17 +1,15 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.*;
-import com.example.springsecuritytest.domain.repository.FavoriteRepository;
-import com.example.springsecuritytest.domain.repository.MapRepository;
-import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
-import com.example.springsecuritytest.domain.repository.HeartRepository;
-import com.example.springsecuritytest.domain.repository.member.MemberRepository;
+import com.example.springsecuritytest.domain.favorite.FavoriteEntity;
+import com.example.springsecuritytest.domain.map.MapEntity;
+import com.example.springsecuritytest.domain.member.MemberEntity;
+import com.example.springsecuritytest.domain.favorite.FavoriteRepository;
+import com.example.springsecuritytest.domain.map.MapRepository;
+import com.example.springsecuritytest.domain.bbs.BbsRepository;
+import com.example.springsecuritytest.domain.member.MemberRepository;
 import com.example.springsecuritytest.dto.FavoriteDto;
-import com.example.springsecuritytest.dto.HeartDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

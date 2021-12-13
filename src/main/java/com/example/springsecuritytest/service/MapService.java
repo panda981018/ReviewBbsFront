@@ -1,12 +1,10 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.BbsEntity;
-import com.example.springsecuritytest.domain.entity.FavoriteEntity;
-import com.example.springsecuritytest.domain.entity.MapEntity;
-import com.example.springsecuritytest.domain.repository.FavoriteRepository;
-import com.example.springsecuritytest.domain.repository.MapRepository;
-import com.example.springsecuritytest.domain.repository.bbs.BbsQueryRepository;
-import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
+import com.example.springsecuritytest.domain.bbs.BbsEntity;
+import com.example.springsecuritytest.domain.favorite.FavoriteEntity;
+import com.example.springsecuritytest.domain.map.MapEntity;
+import com.example.springsecuritytest.domain.favorite.FavoriteRepository;
+import com.example.springsecuritytest.domain.map.MapRepository;
 import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.FavoriteDto;
 import com.example.springsecuritytest.dto.MemberDto;
@@ -16,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 

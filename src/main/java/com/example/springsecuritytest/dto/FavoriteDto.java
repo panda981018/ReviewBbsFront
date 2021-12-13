@@ -1,10 +1,7 @@
 package com.example.springsecuritytest.dto;
 
-import com.example.springsecuritytest.domain.entity.FavoriteEntity;
-import com.example.springsecuritytest.domain.entity.HeartEntity;
+import com.example.springsecuritytest.domain.favorite.FavoriteEntity;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter

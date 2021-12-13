@@ -1,6 +1,6 @@
 package com.example.springsecuritytest.dto;
 
-import com.example.springsecuritytest.domain.entity.NoticeEntity;
+import com.example.springsecuritytest.domain.notice.NoticeEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;

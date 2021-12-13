@@ -1,7 +1,7 @@
 package com.example.springsecuritytest.batch;
 
-import com.example.springsecuritytest.domain.entity.BatchResult;
-import com.example.springsecuritytest.domain.entity.BbsEntity;
+import com.example.springsecuritytest.domain.batch.BatchResult;
+import com.example.springsecuritytest.domain.bbs.BbsEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;

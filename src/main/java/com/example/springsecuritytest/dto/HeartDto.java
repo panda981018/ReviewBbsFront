@@ -1,6 +1,6 @@
 package com.example.springsecuritytest.dto;
 
-import com.example.springsecuritytest.domain.entity.HeartEntity;
+import com.example.springsecuritytest.domain.heart.HeartEntity;
 import lombok.*;
 
 @Getter

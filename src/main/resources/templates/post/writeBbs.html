@@ -52,9 +52,9 @@
             <div layout:replace="fragments/mapModal :: modalFragment"></div>
 
             <div id="btnGroup" class="flex-wrap">
-                <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button">
+                <a th:href="@{/post/bbs(category=${categoryId})}" id="cancelBtn" class="btn btn-outline-secondary form-button">
                     취소
-                </button>
+                </a>
                 <button type="submit" id="submitBtn" class="btn btn-primary form-button">등록</button>
             </div>
         </form>
@@ -62,9 +62,9 @@
 </div>
 <th:block layout:fragment="script">
     <script src="/js/editorSetting.js"></script>
-    <script src="/js/editpost.js"></script>
+    <script src="/js/post/editpost.js"></script>
     <script src="/js/validate.js"></script>
-    <script type="text/javascript" src="/js/kakaoMap.js"></script>
+    <script type="text/javascript" src="/js/map/kakaoMap.js"></script>
     <script type="text/javascript">
         //<[CDATA[
         const categoryId = [[${categoryId}]];

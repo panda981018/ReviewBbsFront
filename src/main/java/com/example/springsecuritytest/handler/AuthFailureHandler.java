@@ -19,7 +19,8 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
     private final String DEFAULT_FAILURE_URL="/login/error";
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                                        AuthenticationException exception)
             throws IOException, ServletException {
 
         String errorMsg;

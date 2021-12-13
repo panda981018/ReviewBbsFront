@@ -54,8 +54,11 @@ public class HomeController { // anonymous
     public String signUp(MemberDto memberDto) {
 
         memberDto.setRole(memberDto.getRole().equals("ADMIN") ? Role.ADMIN.getValue() : Role.MEMBER.getValue());
-        memberService.signUp(memberDto);
-        return "redirect:/";
+        Long newId = memberService.signUp(memberDto);
+        if (newId != null)
+            return "redirect:/";
+        else
+            return "error";
     }
 
 }

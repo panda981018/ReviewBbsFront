@@ -1,8 +1,8 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.MemberEntity;
-import com.example.springsecuritytest.domain.repository.member.MemberQueryRepository;
-import com.example.springsecuritytest.domain.repository.member.MemberRepository;
+import com.example.springsecuritytest.domain.member.MemberEntity;
+import com.example.springsecuritytest.domain.member.MemberQueryRepository;
+import com.example.springsecuritytest.domain.member.MemberRepository;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.enumclass.Role;
 import lombok.AllArgsConstructor;
@@ -33,7 +33,7 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
 
-    public void signUp(MemberDto memberDto) { // 회원가입
+    public Long signUp(MemberDto memberDto) { // 회원가입
 
         LocalDateTime now = LocalDateTime.now();
         String time = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -42,70 +42,10 @@ public class MemberService implements UserDetailsService {
         memberDto.setPassword(cryptoPassword);
         memberDto.setRegDate(time);
 
-        memberRepository.save(memberDto.toEntity());
-    }
+        MemberEntity memberEntity = memberDto.toEntity();
+        memberRepository.save(memberEntity);
 
-    public void updateMember(HttpSession session, MemberDto memberDto) { // 회원 정보 update
-
-        Optional<MemberEntity> memberEntity = memberRepository.findByUsername(memberDto.getUsername());
-
-        if (memberEntity.isPresent()) {
-            MemberEntity member = memberEntity.get();
-
-            if (memberDto.getPassword().isEmpty()) { // 비밀번호를 수정하지 않은 경우
-                memberDto.setId(member.getId());
-                memberDto.setPassword(member.getPassword());
-            } else { // 비밀번호를 수정한 경우
-                String cryptoPassword = passwordEncoder.encode(memberDto.getPassword());
-                memberDto.setId(member.getId());
-                memberDto.setPassword(cryptoPassword);
-            }
-
-            memberDto.setRole(member.getRole() == Role.ADMIN ? Role.ADMIN.getValue() : Role.MEMBER.getValue());
-            memberDto.setRegDate(localDateTimeToString(member.getRegDate()));
-
-            memberRepository.save(memberDto.toEntity());
-
-            MemberDto myInfo = (MemberDto) session.getAttribute("memberInfo");
-            if (myInfo.getRole().equals(Role.MEMBER.getTitle())) {
-                session.setAttribute("memberInfo", memberRepository.getById(myInfo.getId()).toDto());
-            }
-        }
-    }
-
-    public MemberDto findByUsername(String username) throws SQLException { // 이름으로 회원정보 get
-
-        Optional<MemberEntity> memberEntity = memberRepository.findByUsername(username);
-        if(memberEntity.isPresent()) {
-            return memberEntity.get().toDto();
-        } else {
-            throw new SQLException();
-        }
-    }
-
-    public MemberDto findById(Long id) throws SQLException {
-        Optional<MemberEntity> memberEntity = memberRepository.findById(id);
-        if (memberEntity.isPresent()) {
-            return memberEntity.get().toDto();
-        } else {
-            throw new SQLException();
-        }
-    }
-
-    // 모든 ROLE_MEMBER 정보 가져오기
-    public HashMap<String, Object> getMemberPagination(Pageable pageable) throws Exception {
-        Page<MemberEntity> memberEntities = memberQueryRepository.findAllExceptAdmin(pageable);
-        List<MemberDto> memberDtoList = new ArrayList<>();
-
-        for(MemberEntity member : memberEntities.getContent()) {
-            memberDtoList.add(member.toDto());
-        }
-
-        HashMap<String, Object> dataMap = new HashMap<>();
-        dataMap.put("memberDtoList", memberDtoList);
-        dataMap.put("totalCount", memberEntities.getTotalElements());
-
-        return dataMap;
+        return memberEntity.getId();
     }
 
     // 이메일 중복 체크 함수
@@ -129,6 +69,66 @@ public class MemberService implements UserDetailsService {
         HashMap<String, Boolean> map = new HashMap<>();
         map.put("result", result);
         return map;
+    }
+
+    public void updateMember(HttpSession session, MemberDto memberDto) { // 회원 정보 update
+
+        MemberEntity member = memberRepository.findByUsername(memberDto.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 회원은 없습니다. 다시 시도 해주십시오."));
+
+        if (memberDto.getPassword().isEmpty()) { // 비밀번호를 수정하지 않은 경우
+            memberDto.setId(member.getId());
+            memberDto.setPassword(member.getPassword());
+        } else { // 비밀번호를 수정한 경우
+            String cryptoPassword = passwordEncoder.encode(memberDto.getPassword());
+            memberDto.setId(member.getId());
+            memberDto.setPassword(cryptoPassword);
+        }
+
+        memberDto.setRole(member.getRole() == Role.ADMIN ? Role.ADMIN.getValue() : Role.MEMBER.getValue());
+        memberDto.setRegDate(localDateTimeToString(member.getRegDate()));
+
+        memberRepository.save(memberDto.toEntity());
+
+        MemberDto myInfo = (MemberDto) session.getAttribute("memberInfo");
+        if (myInfo.getRole().equals(Role.MEMBER.getTitle())) {
+            session.setAttribute("memberInfo", memberRepository.getById(myInfo.getId()).toDto());
+        }
+    }
+
+    public MemberDto findByUsername(String username) throws SQLException { // 이름으로 회원정보 get
+
+        Optional<MemberEntity> memberEntity = memberRepository.findByUsername(username);
+        if (memberEntity.isPresent()) {
+            return memberEntity.get().toDto();
+        } else {
+            throw new SQLException();
+        }
+    }
+
+    public MemberDto findById(Long id) throws SQLException {
+        Optional<MemberEntity> memberEntity = memberRepository.findById(id);
+        if (memberEntity.isPresent()) {
+            return memberEntity.get().toDto();
+        } else {
+            throw new SQLException();
+        }
+    }
+
+    // 모든 ROLE_MEMBER 정보 가져오기
+    public HashMap<String, Object> getMemberPagination(Pageable pageable) throws Exception {
+        Page<MemberEntity> memberEntities = memberQueryRepository.findAllExceptAdmin(pageable);
+        List<MemberDto> memberDtoList = new ArrayList<>();
+
+        for (MemberEntity member : memberEntities.getContent()) {
+            memberDtoList.add(member.toDto());
+        }
+
+        HashMap<String, Object> dataMap = new HashMap<>();
+        dataMap.put("memberDtoList", memberDtoList);
+        dataMap.put("totalCount", memberEntities.getTotalElements());
+
+        return dataMap;
     }
 
     @Override

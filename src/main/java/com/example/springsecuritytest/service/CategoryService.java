@@ -1,7 +1,7 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.CategoryEntity;
-import com.example.springsecuritytest.domain.repository.category.CategoryRepository;
+import com.example.springsecuritytest.domain.category.CategoryEntity;
+import com.example.springsecuritytest.domain.category.CategoryRepository;
 import com.example.springsecuritytest.dto.CategoryDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;

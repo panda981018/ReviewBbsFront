@@ -1,8 +1,6 @@
 package com.example.springsecuritytest.util;
 
-import static com.example.springsecuritytest.domain.entity.QMemberEntity.memberEntity;
-
-import com.example.springsecuritytest.domain.entity.QMemberEntity;
+import com.example.springsecuritytest.domain.member.QMemberEntity;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
@@ -13,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.springsecuritytest.domain.member.QMemberEntity.memberEntity;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 public class QueryDslUtil {

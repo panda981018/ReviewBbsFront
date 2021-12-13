@@ -1,8 +1,8 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.NoticeEntity;
-import com.example.springsecuritytest.domain.repository.NoticeQueryRepository;
-import com.example.springsecuritytest.domain.repository.NoticeRepository;
+import com.example.springsecuritytest.domain.notice.NoticeEntity;
+import com.example.springsecuritytest.domain.notice.NoticeQueryRepository;
+import com.example.springsecuritytest.domain.notice.NoticeRepository;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.dto.NoticeDto;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;

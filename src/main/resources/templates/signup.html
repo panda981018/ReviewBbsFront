@@ -22,7 +22,7 @@
             <!--  username  -->
             <div class="mb-3" id="emailDiv">
                 <label th:for="signUpEmail" class="form-label" aria-describedby="emailHelpBlock">
-                    <b>Email address</b></label>
+                    <b>Email address</b><span class="required-info">*</span></label>
                 <small id="emailHelpBlock" class="text-muted">이메일 형식으로 입력해주세요.</small>
                 <input type="email" class="form-control" id="signUpEmail" name="username" placeholder="이메일을 입력해주세요"
                        autocomplete="off"/>
@@ -31,7 +31,7 @@
             <!-- password -->
             <div class="mb-3" id="passwordDiv">
                 <label th:for="signUpPassword" class="form-label"
-                       aria-describedby="passwordHelpBlock"><b>Password</b></label>
+                       aria-describedby="passwordHelpBlock"><b>Password</b><span class="required-info">*</span></label>
                 <small id="passwordHelpBlock" class="text-muted">비밀번호는 8~20자로 해주세요.</small>
                 <input type="password" class="form-control" id="signUpPassword" name="password"
                        placeholder="비밀번호" autocomplete="false"/>
@@ -39,20 +39,20 @@
             </div>
             <!-- nickname -->
             <div class="mb-3" id="nicknameDiv">
-                <label th:for="nickname" class="form-label"><b>Nickname</b></label>
-                <input type="text" class="form-control" id="nickname" name="nickname" placeholder="이름"
+                <label th:for="nickname" class="form-label"><b>Nickname</b><span class="required-info">*</span></label>
+                <input type="text" class="form-control" id="nickname" name="nickname" placeholder="닉네임(별명)"
                        autocomplete="off"/>
                 <p class="mt-3 alert alert-danger valid" id="nicknameError" name="nicknameError"></p>
             </div>
             <!-- Gender -->
             <div class="mb-3" id="genderDiv">
-                <label th:for="gender" class="form-label"><b>Gender</b></label><br>
+                <label th:for="gender" class="form-label"><b>Gender</b><span class="required-info">*</span></label><br>
                 <input type="radio" name="gender" id="male" th:name="gender" value="남성" checked> Male
                 <input type="radio" name="gender" id="female" th:name="gender" value="여성"> Female
             </div>
             <!-- birth -->
             <div class="mb-3 dropdown" id="birthDiv">
-                <label class="form-label" for="birth"><b>Birth</b></label><br/>
+                <label class="form-label" for="birth"><b>Birth</b><span class="required-info">*</span></label><br/>
                 <div id="birth" class="d-flex flex-row align-items-center justify-content-evenly">
                     <!-- year -->
                     <select class="form-select dropdown-toggle me-3" data-toggle="dropdown" id="selectYear"
@@ -81,8 +81,8 @@
                 </div>
                 <div id="birthError" class="mt-3 valid"></div>
             </div>
-            <button type="submit" class="btn btn-primary form-button">Sign Up</button>
-            <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button">Cancel</button>
+            <button type="submit" class="btn btn-primary form-button">회원가입</button>
+            <a href="/" id="cancelBtn" class="btn btn-outline-secondary form-button">취소</a>
         </form>
     </div>
 </div>

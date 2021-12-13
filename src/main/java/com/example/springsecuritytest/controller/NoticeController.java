@@ -1,9 +1,8 @@
 package com.example.springsecuritytest.controller;
 
-import com.example.springsecuritytest.domain.entity.NoticeEntity;
+import com.example.springsecuritytest.domain.notice.NoticeEntity;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.example.springsecuritytest.dto.NoticeDto;
-import com.example.springsecuritytest.service.ImageService;
 import com.example.springsecuritytest.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,10 +12,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;

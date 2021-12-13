@@ -130,13 +130,13 @@ function passwordTooltip() {
 function nicknameValidate(view) {
 
     $('#nickname').on('focusout', function () {
-        let id = $('#hiddenId').val();
+        let id = $('#hiddenId').val(); // 회원 고유 id myInfo에만 있음.
         const nickname = $('#nickname').val();
         const nicknameError = $('#nicknameError');
 
-        if (id == null) {
-            id = 'null';
-        }
+        // if (id == null) { // signUp에서 날아온 요청일 때
+        //     id = 'null';
+        // }
 
         if (nickname == '') {
             nicknameError.removeClass('valid');

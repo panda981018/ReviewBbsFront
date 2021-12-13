@@ -2,8 +2,6 @@
     width:100%;
 }
 
-#chartInfo,
-#chartInfo label,
 #chartInfo select {
-    width: 100%;
+    width: 6.5rem;
 }

@@ -44,6 +44,7 @@ dependencies {
     // Querydsl
     implementation group: 'com.querydsl', name: 'querydsl-jpa', version: querydslVersion
     implementation group: 'com.querydsl', name: 'querydsl-core', version: querydslVersion
+    implementation 'org.projectlombok:lombok:1.18.20'
     annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion, classifier: 'jpa'
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")

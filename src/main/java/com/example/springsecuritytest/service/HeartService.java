@@ -1,11 +1,11 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.BbsEntity;
-import com.example.springsecuritytest.domain.entity.HeartEntity;
-import com.example.springsecuritytest.domain.entity.MemberEntity;
-import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
-import com.example.springsecuritytest.domain.repository.HeartRepository;
-import com.example.springsecuritytest.domain.repository.member.MemberRepository;
+import com.example.springsecuritytest.domain.bbs.BbsEntity;
+import com.example.springsecuritytest.domain.heart.HeartEntity;
+import com.example.springsecuritytest.domain.member.MemberEntity;
+import com.example.springsecuritytest.domain.bbs.BbsRepository;
+import com.example.springsecuritytest.domain.heart.HeartRepository;
+import com.example.springsecuritytest.domain.member.MemberRepository;
 import com.example.springsecuritytest.dto.HeartDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

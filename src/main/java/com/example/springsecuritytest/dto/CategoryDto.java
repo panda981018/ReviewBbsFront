@@ -1,6 +1,6 @@
 package com.example.springsecuritytest.dto;
 
-import com.example.springsecuritytest.domain.entity.CategoryEntity;
+import com.example.springsecuritytest.domain.category.CategoryEntity;
 import lombok.*;
 
 import java.io.Serializable;

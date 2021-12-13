@@ -1,10 +1,7 @@
 package com.example.springsecuritytest.dto;
 
-import com.example.springsecuritytest.domain.entity.BbsEntity;
+import com.example.springsecuritytest.domain.bbs.BbsEntity;
 import lombok.*;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static com.example.springsecuritytest.conf.AppConfig.stringToLocalDateTime;
 

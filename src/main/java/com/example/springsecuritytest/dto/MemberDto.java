@@ -1,6 +1,6 @@
 package com.example.springsecuritytest.dto;
 
-import com.example.springsecuritytest.domain.entity.MemberEntity;
+import com.example.springsecuritytest.domain.member.MemberEntity;
 import com.example.springsecuritytest.enumclass.Gender;
 import com.example.springsecuritytest.enumclass.Role;
 import lombok.*;

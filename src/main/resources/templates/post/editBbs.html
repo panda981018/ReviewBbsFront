@@ -57,9 +57,9 @@
             <div layout:replace="fragments/mapModal :: modalFragment"></div>
 
             <div id="btnGroup">
-                <button type="button" id="cancelBtn" class="btn btn-outline-secondary form-button"
-                        onclick="window.history.back();">취소
-                </button>
+                <a th:href="@{/post/bbs(category=${bbs.categoryId})}" id="cancelBtn"
+                   class="btn btn-outline-secondary form-button">취소
+                </a>
                 <button type="submit" id="updateBtn" class="btn btn-primary form-button">수정</button>
             </div>
         </form>
@@ -67,9 +67,9 @@
 </div>
 <th:block layout:fragment="script">
     <script src="/js/editorSetting.js"></script>
-    <script src="/js/editpost.js"></script>
+    <script src="/js/post/editpost.js"></script>
     <script src="/js/validate.js"></script>
-    <script type="text/javascript" src="/js/kakaoMap.js"></script>
+    <script type="text/javascript" src="/js/map/kakaoMap.js"></script>
     <script type="text/javascript">
         //<[CDATA[
         const latitude = [[${bbs.latitude}]];

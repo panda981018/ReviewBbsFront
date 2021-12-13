@@ -1,12 +1,17 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.entity.*;
-import com.example.springsecuritytest.domain.repository.category.CategoryRepository;
-import com.example.springsecuritytest.domain.repository.HeartRepository;
-import com.example.springsecuritytest.domain.repository.MapRepository;
-import com.example.springsecuritytest.domain.repository.bbs.BbsQueryRepository;
-import com.example.springsecuritytest.domain.repository.bbs.BbsRepository;
-import com.example.springsecuritytest.domain.repository.member.MemberRepository;
+import com.example.springsecuritytest.domain.bbs.BbsEntity;
+import com.example.springsecuritytest.domain.category.CategoryEntity;
+import com.example.springsecuritytest.domain.heart.HeartEntity;
+import com.example.springsecuritytest.domain.map.MapEntity;
+import com.example.springsecuritytest.domain.member.MemberEntity;
+import com.example.springsecuritytest.domain.reply.ReplyEntity;
+import com.example.springsecuritytest.domain.category.CategoryRepository;
+import com.example.springsecuritytest.domain.heart.HeartRepository;
+import com.example.springsecuritytest.domain.map.MapRepository;
+import com.example.springsecuritytest.domain.bbs.BbsQueryRepository;
+import com.example.springsecuritytest.domain.bbs.BbsRepository;
+import com.example.springsecuritytest.domain.member.MemberRepository;
 import com.example.springsecuritytest.dto.BbsDto;
 import com.example.springsecuritytest.dto.MemberDto;
 import com.querydsl.core.Tuple;

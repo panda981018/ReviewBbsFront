@@ -1,7 +1,6 @@
 package com.example.springsecuritytest.service;
 
-import com.example.springsecuritytest.domain.repository.batch.BatchQueryRepository;
-import com.example.springsecuritytest.domain.repository.category.CategoryQueryRepository;
+import com.example.springsecuritytest.domain.batch.BatchQueryRepository;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

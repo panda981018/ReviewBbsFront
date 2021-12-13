@@ -42,3 +42,9 @@ table {
 .valid {
     display: none;
 }
+
+.required-info {
+    color: red;
+    font-size: 1.1rem;
+    margin-left: 0.4rem;
+}
