@@ -5,9 +5,9 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-src/main/resources/static/tui-grid/**
-src/main/resources/static/tui-pagination/**
-chart/**
+src/main/resources/static/tui-grid/
+src/main/resources/static/tui-pagination/
+src/main/resources/static/js/chart/
 
 ### STS ###
 .apt_generated
