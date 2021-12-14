@@ -7,7 +7,7 @@ build/
 !**/src/test/**/build/
 src/main/resources/static/tui-grid/**
 src/main/resources/static/tui-pagination/**
-src/main/resources/static/js/chart/**
+chart/**
 
 ### STS ###
 .apt_generated
