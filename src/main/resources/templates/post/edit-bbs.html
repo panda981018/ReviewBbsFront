@@ -54,7 +54,7 @@
             <span id="contentsError" class="valid">내용을 채워주세요</span>
             <textarea id="writeSpace" class="form-box" name="bbsContents" th:field="*{bbsContents}"></textarea>
 
-            <div layout:replace="fragments/mapModal :: modalFragment"></div>
+            <div layout:replace="fragments/frag-map-modal :: modalFragment"></div>
 
             <div id="btnGroup">
                 <a th:href="@{/post/bbs(category=${bbs.categoryId})}" id="cancelBtn"

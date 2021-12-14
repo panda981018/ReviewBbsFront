@@ -8,14 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.sql.SQLException;
-import java.util.HashMap;
 
 @Controller
 @RequiredArgsConstructor
@@ -46,7 +40,7 @@ public class HomeController { // anonymous
     public String showSignUpPage(Model model) {
         model.addAttribute("memberDto", new MemberDto());
 
-        return "signup";
+        return "sign-up";
     }
 
     // 회원가입 처리

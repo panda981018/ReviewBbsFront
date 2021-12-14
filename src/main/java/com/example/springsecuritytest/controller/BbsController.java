@@ -3,7 +3,6 @@ package com.example.springsecuritytest.controller;
 import com.example.springsecuritytest.dto.*;
 import com.example.springsecuritytest.service.*;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +32,7 @@ public class BbsController {
     @GetMapping
     public String defaultCategory(HttpSession session) {
         if (categoryService.getAllCategories().isEmpty()) {
-            return "post/nocategory";
+            return "post/no-category";
         } else {
             List<CategoryDto> categoryDtoList = categoryService.getAllCategories();
             session.setAttribute("categoryList", categoryDtoList);
@@ -58,7 +57,7 @@ public class BbsController {
     public String showWritePage(@RequestParam String category, Model model) {
         model.addAttribute("bbs", new BbsDto());
         model.addAttribute("categoryId", category);
-        return "post/writeBbs";
+        return "post/write-bbs";
     }
 
     @PostMapping("/bbs/write")
@@ -99,7 +98,7 @@ public class BbsController {
         model.addAttribute("heartObj", heartDto);
         model.addAttribute("favObj", favDto);
 
-        return "post/viewBbs";
+        return "post/view-bbs";
     }
 
     @GetMapping("/bbs/update") // 수정하는 페이지
@@ -113,7 +112,7 @@ public class BbsController {
             bbs = (BbsDto) dataMap.get("bbsDto");
         }
         model.addAttribute("bbs", bbs);
-        return "post/editBbs";
+        return "post/edit-bbs";
     }
 
     @PostMapping("/bbs/update") // 수정 클릭

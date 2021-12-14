@@ -16,7 +16,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div layout:replace="fragments/postnav :: NaviPost"></div>
+    <div layout:replace="fragments/frag-post-nav :: NaviPost"></div>
     <div id="writeContent" class="d-flex flex-column">
         <div id="outer-div" class="d-flex flex-column justify-content-start">
             <div id="categoryInfo" class="mb-3">
@@ -109,7 +109,7 @@
                     <a th:href="@{'/post/bbs/update?id=' + ${bbs.id}}" id="updateBtn" class="btn btn-primary">수정</a>
                 </div>
             </div>
-            <div layout:replace="fragments/reply :: replyFragment"></div>
+            <div layout:replace="fragments/frag-reply :: replyFragment"></div>
         </div>
     </div>
 

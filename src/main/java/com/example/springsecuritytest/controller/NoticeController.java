@@ -42,13 +42,13 @@ public class NoticeController {
     public String viewNotice(@RequestParam String id, Model model) {
         NoticeDto notice = noticeService.getNotice(Long.parseLong(id));
         model.addAttribute("notice", notice);
-        return "notice/viewnotice";
+        return "notice/view-notice";
     }
 
     @GetMapping("/write")
     public String showWritePage(Model model) {
         model.addAttribute("noticeDto", new NoticeDto());
-        return "notice/writenotice";
+        return "notice/write-notice";
     }
 
     @PostMapping("/write")
@@ -63,7 +63,7 @@ public class NoticeController {
         NoticeDto notice = noticeService.getNotice(Long.parseLong(id));
         System.out.println(notice);
         model.addAttribute("noticeDto", notice);
-        return "notice/editnotice";
+        return "notice/edit-notice";
     }
 
     @PostMapping("/update")

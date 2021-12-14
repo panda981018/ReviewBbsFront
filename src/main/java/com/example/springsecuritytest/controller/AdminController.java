@@ -21,39 +21,39 @@ public class AdminController { // admin
 
     @GetMapping("/home")
     public String adminHome() {
-        return "home/adminHome";
+        return "home/admin-home";
     }
 
     // member 페이지 보여주는 함수
     @GetMapping("/manage/member")
     public String showMemberPage() {
-        return "admin/admin_member";
+        return "admin/admin-member";
     }
 
     @GetMapping("/info")
     public String showMemberInfo(@RequestParam(required = false) String id, Model model) throws SQLException {
         MemberDto memberDto = memberService.findById(Long.parseLong(id));
         model.addAttribute("memberInfo", memberDto);
-        return "myInfo";
+        return "my-Info";
     }
 
     @GetMapping("/category")
     public String showCategoryPage(Model model) {
         model.addAttribute("category", new CategoryDto());
 
-        return "admin/admin_category";
+        return "admin/admin-category";
     }
 
     @PostMapping("/category")
     public String createCategory(CategoryDto categoryDto) {
         categoryService.createCategory(categoryDto);
 
-        return "admin/admin_category";
+        return "admin/admin-category";
     }
 
     @GetMapping("/chart")
     public String showCategoryChart() {
-        return "admin/admin_statics";
+        return "admin/admin-statics";
     }
 
 }

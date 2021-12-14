@@ -30,7 +30,7 @@ public class MemberController { // member
         } else {
             session.removeAttribute("categoryList");
         }
-        return "home/memberHome";
+        return "home/member-home";
     }
 
     // 내정보 페이지
@@ -38,7 +38,7 @@ public class MemberController { // member
     public String showMyInfo(HttpSession session, Model model) throws SQLException { // 세션에서 유지되고 있는 Authentication 객체를 가져옴.
 
         model.addAttribute("memberInfo", session.getAttribute("memberInfo"));
-        return "myInfo";
+        return "my-Info";
     }
 
     // 내정보에서 update 클릭했을 때
