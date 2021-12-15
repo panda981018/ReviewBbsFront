@@ -8,10 +8,10 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableBatchProcessing
 @EnableRedisHttpSession
 @SpringBootApplication
-public class SpringSecurityTestApplication {
+public class ReviewBbsApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringSecurityTestApplication.class, args);
+        SpringApplication.run(ReviewBbsApplication.class, args);
     }
 
 }
