@@ -86,13 +86,12 @@ public class BbsService {
 
     // 게시물 1개
     public HashMap<String, Object> getBbs(Long bbsId) throws Exception {
+        HashMap<String, Object> dataMap = new HashMap<>();
 
         BbsEntity bbsEntity = bbsRepository.findById(bbsId)
                 .orElseThrow(() -> new Exception("POST NOT EXIST"));
-        BbsDto bbsDto;
-        HashMap<String, Object> dataMap = new HashMap<>();
+        BbsDto bbsDto = bbsEntity.toDto();
 
-        bbsDto = bbsEntity.toDto();
         dataMap.put("bbsDto", bbsDto);
         List<ReplyEntity> replies = bbsEntity.getReplies();
         dataMap.put("replies", replies);

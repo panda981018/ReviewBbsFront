@@ -72,7 +72,7 @@ public class BbsController {
     @GetMapping("/bbs/view") // 게시글 보기
     public String viewBbs(@RequestParam(required = false) String id, HttpSession session, Model model) throws Exception {
         BbsDto bbs = null;
-        Long viewCategoryId = 0L;
+        long viewCategoryId = 0L;
         List<ReplyDto> replies;
 
         HashMap<String, Object> dataMap = bbsService.getBbs(Long.parseLong(id));

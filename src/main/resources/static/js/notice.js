@@ -12,11 +12,11 @@ function updateNoticeViews() { // 조회수 업데이트
             dataType: 'json',
             data: JSON.stringify({ "id": noticeId}),
             contentType: 'application/json; charset=utf-8',
-            error: function () {
-                console.log('view update failed.');
+            error: function (error) {
+                console.log(this.error + '\nview update failed.');
             }
-        })
-    })
+        });
+    });
 }
 
 function deleteNotice(noticeId) { // 게시물 삭제
@@ -27,7 +27,7 @@ function deleteNotice(noticeId) { // 게시물 삭제
             data.id = noticeId;
 
             const imgList = $('#noticeContents img');
-            if (imgList != null) {
+            if (imgList !== null) {
                 urlList = [];
                 for(let i = 0; i < imgList.length; i++) {
                     const startIndex = imgList[i].currentSrc.indexOf('/summernoteImg/');
@@ -48,6 +48,6 @@ function deleteNotice(noticeId) { // 게시물 삭제
         } else {
             return false;
         }
-    })
+    });
 }
 

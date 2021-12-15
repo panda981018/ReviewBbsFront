@@ -50,7 +50,7 @@
             </div>
         </div>
         <!--   데이터가 있을때만 노출    -->
-        <div id="grid" class="flex-column justify-content-around align-items-stretch table-responsive table-hover">
+        <div id="postGrid" class="flex-column justify-content-around align-items-stretch table-responsive table-hover">
         </div>
         <!--   데이터가 있건 없건 노출    -->
         <div class="d-flex flex-row justify-content-end">
@@ -64,15 +64,16 @@
 <th:block layout:fragment="script">
     <!--  없으면 ajax가 동작하지 않음  -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="/js/post/postGridSetting.js" defer></script>
+    <script src="/js/grid/post-grid-setting.js" defer></script>
     <script src="/js/post/post.js"></script>
+
     <script>
         window.onload = function () {
             getCategoryId($('#categoryId').val()); // 카테고리 아이디
             setDatasource(); // 데이터 소스 정의 및 grid 생성
             postResponseHandler();
             sortBbs();
-            gridClickEvent();
+            clickBbsEvent();
         }
     </script>
 </th:block>

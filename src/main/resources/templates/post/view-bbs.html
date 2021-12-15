@@ -103,10 +103,12 @@
                         <span th:text="${bbs.replyCnt}"></span>
                     </button>
                 </div>
-                <div id="ownerBtnGroup" class="d-flex justify-content-end align-items-center"
-                     th:if="${bbs.bbsWriter == session.memberInfo.getNickname()}">
-                    <button type="button" id="deleteBbsBtn" class="btn btn-outline-danger me-3">삭제</button>
-                    <a th:href="@{'/post/bbs/update?id=' + ${bbs.id}}" id="updateBtn" class="btn btn-primary">수정</a>
+                <div id="bbsUtilBtnGroup" class="d-flex justify-content-end align-items-center">
+                    <a th:href="@{/post/bbs(category=${bbs.categoryId})}" id="backToBbsList" class="btn btn-outline-secondary me-3">목록</a>
+                    <div id="ownerBtnGroup" th:if="${bbs.bbsWriter == session.memberInfo.getNickname()}">
+                        <button type="button" id="deleteBbsBtn" class="btn btn-outline-danger me-3">삭제</button>
+                        <a th:href="@{/post/bbs/update(id=${bbs.id})}" id="updateBbsBtn" class="btn btn-primary">수정</a>
+                    </div>
                 </div>
             </div>
             <div layout:replace="fragments/frag-reply :: replyFragment"></div>
@@ -117,7 +119,7 @@
 <th:block layout:fragment="script">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script type="text/javascript" src="/js/post/post.js"></script>
-    <script type="text/javascript" src="/js/map/kakaoMap.js"></script>
+    <script type="text/javascript" src="/js/map/bbs-map.js"></script>
     <script type="text/javascript" src="/js/reply.js"></script>
     <script>
         window.onload = function () {

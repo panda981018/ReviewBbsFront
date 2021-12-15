@@ -21,7 +21,7 @@
          class="d-flex flex-column justify-content-evenly align-items-start form-box">
         <h1 class="flex-grow-0 pb-3 border-bottom">Write Review</h1>
         <form class="form-group d-grid mt-3" id="formEdit" th:action="@{/post/bbs/write}"
-              method="post">
+              method="post" onsubmit="return validateForm()">
             <!-- id -->
             <input type="hidden" id="hiddenId" name="bbsId">
             <!-- lat, lng -->
@@ -61,10 +61,10 @@
     </div>
 </div>
 <th:block layout:fragment="script">
-    <script src="/js/editorSetting.js"></script>
+    <script src="/js/summernote-setting.js"></script>
     <script src="/js/post/editpost.js"></script>
-    <script src="/js/validate.js"></script>
-    <script type="text/javascript" src="/js/map/kakaoMap.js"></script>
+    <script src="/js/validate-bbs-notice.js"></script>
+    <script type="text/javascript" src="/js/map/bbs-map.js"></script>
     <script type="text/javascript">
         //<[CDATA[
         const categoryId = [[${categoryId}]];
@@ -77,8 +77,7 @@
             showMapModal(lat, lng);
             titleValidate();
             contentValidate();
-            cancelingWrite();
-            validateForm();
+            cancelWriting();
             closeMapModal();
         }
     </script>

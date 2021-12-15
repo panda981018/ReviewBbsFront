@@ -1,9 +1,6 @@
-let dataSource; // grid datasource
-let grid; // tui grid
-
-function createGrid() {
+function createHomeGrid() {
     grid = new tui.Grid({
-        el: $('#newGrid')[0],
+        el: $('#memberHomeGrid')[0],
         minBodyHeight: 40,
         scrollX: false,
         scrollY: false,
@@ -40,7 +37,7 @@ function createGrid() {
                 align: "center"
             }
         ]
-    }); // grid 객체
+    }); // homeGrid 객체
 }
 
 function getBbsData() {
@@ -56,5 +53,5 @@ function getBbsData() {
                 alert('데이터가 존재하지 않습니다.');
             }
         }
-    })
+    });
 }

@@ -12,7 +12,7 @@
     <div class="d-flex flex-column justify-content-center align-items-stretch align-self-center form-box">
         <h1>Sign Up</h1>
         <form class="form-group" id="signUpForm" name="signUpForm" th:action="@{/signup}" th:object="${memberDto}"
-              method="post" onsubmit="return validateForm();">
+              method="post" onsubmit="return validateMember();">
             <!-- role -->
             <div class="mb-3" id="roleDiv">
                 <label th:for="role" class="form-label"><b>Role</b></label><br/>
@@ -89,7 +89,7 @@
 <th:block layout:fragment="script">
     <!--  없으면 ajax가 동작하지 않음  -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="/js/checkForm.js"></script>
+    <script src="/js/validate-member.js"></script>
     <script>
         window.onload = function () {
             emailValidate();    // email

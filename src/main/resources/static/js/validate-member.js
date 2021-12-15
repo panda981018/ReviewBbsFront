@@ -1,8 +1,5 @@
-$('#cancelBtn').on('click', function () {
-    window.history.back();
-});
 $('input').on('keydown', function (e) {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) { // enter치면 자동 submit 되는 이벤트 막기
         e.preventDefault();
     }
 });
@@ -35,12 +32,12 @@ function emailValidate() {
     $('#signUpEmail').on('focusout', function () {
         const username = $('#signUpEmail').val();
         const emailError = $('#emailError');
-        if (username == '') { // 비어있을 때
+        if (username === '') { // 비어있을 때
             emailError.removeClass('valid');
             emailError.addClass('error');
             emailError.text('이메일은 필수 항목입니다.');
-        } else if (username.indexOf('@') == -1
-            || username.indexOf('.') == -1) { // @ 혹은 .이 없을 때
+        } else if (username.indexOf('@') === -1
+            || username.indexOf('.') === -1) { // @ 혹은 .이 없을 때
             emailError.removeClass('valid');
             emailError.addClass('error');
             emailError.text('이메일 형식을 지켜주십시오.');
@@ -182,7 +179,7 @@ function birthValidate() {
         let selectedMonth = $('#selectMonth option:selected').val();
         let selectedDayOfMonth = $('#selectDay option:selected').val();
 
-        if (selectedYear != '' && selectedMonth != '' && selectedDayOfMonth != '') { // 생년월일을 잘 선택한 경우
+        if (selectedYear !== '' && selectedMonth !== '' && selectedDayOfMonth !== '') { // 생년월일을 잘 선택한 경우
             switch(selectedMonth) {
                 case '02':
                     if (selectedDayOfMonth > 28) {
@@ -222,7 +219,8 @@ function birthValidate() {
         }
     })
 }
-let submitCallback = function (event) {
+
+const submitCallback = function (event) {
     event.preventDefault();
 
     const emailError = $('#emailError');
@@ -239,7 +237,7 @@ let submitCallback = function (event) {
         $('form').eq(0).submit();
     }
 }
-function validateForm() {
+
+function validateMember() {
     $('button :submit').on('submit', submitCallback);
 }
-

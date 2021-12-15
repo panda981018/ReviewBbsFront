@@ -24,21 +24,21 @@
         <!-- 최신글 리스트 -->
         <div class="d-flex flex-column new-list">
             <h2 class="mb-3">New Post</h2>
-            <div id="newGrid"></div>
+            <div id="memberHomeGrid"></div>
         </div>
     </div>
 </div>
 <th:block layout:fragment="script">
     <!--  없으면 ajax가 동작하지 않음  -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="/js/grid/homeGridSetting.js" defer></script>
+    <script src="/js/grid/post-grid-setting.js"></script>
+    <script src="/js/grid/home-grid-setting.js"></script>
     <script src="/js/post/post.js"></script>
     <script>
         window.onload = function () {
-            // setDatasource(); // 데이터 소스 정의 및 grid 생성
-            createGrid();
+            createHomeGrid();
             getBbsData();
-            gridClickEvent();
+            clickBbsEvent();
         }
     </script>
 </th:block>

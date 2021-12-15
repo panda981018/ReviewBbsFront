@@ -10,7 +10,7 @@ function getCategoryId(categoryId) {
 
 function createGrid(dataSource) {
     grid = new tui.Grid({
-        el: $('#grid')[0],
+        el: $('#postGrid')[0],
         minBodyHeight: 40,
         scrollX: false,
         scrollY: false,
@@ -74,14 +74,28 @@ function setDatasource() {
     createGrid(dataSource);
 }
 
-function gridClickEvent() {
+const gridClickCallBack = function (ev) {
+    if (ev.rowKey > -1) {
+        const id = grid.getFormattedValue(ev.rowKey, 'id'); // (rowKey, columnName)
+
+        $.ajax({ // 조회수 증가 코드
+            type: 'POST',
+            url: '/api/bbs/update/views',
+            dataType: 'json',
+            data: JSON.stringify({"id": id}),
+            contentType: 'application/json; charset=utf-8',
+            error: function () {
+                console.log('view update failed.');
+            }
+        });
+
+        location.href = '/post/bbs/view?id=' + id;
+    }
+}
+
+function clickBbsEvent() {
     // 클릭된 rowkey를 가져오고 해당 row의 id column 값을 가져와서 이동시키기
-    grid.on('click', ev => {
-        if (ev.rowKey > -1) {
-            const id = grid.getFormattedValue(ev.rowKey, 'id'); // (rowKey, columnName)
-            location.href = '/post/bbs/view?id=' + id;
-        }
-    });
+    grid.on('click', gridClickCallBack);
 }
 
 function postResponseHandler() {

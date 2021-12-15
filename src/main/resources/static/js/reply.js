@@ -12,17 +12,16 @@ function createReply(bbsId) {
                 url: "/api/reply/add",
                 type: "post",
                 data: JSON.stringify({'bbsId': bbsId, 'contents': textEle.val().trim()}),
-                dataType: "json",
                 contentType: "application/json;charset=utf-8;",
+                dataType: "text",
                 success: function (result) {
-                    console.log(result.responseCode);
-                    if (result.responseCode === 'ok') {
+                    if (result === 'ok') {
                         location.reload();
                     }
                 }
             })
         }
-    })
+    });
 }
 
 function emojiClickEvent() {
@@ -44,22 +43,21 @@ function adjustHeight() {
         $(this).css('height', 'auto');
         const textEleHeight = $(this).prop('scrollHeight');
         $(this).css('height', textEleHeight);
-    })
+    });
 }
 
 function autoResizing() { // 컨텐츠 길이에 따라 높이가 늘어나게
     $('textarea').each(function () {
         $(this).on('keyup', function (index, element) {
             adjustHeight();
-        })
-    })
+        });
+    });
 }
 
 function deleteReply(bbsId) { // 삭제 버튼 눌렀을 때
     $(document).on('click', "#deleteReplyBtn", function () {
         const replyId = $(this).parent().siblings('input').val();
-        let result = confirm('댓글을 삭제하시겠습니까?');
-        if (result) {
+        if (confirm('댓글을 삭제하시겠습니까?')) {
             $.ajax({
                 url: '/api/reply/delete',
                 type: 'DELETE',
@@ -68,11 +66,11 @@ function deleteReply(bbsId) { // 삭제 버튼 눌렀을 때
                 success: function () {
                     location.reload();
                 }
-            })
+            });
         } else {
             $(this).focused = false;
         }
-    })
+    });
 }
 
 function showReplyModal() { // 댓글의 수정버튼 눌렀을 때의 이벤트 리스너
@@ -87,7 +85,7 @@ function showReplyModal() { // 댓글의 수정버튼 눌렀을 때의 이벤트
         modalTextarea.innerHTML = oldText;
 
         $('#updateReplyDialog').modal('show');
-    })
+    });
 }
 
 function modalListener() { // modal 수정 클릭 리스너
@@ -109,5 +107,5 @@ function modalListener() { // modal 수정 클릭 리스너
                 }
             }
         });
-    })
+    });
 }

@@ -1,33 +1,12 @@
+const searchInput = $('#searchInput');
 let isAdded = false;
-
-// 게시글 1개를 눌렀을 때 동작하는 함수
-$(document).on('click', 'td[data-column-name=bbsTitle]', function () {
-    const td = $(this).siblings()[0];
-    const bid = td.children[0].innerHTML;
-
-    $.ajax({ // 조회수 증가 코드
-        type: 'POST',
-        url: '/api/bbs/update/views',
-        dataType: 'json',
-        data: JSON.stringify({"id": bid}),
-        contentType: 'application/json; charset=utf-8',
-        error: function () {
-            console.log('view update failed.');
-        }
-    })
-
-    location.href = '/post/bbs/view?id=' + bid;
-});
-
 let urlList = []; // 사진 src만 갖고 있는 배열
 
 function deleteBbs(bbsId, categoryId) { // 게시물 삭제
     $('#deleteBbsBtn').on('click', function () {
-
-        const result = confirm('게시글을 삭제하시겠습니까?');
-        if (result) {
+        if (confirm('게시글을 삭제하시겠습니까?')) {
             const address = '/post/bbs?category=' + categoryId;
-            let data = new Object();
+            let data = {};
             data.id = bbsId;
 
             const imgList = $('#bbsContents img');
@@ -63,27 +42,27 @@ function sortBbs() { // 정렬
 }
 
 function filterGrid() { // 검색 이벤트 핸들러
-    const input = $('#searchInput');
     const selectedValue = $('#findStandard option:selected').val();
 
-    if (input.val() === '') {
+    if (searchInput.val() === '') {
         alert('내용을 입력해주세요.');
     } else {
-        grid.readData(1, {"searchType": selectedValue, "keyword": input.val()});
+        grid.readData(1, {"searchType": selectedValue, "keyword": searchInput.val()});
     }
 }
 
 $('#searchImg').on('click', function () {
     filterGrid();
 });
-$('#searchInput').on('keydown', function (key) {
+
+searchInput.on('keydown', function (key) {
     if (key.key === 'Enter') {
         filterGrid();
     }
 });
 
 function replyListener() {
-    let isShowReply = false;
+    let isShowReply = true;
     $('#replyBtn').on('click', function () {
         if (isShowReply) {
             isShowReply = false;
@@ -135,7 +114,6 @@ function showMapModal(lat, lng) {
     });
 }
 
-//////////////////////////////////
 // map에 추가/삭제
 function clickAddMapBtn(favObj, bbsId, lat, lng) {
     const addBtn = $('#addMap'); // map btn

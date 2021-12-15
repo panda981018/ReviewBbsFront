@@ -26,5 +26,5 @@ function showMapModal(lat, lng) { // 지도 모달을 띄우게 하기 위한 �
             initMap(lat, lng, 'saved');
         }
         $('#mapDialog').modal('show');
-    })
+    });
 }

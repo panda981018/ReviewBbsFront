@@ -18,7 +18,7 @@
          class="d-flex flex-column justify-content-evenly align-items-stretch form-box">
         <h1 class="flex-grow-0 pb-3 border-bottom">Edit Notice</h1>
         <form class="form-group d-grid mt-3" id="formEdit" th:action="@{/notice/update}" th:object="${noticeDto}"
-              method="post">
+              method="post" onsubmit="return validateForm()">
             <!-- id -->
             <input type="hidden" id="hiddenId" th:field="*{id}">
             <!-- 제목 -->
@@ -39,8 +39,8 @@
     </div>
 </div>
 <th:block layout:fragment="script">
-    <script src="/js/editorSetting.js"></script>
-    <script src="/js/validate.js"></script>
+    <script src="/js/summernote-setting.js"></script>
+    <script src="/js/validate-bbs-notice.js"></script>
     <script th:inline="javascript">
         //<[CDATA[
         //]]>
@@ -49,8 +49,7 @@
             $('#writeSpace').summernote(setting);
             titleValidate();
             contentValidate();
-            cancelingWrite();
-            validateForm();
+            cancelWriting();
         }
     </script>
 </th:block>

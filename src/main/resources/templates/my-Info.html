@@ -11,7 +11,8 @@
 <div layout:fragment="content">
     <div class="d-flex flex-column justify-content-start align-items-stretch form-box">
         <h1 class="mb-5">My Info</h1>
-        <form class="form-group" th:action="@{/member/info}" th:object="${memberInfo}" method="post">
+        <form class="form-group" th:action="@{/member/info}" th:object="${memberInfo}"
+              method="post" onsubmit="return validateMember();">
             <input type="hidden" id="hiddenId" th:field="*{id}">
             <!--  username  -->
             <div class="mb-3">
@@ -76,7 +77,7 @@
 </div>
 <th:block layout:fragment="script">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="/js/checkForm.js"></script>
+    <script src="/js/validate-member.js"></script>
     <script>
         window.onload = function () {
             passwordTooltip();

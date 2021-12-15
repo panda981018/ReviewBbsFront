@@ -21,7 +21,7 @@ public class ReplyApiController {
     private final ReplyService replyService;
 
     @PostMapping("/add")
-    public HashMap<String, String> createReply(HttpServletRequest request, @RequestBody HashMap<String, String> obj) throws Exception {
+    public String createReply(HttpServletRequest request, @RequestBody HashMap<String, String> obj) throws Exception {
         HttpSession session = request.getSession();
         String bbsId = obj.get("bbsId");
         System.out.println(bbsId);
@@ -32,9 +32,7 @@ public class ReplyApiController {
                 .build();
         replyService.createReply(session, replyDto);
 
-        HashMap<String, String> map = new HashMap<>();
-        map.put("responseCode", "ok");
-        return map;
+        return "ok";
     }
 
     @DeleteMapping("/delete")

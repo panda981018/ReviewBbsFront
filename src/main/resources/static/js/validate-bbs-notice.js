@@ -1,3 +1,5 @@
+let urlList = []; // 사진 src만 갖고 있는 배열
+
 $(document).on('keydown', 'input[type="text"]',function (event) {
     if (event.keyCode === 13) {
         event.preventDefault();
@@ -19,7 +21,7 @@ function titleValidate() {
     const titleError = $('#titleError');
 
     title.on('focusout', function () {
-        if (title.val().trim() == '') {
+        if (title.val().trim() === '') {
             invalidMsg(titleError);
         } else {
             validMsg(titleError);
@@ -29,7 +31,6 @@ function titleValidate() {
 
 function contentValidate() {
     const contentError = $('#contentsError');
-
     // summernote에서 제공하는 콜백 사용
     $('#writeSpace').on('summernote.blur', function () {
         if ($('#writeSpace').summernote('isEmpty')) {
@@ -39,8 +40,6 @@ function contentValidate() {
         }
     });
 }
-
-let urlList = []; // 사진 src만 갖고 있는 배열
 
 function validateForm() { // 타이틀과 내용이 버어있는가
     $('#submitBtn').on('click', function (e) {
@@ -65,7 +64,7 @@ function validateForm() { // 타이틀과 내용이 버어있는가
     });
 }
 
-function cancelingWrite() { // 취소버튼 클릭
+function cancelWriting() { // 취소버튼 클릭
     const editor = $('.note-editable');
     const oldContents = editor.eq(0).innerHTML;
     const cancel = $('#cancelBtn');
@@ -91,7 +90,7 @@ function cancelingWrite() { // 취소버튼 클릭
                     method: 'POST',
                     data: JSON.stringify(data),
                     contentType: 'application/json;charset=utf-8;',
-                    url: '/summernote/deleteImg',
+                    url: '/api/summernote/deleteImg',
                     success: function (response) {
                         if (response === 'ok') {
                             window.history.back();
