@@ -53,24 +53,23 @@ function getCurrentLocation() {
 }
 
 function geolocationFailCallBack(error) {
-    // switch (error.code) {
-    //     case 1 :
-    //         alert("geolocation failed. PERMISSION DENIED");
-    //         break;
-    //     case 2 :
-    //         alert("geolocation failed. POSITION_UNAVAILABLE");
-    //         break;
-    //     case 3 :
-    //         alert("geolocation failed. TIMEOUT");
-    //         break;
-    // }
-    alert("geolocation failed. error code :" + error.code);
+    switch (error.code) {
+        case 1 :
+            alert("PERMISSION DENIED. 위치 정보 권한을 다시 확인해주십시오.");
+            break;
+        case 2 :
+            alert("POSITION_UNAVAILABLE. 위치 정보를 찾을 수 없습니다.");
+            break;
+        case 3 :
+            alert("TIMEOUT");
+            break;
+    }
 }
 
 function getData(pageNum) {
     $.ajax({
         method: 'GET',
-        url: '/map/getMarkers?page=' + pageNum,
+        url: '/api/map/getMarkers?page=' + pageNum,
         dataType: "json",
         success: function (result) {
             if (result.data.length > 0) {
@@ -179,7 +178,7 @@ function searchDetailAddrFromCoords(marker, favObj, placeListEle) {
                     $('#showBbsList').on('click', function () {
                         $.ajax({
                             method: 'GET',
-                            url: '/map/bbsList?lat=' + marker.getPosition().getLat() + '&lng=' + marker.getPosition().getLng(),
+                            url: '/api/map/bbsList?lat=' + marker.getPosition().getLat() + '&lng=' + marker.getPosition().getLng(),
                             dataType: 'json',
                             success: function (response) {
                                 const rs = response.result;
@@ -205,7 +204,7 @@ function searchDetailAddrFromCoords(marker, favObj, placeListEle) {
                     $('#showBbsList').on('click', function () {
                         $.ajax({
                             method: 'GET',
-                            url: '/map/bbsList?lat=' + marker.getPosition().getLat() + '&lng=' + marker.getPosition().getLng(),
+                            url: '/api/map/bbsList?lat=' + marker.getPosition().getLat() + '&lng=' + marker.getPosition().getLng(),
                             dataType: 'json',
                             success: function (response) {
                                 const rs = response.result;
