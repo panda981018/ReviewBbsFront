@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class HomeController {
     // 메인 페이지
-    @GetMapping("/")
-    public String index(Authentication auth) {
-        if (auth == null) {
-            return "home/index";
-        } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority(Role.MEMBER.getValue()))) {
-            return "redirect:/member/home";
-        } else {
-            return "redirect:/admin/home";
-        }
-    }
+//    @GetMapping("/")
+//    public String index(Authentication auth) {
+//        if (auth == null) {
+//            return "home/index";
+//        } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority(Role.MEMBER.getValue()))) {
+//            return "redirect:/member/home";
+//        } else {
+//            return "redirect:/admin/home";
+//        }
+//    }
 
     // 로그인 페이지
     @GetMapping("/login")
