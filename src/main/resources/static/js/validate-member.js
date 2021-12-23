@@ -47,10 +47,10 @@ function emailValidate() {
                 url: "/api/check/email",
                 data: JSON.stringify({"username": username}),
                 contentType: 'application/json;charset=utf-8;',
-                dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    if (result.result === true) { // 존재한다면
+
+                    if (result === true) { // 존재한다면
                         emailError.removeClass('valid');
                         emailError.addClass('error');
                         emailError.text('중복된 이메일입니다. 다른 이메일을 입력해주세요');
@@ -119,8 +119,7 @@ function passwordTooltip() {
             placement: 'bottom',
             trigger: 'focus'
         });
-
-    })
+    });
 }
 
 // nickname validate 성공
@@ -152,7 +151,7 @@ function nicknameValidate(view) {
                 dataType: 'json',
                 success: function (result) {
                     console.log(result);
-                    if (result.result === true) {
+                    if (result === true) {
                         nicknameError.removeClass('valid');
                         nicknameError.addClass('error');
                         nicknameError.text('중복된 닉네임입니다. 다른 닉네임을 입력해주세요.');
