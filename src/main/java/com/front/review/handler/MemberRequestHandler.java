@@ -2,7 +2,6 @@ package com.front.review.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.front.review.dto.MemberDto;
-import com.front.review.util.MultiValueMapConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -13,8 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 
 @Slf4j
@@ -23,9 +21,10 @@ import java.util.HashMap;
 public class MemberRequestHandler { // back 단의 api를 호출하는 기능
 
     private final ObjectMapper objectMapper;
-    private String baseUrl = "http://localhost:9000";
+    private final String baseUrl = "http://localhost:9000";
 
-    public MemberDto getMemberDto(String username) {
+    // MemberDto 가져오기
+    public MemberDto getMemberDto(String username) { // GET
         RestTemplate restTemplate = new RestTemplate();
         String url = baseUrl + "/api/member/getUser";
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -46,8 +45,8 @@ public class MemberRequestHandler { // back 단의 api를 호출하는 기능
 
         return responseEntity.getBody();
     }
-
-    public Long signUpRequest(MemberDto memberDto) {
+    // 회원가입 요청 보내기
+    public Long signUpRequest(MemberDto memberDto) { // POST
         RestTemplate restTemplate = new RestTemplate();
         String url = baseUrl + "/api/member/signup";
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -60,8 +59,25 @@ public class MemberRequestHandler { // back 단의 api를 호출하는 기능
 
         return response.getBody();
     }
+    // 정보 업데이트 요청 보내기
+    public void updateMyInfoRequest(HttpSession session, MemberDto memberDto) { // POST
+        RestTemplate restTemplate = new RestTemplate();
+        String url = baseUrl + "/api/member/update";
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        // Http 객체 생성
+        HttpEntity<MemberDto> entity = new HttpEntity<>(memberDto, httpHeaders);
+        ResponseEntity<Long> response = restTemplate.postForEntity(url, entity, Long.class);
 
-    public ResponseEntity<Boolean> checkEmail(HashMap<String, String> usernameObj) {
+        log.info("UPDATE id = {}", memberDto.getId());
+        log.info("RESPONSE id = {}", response.getBody());
+
+        if (memberDto.getId() == response.getBody()) {
+            session.setAttribute("memberInfo", getMemberDto(memberDto.getUsername()));
+        }
+    }
+    // 이메일 중복체크 요청 보내기
+    public ResponseEntity<Boolean> checkEmail(HashMap<String, String> usernameObj) { // POST
         RestTemplate restTemplate = new RestTemplate();
         String url = baseUrl + "/api/check/email";
 
@@ -76,8 +92,8 @@ public class MemberRequestHandler { // back 단의 api를 호출하는 기능
 
         return response;
     }
-
-    public ResponseEntity<Boolean> checkNickname(HashMap<String, String> nicknameObj) {
+    // 닉네임 중복체크 요청 보내기
+    public ResponseEntity<Boolean> checkNickname(HashMap<String, String> nicknameObj) { // POST
         RestTemplate restTemplate = new RestTemplate();
         String url = baseUrl + "/api/check/nickname";
 

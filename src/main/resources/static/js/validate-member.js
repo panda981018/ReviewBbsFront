@@ -6,7 +6,6 @@ $('input').on('keydown', function (e) {
 
 // role 선택에 따른 양식 변화
 function changeSignUpForm() {
-
     $('#roleDiv').on('change', function (e) {
         let target = e.target;
         const birthDiv = $('#birthDiv');

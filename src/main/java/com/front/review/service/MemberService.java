@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -56,6 +57,13 @@ public class MemberService implements UserDetailsService {
         memberDto.setRegDate(time);
 
         return memberRequestHandler.signUpRequest(memberDto);
+    }
+
+    public void updateMemberInfo(HttpSession session, MemberDto memberDto) { // POST, update
+        if (memberDto.getPassword().length() != 0) { // 비번 바꿈.
+            memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+        }
+        memberRequestHandler.updateMyInfoRequest(session, memberDto);
     }
 
     public ResponseEntity<Boolean> checkEmail(HashMap<String, String> usernameObj) {

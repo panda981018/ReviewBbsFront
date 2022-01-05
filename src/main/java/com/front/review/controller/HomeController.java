@@ -2,6 +2,7 @@ package com.front.review.controller;
 
 import com.front.review.dto.MemberDto;
 import com.front.review.enumclass.Role;
+import com.front.review.service.BbsService;
 import com.front.review.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +13,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
 
     private final MemberService memberService;
+    private final BbsService bbsService;
 
     // 메인 페이지
     @GetMapping("/")
@@ -39,6 +43,7 @@ public class HomeController {
         return "login";
     }
 
+    // 회원가입 페이지
     @GetMapping("/signup")
     public String showSignUpPage(Model model) {
         model.addAttribute("memberDto", new MemberDto());
@@ -64,5 +69,10 @@ public class HomeController {
     @PostMapping("/api/check/nickname")
     public ResponseEntity<Boolean> checkOverlapNickname(@RequestBody HashMap<String, String> nicknameObj) {
         return memberService.checkNickname(nicknameObj);
+    }
+
+    @GetMapping("/home/bbs")
+    public ResponseEntity<List> getMainPosts(@RequestParam int perPage) {
+        return bbsService.getHomeBbsDtoList(perPage);
     }
 }

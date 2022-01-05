@@ -66,7 +66,7 @@ function setDatasource() {
     dataSource = {
         api: {
             readData: {
-                url: '/api/bbs/get', method: 'GET',
+                url: '/api/bbs/get/all', method: 'GET',
                 initParams: {category: bbsCategoryId, column: sortType}
             }
         }
@@ -80,8 +80,7 @@ const gridClickCallBack = function (ev) {
 
         $.ajax({ // 조회수 증가 코드
             type: 'POST',
-            url: '/api/bbs/update/views',
-            dataType: 'json',
+            url: '/post/bbs/update/views',
             data: JSON.stringify({"id": id}),
             contentType: 'application/json; charset=utf-8',
             error: function () {

@@ -143,7 +143,7 @@ function displayPlaces(places) {
     let menuEle = $('#menu_wrap');
     let bounds = new kakao.maps.LatLngBounds();
 
-    removeAllChildNods(listEle);
+    removeAllChildNodes(listEle);
     removeMarker();
 
     for (let i = 0; i < places.length; i++) {
@@ -281,7 +281,7 @@ function displayPagination(pagination) {
     let i;
 
     // 기존에 추가된 페이지 번호를 삭제
-    removeAllChildNods(paginationEle[0]);
+    removeAllChildNodes(paginationEle[0]);
 
     for (i = 1; i <= pagination.last; i++) {
         const ele = document.createElement('button');
@@ -327,7 +327,7 @@ function closeMapModal() {
             }
         }
         removeMarker();
-        removeAllChildNods($('#map')[0]);
+        removeAllChildNodes($('#map')[0]);
     });
 }
 
@@ -340,7 +340,7 @@ function removeMarker() {
 }
 
 // 모든 자식 element를 삭제하는 함수
-function removeAllChildNods(el) {
+function removeAllChildNodes(el) {
     while (el.hasChildNodes()) {
         el.removeChild(el.lastChild);
     }

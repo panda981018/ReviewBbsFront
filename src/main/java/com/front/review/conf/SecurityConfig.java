@@ -57,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoringAntMatchers("/admin/manage/sort/**")
                 .ignoringAntMatchers("/check/email")
                 .ignoringAntMatchers("/check/nickname")
+                .ignoringAntMatchers("/post/bbs/update/views")
                 .ignoringAntMatchers("/reply/ajax/**")
                 .ignoringAntMatchers("/notice/ajax/**")
                 .ignoringAntMatchers("/summernote/**")

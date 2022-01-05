@@ -19,38 +19,38 @@
     <div layout:replace="fragments/frag-post-nav :: NaviPost"></div>
     <div id="writeContent" class="d-flex flex-column">
         <div id="outer-div" class="d-flex flex-column justify-content-start">
-            <div id="categoryInfo" class="mb-3">
-                <h1>
-                    <a th:href="@{'/post/bbs?category=' + ${session.categoryList.get(categoryId).getId()}}"
-                       th:text="${session.categoryList.get(categoryId).getName()}"></a>
-                </h1>
-                <small th:text="${session.categoryList.get(categoryId).getDescription()}" class="text-muted"></small>
-            </div>
+<!--            <div id="categoryInfo" class="mb-3">-->
+<!--                <h1>-->
+<!--                    <a th:href="@{'/post/bbs?category=' + ${session.categoryList.get(categoryId).getId()}}"-->
+<!--                       th:text="${session.categoryList.get(categoryId).getName()}"></a>-->
+<!--                </h1>-->
+<!--                <small th:text="${session.categoryList.get(categoryId).getDescription()}" class="text-muted"></small>-->
+<!--            </div>-->
             <table id="tableDiv" class="table table-responsive">
                 <tr id="bbsTitleTr">
                     <th class="bbs-cell">제목</th>
-                    <td class="bbs-cell" colspan="5" th:text="${bbs.bbsTitle}"></td>
+                    <td class="bbs-cell" colspan="5" th:text="${bbsDto.bbsTitle}"></td>
                 </tr>
 
                 <tr id="bbsWriterTr">
                     <th class="bbs-cell">작성자</th>
-                    <td class="bbs-cell bbs-writer" colspan="2" th:text="${bbs.bbsWriter}"></td>
+                    <td class="bbs-cell bbs-writer" colspan="2" th:text="${bbsDto.bbsWriter}"></td>
                     <th class="bbs-cell">작성 날짜</th>
-                    <td class="bbs-cell bbs-date" colspan="2" th:text="${bbs.bbsDate}"></td>
+                    <td class="bbs-cell bbs-date" colspan="2" th:text="${bbsDto.bbsDate}"></td>
                 </tr>
 
                 <tr id="bbsContentsTr" class="mb-4">
                     <td colspan="6" id="bbsContents" class="ps-3 pt-3 bbs-cell"
-                        th:utext="${bbs.bbsContents}">
+                        th:utext="${bbsDto.bbsContents}">
                     </td>
                 </tr>
             </table>
             <!-- 장소 정보 -->
-            <div th:if="${bbs.latitude != 0.0}" id="locationInfo"
+            <div th:if="${bbsDto.latitude != 0.0}" id="locationInfo"
                  class="d-flex justify-content-between align-items-center px-3">
                 <div id="savedLocInfo">
                     <i class="fas fa-lg fa-map-marker-alt me-3"></i>
-                    <strong class="placeName" th:text="${bbs.placeName}"></strong>
+                    <strong class="placeName" th:text="${bbsDto.placeName}"></strong>
                 </div>
                 <div>
                     <button id="addMap" class="btn btn-outline-secondary">
@@ -96,18 +96,18 @@
                             <img class="likeBtnImg me-2" id="emptyHeartImg" src="/img/emptyHeart.png">
                         </th:block>
                         <strong class="me-2">LIKE</strong>
-                        <span id="likeCntText" th:text="${bbs.likeCnt}"></span>
+                        <span id="likeCntText" th:text="${bbsDto.likeCnt}"></span>
                     </button>
                     <button type="button" id="replyBtn" class="btn btn-outline-secondary">
                         <img class="commentImg me-2" id="commentImg" src="/img/comment.png">
-                        <span th:text="${bbs.replyCnt}"></span>
+                        <span th:text="${bbsDto.replyCnt}"></span>
                     </button>
                 </div>
                 <div id="bbsUtilBtnGroup" class="d-flex justify-content-end align-items-center">
-                    <a th:href="@{/post/bbs(category=${bbs.categoryId})}" id="backToBbsList" class="btn btn-outline-secondary me-3">목록</a>
-                    <div id="ownerBtnGroup" th:if="${bbs.bbsWriter == session.memberInfo.getNickname()}">
+                    <a th:href="@{/post/bbs(category=${bbsDto.categoryId})}" id="backToBbsList" class="btn btn-outline-secondary me-3">목록</a>
+                    <div id="ownerBtnGroup" th:if="${bbsDto.bbsWriter == session.memberInfo.getNickname()}">
                         <button type="button" id="deleteBbsBtn" class="btn btn-outline-danger me-3">삭제</button>
-                        <a th:href="@{/post/bbs/update(id=${bbs.id})}" id="updateBbsBtn" class="btn btn-primary">수정</a>
+                        <a th:href="@{/post/bbs/update(id=${bbsDto.id})}" id="updateBbsBtn" class="btn btn-primary">수정</a>
                     </div>
                 </div>
             </div>
@@ -124,10 +124,10 @@
     <script>
         window.onload = function () {
             //<[CDATA[
-            const bbsId = [[${bbs.id}]];
-            const categoryId = [[${bbs.categoryId}]];
-            const lat = [[${bbs.latitude}]];
-            const lng = [[${bbs.longitude}]];
+            const bbsId = [[${bbsDto.id}]];
+            const categoryId = [[${bbsDto.categoryId}]];
+            const lat = [[${bbsDto.latitude}]];
+            const lng = [[${bbsDto.longitude}]];
             const favObj = [[${favObj}]];
             //]]>
             createReply(bbsId); // 댓글 생성

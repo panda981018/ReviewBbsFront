@@ -20,46 +20,48 @@
         <span class="d-flex emoji" id="emoji-angry">&#128545;</span> <!-- angry -->
         <span class="d-flex emoji" id="emoji-sad">&#128546;</span><!-- sad -->
     </div>
-    <div id="writtenReply" class="py-4 ps-2" th:if="${replyList != null}" th:each="reply : ${replyList}">
-        <div class="d-flex flex-column align-items-stretch">
-            <!-- 댓글 정보 -->
-            <div th:id="reply_ + ${reply.id}" class="d-flex align-items-center">
-                <input type="hidden" th:value="${reply.id}">
-                <b class="me-3">작성자</b><span class="me-3" th:text="${reply.writer}"></span>
-                <b class="me-2">작성일자</b><span th:text="${reply.createDate}"></span>
-                <span class="ms-2 text-muted" th:if="${reply.isUpdated == true}">(수정됨)</span>
-                <div class="d-flex align-items-center flex-wrap"
-                     th:if="${reply.writer == session.memberInfo.getNickname()}">
-                    <button type="button" data-toggle="modal" data-bs-target="#updateReplyDialog" id="updateReplyBtn" class="btn">
-                        <strong>수정</strong>
-                    </button>
-                    <button type="button" id="deleteReplyBtn" class="btn"><strong>삭제</strong></button>
-                </div>
+</div>
+<div id="writtenReply" class="py-4 ps-2" th:if="${replies != null}" th:each="reply : ${replies}">
+    <div class="d-flex flex-column align-items-stretch">
+        <!-- 댓글 정보 -->
+        <div th:id="reply_ + ${reply.id}" class="d-flex align-items-center">
+            <input type="hidden" th:value="${reply.id}">
+            <b class="me-3">작성자</b><span class="me-3" th:text="${reply.writer}"></span>
+            <b class="me-2">작성일자</b><span th:text="${reply.createDate}"></span>
+            <span class="ms-2 text-muted" th:if="${reply.isUpdated == true}">(수정됨)</span>
+            <div class="d-flex align-items-center flex-wrap"
+                 th:if="${reply.writer == session.memberInfo.getNickname()}">
+                <button type="button" data-toggle="modal" data-bs-target="#updateReplyDialog" id="updateReplyBtn"
+                        class="btn">
+                    <strong>수정</strong>
+                </button>
+                <button type="button" id="deleteReplyBtn" class="btn"><strong>삭제</strong></button>
             </div>
-            <!-- 댓글 내용 -->
-            <span id="replyContents" th:text="${reply.contents}"></span>
+        </div>
+        <!-- 댓글 내용 -->
+        <span id="replyContents" th:text="${reply.contents}"></span>
 
-            <!-- Modal : 수정 버튼 누르면 나옴-->
-            <div class="modal fade" id="updateReplyDialog" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <span class="modal-title" id="modalLabel">Update Reply</span>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body d-flex flex-column">
-                            <input type="hidden" id="hiddenReplyId">
-                            <b>Contents</b><br>
-                            <textarea id="updateReplyTextarea" rows="1" placeholder="수정할 내용을 입력해주세요!"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                            <button type="button" id="modalUpdateBtn" class="btn btn-primary">수정</button>
-                        </div>
+        <!-- Modal : 수정 버튼 누르면 나옴-->
+        <div class="modal fade" id="updateReplyDialog" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title" id="modalLabel">Update Reply</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-column">
+                        <input type="hidden" id="hiddenReplyId">
+                        <b>Contents</b><br>
+                        <textarea id="updateReplyTextarea" rows="1" placeholder="수정할 내용을 입력해주세요!"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" id="modalUpdateBtn" class="btn btn-primary">수정</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 </html>

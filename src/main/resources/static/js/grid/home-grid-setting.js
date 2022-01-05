@@ -44,11 +44,11 @@ function getBbsData() {
     const page = 15;
     $.ajax({
         method: 'GET',
-        url: '/api/bbs/get/home?perPage=' + page,
+        url: '/home/bbs?perPage=' + page,
         dataType: 'json',
         success: function (jsonMap) {
-            if (jsonMap.data.length !== 0) {
-                grid.resetData(jsonMap.data);
+            if (jsonMap.length !== 0) {
+                grid.resetData(jsonMap);
             } else {
                 alert('데이터가 존재하지 않습니다.');
             }

@@ -1,9 +1,13 @@
 package com.front.review.controller;
 
+import com.front.review.dto.MemberDto;
+import com.front.review.enumclass.Role;
+import com.front.review.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
@@ -13,6 +17,8 @@ import java.sql.SQLException;
 @AllArgsConstructor
 @RequestMapping("/member")
 public class MemberController {
+
+    private final MemberService memberService;
 
     @GetMapping("/home")
     public String memberHome(HttpSession session) {
@@ -26,9 +32,18 @@ public class MemberController {
 
     // 내정보 페이지
     @GetMapping("/info")
-    public String showMyInfo(HttpSession session, Model model) throws SQLException { // 세션에서 유지되고 있는 Authentication 객체를 가져옴.
+    public String showMyInfo(HttpSession session, Model model) {
+        if (session.getAttribute("memberInfo") != null) {
+            model.addAttribute("memberInfo", session.getAttribute("memberInfo"));
+            return "my-Info";
+        } else {
+            return "redirect:/login";
+        }
+    }
 
-        model.addAttribute("memberInfo", session.getAttribute("memberInfo"));
-        return "my-Info";
+    @PostMapping("/info")
+    public String updateMyInfo(HttpSession session, MemberDto memberInfo) {
+        memberService.updateMemberInfo(session, memberInfo);
+        return "redirect:/member/home";
     }
 }

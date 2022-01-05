@@ -34,7 +34,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         HttpSession session = request.getSession(false);
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
 
-        System.out.println("[SuccessHandler] Spring Security Session ID : " + request.getSession().getId());
+        log.info("[SuccessHandler] Spring Security Session ID : {}", request.getSession().getId());
 
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 

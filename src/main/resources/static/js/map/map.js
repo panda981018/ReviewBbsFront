@@ -93,7 +93,7 @@ function displayPlaces(favList) { // 마커 mouseover, mouseout 리스너는 여
         zIndex: 200
     });
 
-    removeAllChildNods(placeListEle);
+    removeAllChildNodes(placeListEle);
     removeMarker();
 
     for (let i = 0; i < favList.length; i++) {
@@ -113,7 +113,7 @@ function displayPlaces(favList) { // 마커 mouseover, mouseout 리스너는 여
 function displayPagination(totalPages) {
     const paginationEle = $('#placePagination')[0];
 
-    removeAllChildNods(paginationEle);
+    removeAllChildNodes(paginationEle);
 
     for(let i = 0; i < totalPages; i++) {
         const ele = document.createElement('button');
@@ -240,7 +240,7 @@ function removeMarker() {
 }
 
 // 모든 자식 element를 삭제하는 함수
-function removeAllChildNods(el) {
+function removeAllChildNodes(el) {
     while (el.hasChildNodes()) {
         el.removeChild(el.lastChild);
     }
@@ -278,6 +278,6 @@ function bbsListModalClose() {
     $('#bbsListDialog').modal('hide');
     $('#bbsListDialog').on('hide.bs.modal', function () {
         const bbsListDiv = $('#bbsList')[0];
-        removeAllChildNods(bbsListDiv);
+        removeAllChildNodes(bbsListDiv);
     });
 }
