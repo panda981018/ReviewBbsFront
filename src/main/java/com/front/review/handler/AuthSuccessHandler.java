@@ -41,6 +41,8 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         MemberDto memberDto = loginHandler.getMemberDto(authentication.getName());
         session.setAttribute("memberInfo", memberDto);
 
+        log.info("memberInfo", memberDto);
+
         if (roles.contains(Role.ADMIN.getValue())) {
             redirectStrategy.sendRedirect(request, response, "/admin" + DEFAULT_LOGIN_SUCCESS_URL);
         } else if (roles.contains(Role.MEMBER.getValue())) {
